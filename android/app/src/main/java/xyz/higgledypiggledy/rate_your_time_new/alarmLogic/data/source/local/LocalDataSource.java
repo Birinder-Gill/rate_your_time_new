@@ -1,0 +1,122 @@
+package xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.local;
+
+
+import android.util.Log;
+
+
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
+import xyz.higgledypiggledy.rate_your_time_new.MainActivity;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Hour;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.DataSource;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
+
+
+public class LocalDataSource implements DataSource {
+
+
+    private static LocalDataSource INSTANCE;
+    private final ProgressDao dao;
+    private final AppExecutors executors;
+
+    private LocalDataSource(ProgressDao dao, AppExecutors diskIO) {
+        this.dao = dao;
+        this.executors = diskIO;
+    }
+
+    public static LocalDataSource getInstance(ProgressDao dao, AppExecutors diskIO) {
+        if (INSTANCE == null) {
+            synchronized (LocalDataSource.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new LocalDataSource(dao, diskIO);
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    private static final String TAG = "LocalDataSource";
+    @Override
+    public void getDataFor(final int day, final int month, final int year, final LoadProgressCallback callback) {
+
+        executors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<HashMap<String, Object>> finalList = getHoursFor(day,month,year);
+                executors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        callback.onProgressLoaded(finalList);
+
+                    }
+                });
+            }
+        });
+
+    }
+
+    ArrayList<HashMap<String, Object>> getHoursFor(int day, int month, int year){
+        List<Hour> list = (dao.getDataFor(day, month, year));
+        final ArrayList<HashMap<String,Object>> finalList=new ArrayList<>();
+        int tempTime=7;
+        for(Hour h:list)
+        {
+            int time=h.getTime();
+            while(tempTime<time)
+            {
+                Log.d(TAG, "run() called inside while loop tempTime = "+tempTime+" time = "+time);
+                finalList.add(new Hour(0,tempTime,day,month,year).toMap());
+                tempTime++;
+            }
+            finalList.add(h.toMap());
+            tempTime++;
+        }
+        Calendar now =Calendar.getInstance();
+        Log.d(TAG, "getHoursFor() called with: day = [" + day + "], month = [" + month + "], year = [" + year + "]");
+        Log.d(TAG, "getHoursFor: "+now.toString());
+        if((!finalList.isEmpty()) && (now.get(Calendar.MONTH)==month) && (now.get(Calendar.YEAR)==year) && (now.get(Calendar.DATE)>day)){
+            Log.d(TAG, "getHoursFor: IN CONDITION");
+             int lastHour = (int)finalList.get(finalList.size()-1).get("time");
+            while(lastHour!= MainActivity.LAST_HOUR){
+                Log.d(TAG, "getHoursFor: IN LOOP");
+                finalList.add(new Hour(0,lastHour,day,month,year).toMap());
+                lastHour++;
+            }
+        }
+        return finalList;
+    }
+
+    @Override
+    public void getDataFor(int day1, int month1, int year1, int day2, int month2, int year2, RangeProgressCallback callback) {
+
+        executors.diskIO().execute(() -> {
+            HashMap<String,ArrayList<HashMap<String,Object>>> map=new HashMap<>();
+            Calendar c1 = Calendar.getInstance();
+            c1.set(year1,month1,day1);
+            Calendar c2 = Calendar.getInstance();
+            c2.set(year2,month2,day2);
+            Log.d(TAG, "getDataFor() called with: day1 = [" + day1 + "], month1 = [" + month1 + "], year1 = [" + year1 + "], day2 = [" + day2 + "], month2 = [" + month2 + "], year2 = [" + year2 + "], callback = [" + callback + "]");
+
+            while(!c1.after(c2))
+            {
+
+                int d=c1.get(Calendar.DATE);
+                int m=c1.get(Calendar.MONTH);
+                int y=c1.get(Calendar.YEAR);
+//                Log.d(TAG, "getDataFor() called with: day1 = [" + d + "], month1 = [" + m + "], year1 = [" + y + "]");
+                ArrayList<HashMap<String,Object>> list = getHoursFor(d,m,y);
+                map.put(y +"-"+ m +"-"+ d,list);
+                c1.add(Calendar.DATE, 1);
+            }
+
+            executors.mainThread().execute(() -> callback.onRangeProgressLoaded(map));
+        });
+
+
+    }
+}
