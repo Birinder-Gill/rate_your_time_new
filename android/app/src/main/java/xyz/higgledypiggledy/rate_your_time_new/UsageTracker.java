@@ -64,7 +64,6 @@ public class UsageTracker {
                             if (u.getTotalTimeInForeground() > 0 && hasLauncher(context, u.getPackageName())) {
 //                                map.put("appLogo", getAppLogo(context, u.getPackageName()));
                                 map.put("color",getColor(context,u.getPackageName()));
-
                                 result.add(map);
                             }
 
@@ -107,7 +106,9 @@ public class UsageTracker {
         PackageManager pm = context.getPackageManager();
 
         try {
-            return bitmapToString(drawableToBitmap(pm.getApplicationIcon(packageName)));
+            Drawable icon = pm.getApplicationIcon(packageName);
+            Log.d(TAG, "getAppLogo: Icon = FOR "+packageName+" = "+icon);
+            return bitmapToString(drawableToBitmap(icon));
         } catch (Exception e) {
             Log.d(TAG, "getAppLogo() called with: packageName = [" + packageName + "]");
             Log.e(TAG, "getAppLogo: ", e);

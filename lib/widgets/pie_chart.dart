@@ -65,7 +65,7 @@ class RallyPieChart extends StatefulWidget {
       {this.heroLabel, this.heroAmount, this.wholeAmount, this.segments});
 
   final String heroLabel;
-  final double heroAmount;
+  final String heroAmount;
   final double wholeAmount;
   final List<RallyPieChartSegment> segments;
 
@@ -132,7 +132,7 @@ class _AnimatedRallyPieChart extends AnimatedWidget {
 
   final Animation<double> animation;
   final String centerLabel;
-  final double centerAmount;
+  final String centerAmount;
   final double total;
   final List<RallyPieChartSegment> segments;
 
@@ -229,7 +229,7 @@ class _RallyPieChartOutlineBoxPainter extends BoxPainter {
     );
     final innerRect = Rect.fromCircle(
       center: configuration.size.center(offset),
-      radius: outerRadius - strokeWidth * 10,
+      radius: outerRadius - strokeWidth * 15,
     );
 
     // Paint each arc with spacing.
@@ -241,7 +241,7 @@ class _RallyPieChartOutlineBoxPainter extends BoxPainter {
       final sweepAngle = _calculateSweepAngle(segment.value, 0);
       canvas.drawArc(outerRect, startAngle, sweepAngle, true, paint);
       cumulativeTotal += segment.value;
-      cumulativeSpace += spaceRadians;
+      // cumulativeSpace += spaceRadians;
     }
 
     // Paint any remaining space black (e.g. budget amount remaining).
