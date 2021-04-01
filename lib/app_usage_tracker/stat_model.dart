@@ -53,6 +53,7 @@ class UsageStat {
     try{
       stat.appLogo= json["appLogo"] == null ? Uint8List(0) : base64.decode(json["appLogo"]);
     }catch(e){
+      if(e is FormatException)
       consoleLog(e);
     }
     return stat;

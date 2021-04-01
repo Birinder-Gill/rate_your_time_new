@@ -12,7 +12,6 @@ import 'package:rate_your_time_new/settings_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/page_status.dart';
 
-
 const Cubic _accelerateCurve = Cubic(0.548, 0, 0.757, 0.464);
 const Cubic _decelerateCurve = Cubic(0.23, 0.94, 0.41, 1);
 const _peakVelocityTime = 0.248210;
@@ -37,29 +36,31 @@ class _FrontLayer extends StatelessWidget {
       height: 40,
       alignment: AlignmentDirectional.centerStart,
       child: Center(
-        child: TextButton.icon(onPressed: (){
-          _openAd();
-        }, icon: Icon(Icons.font_download), label: Text("Watch an Ad")),
+        child: TextButton.icon(
+            onPressed: () {
+              _openAd();
+            },
+            icon: Icon(Icons.font_download),
+            label: Text("Watch an Ad")),
       ),
     );
 
     return Material(
       elevation: 4,
       shape: const BeveledRectangleBorder(
-        borderRadius:
-        BorderRadiusDirectional.only(topEnd: Radius.circular(42)),
+        borderRadius: BorderRadiusDirectional.only(topEnd: Radius.circular(42)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           onTap != null
               ? GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            excludeFromSemantics:
-            true, // Because there is already a "Close Menu" button on screen.
-            onTap: onTap,
-            child: pageTopArea,
-          )
+                  behavior: HitTestBehavior.opaque,
+                  excludeFromSemantics:
+                      true, // Because there is already a "Close Menu" button on screen.
+                  onTap: onTap,
+                  child: pageTopArea,
+                )
               : pageTopArea,
           Expanded(
             child: child,
@@ -97,19 +98,19 @@ class _BackdropTitle extends AnimatedWidget {
     );
 
     final textDirectionScalar =
-    Directionality.of(context) == TextDirection.ltr ? 1 : -1;
+        Directionality.of(context) == TextDirection.ltr ? 1 : -1;
 
-    final slantedMenuIcon =
-    const Icon(Icons.date_range);//ImageIcon(AssetImage('packages/shrine_images/slanted_menu.png'));
+    final slantedMenuIcon = const Icon(Icons
+        .date_range); //ImageIcon(AssetImage('packages/shrine_images/slanted_menu.png'));
 
     final directionalSlantedMenuIcon =
-    Directionality.of(context) == TextDirection.ltr
-        ? slantedMenuIcon
-        : Transform(
-      alignment: Alignment.center,
-      transform: Matrix4.rotationY(pi),
-      child: slantedMenuIcon,
-    );
+        Directionality.of(context) == TextDirection.ltr
+            ? slantedMenuIcon
+            : Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(pi),
+                child: slantedMenuIcon,
+              );
 
     // final menuButtonTooltip = animation.isCompleted
     //     ? GalleryLocalizations.of(context).shrineTooltipOpenMenu
@@ -169,7 +170,8 @@ class Backdrop extends StatefulWidget {
     @required this.backLayer,
     @required this.frontTitle,
     @required this.backTitle,
-    @required this.controller, this.pickDate,
+    @required this.controller,
+    this.pickDate,
   })  : assert(frontLayer != null),
         assert(backLayer != null),
         assert(frontTitle != null),
@@ -191,6 +193,8 @@ class _BackdropState extends State<Backdrop>
   final GlobalKey _backdropKey = GlobalKey(debugLabel: 'Backdrop');
   AnimationController _controller;
   Animation<RelativeRect> _layerAnimation;
+
+  bool _showGuide=true;
 
   @override
   void initState() {
@@ -276,7 +280,8 @@ class _BackdropState extends State<Backdrop>
 
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
     const layerTitleHeight = 48;
-    final layerSize = Size(constraints.biggest.width, constraints.biggest.height/2);
+    final layerSize =
+        Size(constraints.biggest.width, constraints.biggest.height / 2);
     final layerTop = layerSize.height - layerTitleHeight;
 
     _layerAnimation = _getLayerAnimation(layerSize, layerTop);
@@ -317,9 +322,11 @@ class _BackdropState extends State<Backdrop>
       automaticallyImplyLeading: false,
       brightness: Brightness.light,
       elevation: 0,
-      leading: IconButton(icon: Icon(Icons.settings), onPressed: (){
-        pushTo(context, SettingsScreen());
-      }),
+      leading: IconButton(
+          icon: Icon(Icons.settings),
+          onPressed: () {
+            pushTo(context, SettingsScreen());
+          }),
       titleSpacing: 0,
       centerTitle: true,
       title: _BackdropTitle(
@@ -329,23 +336,42 @@ class _BackdropState extends State<Backdrop>
         backTitle: widget.backTitle,
       ),
       actions: [
-       if(false) IconButton(
-          icon: const Icon(Icons.alarm),
-          // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
-          onPressed: () {
-            pushTo(context, AlarmsScreen());
-          },
-        ),
-       FeatureDiscoveryController(
+        if (false)
           IconButton(
-            icon: FeatureDiscovery(description: 'Test desc',
-            title:"Test title",
-            showOverlay: true,
-            child: Icon(Icons.menu)),
-            // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
-            onPressed: _toggleBackdropLayerVisibility,
+            icon: const Icon(Icons.alarm),
+            // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
+            onPressed: () {
+              pushTo(context, AlarmsScreen());
+            },
           ),
-       ),
+        _showGuide
+            ? FeatureDiscoveryController(
+                IconButton(
+                  icon: FeatureDiscovery(
+                      description: 'Test desc',
+                      title: "Test title",
+                      showOverlay: true,
+
+                      onDismiss:() {
+                        _showGuide=false;
+                        // setState(() {
+                        //
+                        // });
+                        // _toggleBackdropLayerVisibility();
+
+
+
+                      },
+                      child: Icon(Icons.menu)),
+                  // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
+                  onPressed: _toggleBackdropLayerVisibility,
+                ),
+              )
+            : IconButton(
+                icon: AnimatedIcon(icon: AnimatedIcons.close_menu, progress: _controller),
+                // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
+                onPressed: _toggleBackdropLayerVisibility,
+              ),
       ],
     );
     return AnimatedBuilder(
@@ -390,9 +416,10 @@ class DesktopBackdrop extends StatelessWidget {
       ],
     );
   }
+
   double desktopCategoryMenuPageWidth({
     BuildContext context,
   }) {
-    return 232 * 1.0;//reducedTextScale(context);
+    return 232 * 1.0; //reducedTextScale(context);
   }
 }

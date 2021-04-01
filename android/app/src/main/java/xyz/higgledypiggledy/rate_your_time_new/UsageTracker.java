@@ -62,8 +62,10 @@ public class UsageTracker {
                             }
                             map.put("appName", getAppName(context, u.getPackageName()));
                             if (u.getTotalTimeInForeground() > 0 && hasLauncher(context, u.getPackageName())) {
-//                                map.put("appLogo", getAppLogo(context, u.getPackageName()));
-                                map.put("color",getColor(context,u.getPackageName()));
+                                String logo=getAppLogo(context, u.getPackageName());
+                                Log.d(TAG, "getAppLogo: Icon = FOR "+u.getPackageName()+"Length = "+logo.length()+" logo = "+logo);
+                                map.put("appLogo", logo);
+//                                map.put("color",getColor(context,u.getPackageName()));
                                 result.add(map);
                             }
 
@@ -107,7 +109,7 @@ public class UsageTracker {
 
         try {
             Drawable icon = pm.getApplicationIcon(packageName);
-            Log.d(TAG, "getAppLogo: Icon = FOR "+packageName+" = "+icon);
+
             return bitmapToString(drawableToBitmap(icon));
         } catch (Exception e) {
             Log.d(TAG, "getAppLogo() called with: packageName = [" + packageName + "]");
@@ -177,7 +179,7 @@ public class UsageTracker {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
     }
 
 

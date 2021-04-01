@@ -98,7 +98,7 @@ class HourWidget extends StatelessWidget {
     );
   }
 
-  _emptyWorthCard() =>true?Container():Row(
+  _emptyWorthCard() => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
         // Icon(Icons.outlet),

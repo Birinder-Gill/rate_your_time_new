@@ -25,7 +25,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   List<UsageStat> distinctApps = [];
 
   double get sum => sumOf<UsageStat>(
-      distinctApps.sublist(0, 4), (e) => e.totalTimeInForeground);
+      distinctApps, (e) => e.totalTimeInForeground);
 
   getApps() async {
     setState(() {
@@ -70,23 +70,16 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
         actions: [
           if (!granted)
-            ElevatedButton(onPressed: openSettings, child: Text("Settings"))
+            ElevatedButton(onPressed: openSettings, child: Text("Settings")),
+            ElevatedButton(onPressed: loading?null:getApps, child:loading?simpleLoader(): Text("Get apps"))
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: loading
-            ? null
-            : () {
-                // Timer.periodic(Duration(seconds: 1), (timer) {
-                getApps();
-                // });
-              },
-        child: Icon(Icons.refresh),
-      ),
+
       body: Scrollbar(
         child: ListView(
           children: [
@@ -119,14 +112,33 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
               ),
             for (UsageStat i in distinctApps ?? [])
               if (i.package.contains(search) || i.appName.contains(search))
-               FinancialEntityCategoryView(
-                        indicatorColor: i.color,
-                        indicatorFraction: 1,
-                        title: i.appName,
-                        subtitle: '',
-                        semanticsLabel: timeInSecs(i.totalTimeInForeground),
-                        amount: timeInSecs(i.totalTimeInForeground),
-                        suffix: null)
+               Column(
+                 mainAxisSize: MainAxisSize.min,
+                 children: [
+                   ListTile(
+                            subtitle: Text(timeInSecs(i.totalTimeInForeground,),),
+                            title: Text(i.appName,style: theme.headline6,),
+                     trailing:SizedBox(
+                       width: 100,
+                       child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                child: LinearProgressIndicator(value:i.totalTimeInForeground/sum,minHeight: 14,),
+                              ),
+                     ),
+                            leading:  Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.memory(i.appLogo),
+                            ),
+                            // horizontalTitleGap: 0,
+                   ),
+                   const Divider(
+                     height: 16,
+                     indent: 16,
+                     endIndent: 16,
+
+                   ),
+                 ],
+               ),
 
           ],
         ),
