@@ -229,7 +229,7 @@ class _RallyPieChartOutlineBoxPainter extends BoxPainter {
     );
     final innerRect = Rect.fromCircle(
       center: configuration.size.center(offset),
-      radius: outerRadius - strokeWidth * 15,
+      radius: outerRadius - strokeWidth * 105,
     );
 
     // Paint each arc with spacing.

@@ -16,7 +16,7 @@ class AppsUsageScreen extends StatefulWidget {
 class _AppsUsageScreenState extends State<AppsUsageScreen> {
   List<UsageStat> apps;
 
-  var granted = false;
+  var _granted;
 
   var search = '';
 
@@ -24,29 +24,37 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   List<UsageStat> distinctApps = [];
 
+  var error=false;
+
   double get sum => sumOf<UsageStat>(
       distinctApps, (e) => e.totalTimeInForeground);
+
+  get granted => (_granted!=null && (_granted));
 
   getApps() async {
     setState(() {
       loading = true;
     });
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
-    final List list = await channel.invokeMethod('getApps');
-    apps = List<UsageStat>.from(
-        list.map((e) => UsageStat.fromJson(jsonEncode(e))));
-    distinctApps = [];
-    apps.forEach((element) {
-      int index = distinctApps.indexWhere((s) => s.package == element.package);
-      if (index != -1)
-        distinctApps[index].totalTimeInForeground =
-            distinctApps[index].totalTimeInForeground +
-                element.totalTimeInForeground;
-      else
-        distinctApps.add(element);
-    });
-    distinctApps
-        .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
+   try{
+     final channel = MethodChannel(Constants.CHANNEL_NAME);
+     final List list = await channel.invokeMethod('getApps');
+     apps = List<UsageStat>.from(
+         list.map((e) => UsageStat.fromJson(jsonEncode(e))));
+     distinctApps = [];
+     apps.forEach((element) {
+       int index = distinctApps.indexWhere((s) => s.package == element.package);
+       if (index != -1)
+         distinctApps[index].totalTimeInForeground =
+             distinctApps[index].totalTimeInForeground +
+                 element.totalTimeInForeground;
+       else
+         distinctApps.add(element);
+     });
+     distinctApps
+         .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
+   }catch(e){
+     error=true;
+   }
     setState(() {
       loading = false;
     });
@@ -59,13 +67,17 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   @override
   void initState() {
-    isAccessGranted();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      isAccessGranted();
+    });
     super.initState();
   }
 
   Future<void> isAccessGranted() async {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
-    granted = await channel.invokeMethod('isAccessGranted');
+    _granted = await channel.invokeMethod('isAccessGranted');
+    if(_granted)
+      getApps();
   }
 
   @override
@@ -73,16 +85,22 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     final theme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
+        // title: Text("$_granted - $granted"),
         actions: [
-          if (!granted)
-            ElevatedButton(onPressed: openSettings, child: Text("Settings")),
+          !granted?
+            ElevatedButton(onPressed: openSettings, child: Text("Settings")):
             ElevatedButton(onPressed: loading?null:getApps, child:loading?simpleLoader(): Text("Get apps"))
         ],
       ),
 
-      body: Scrollbar(
+      body: !granted?gotoSettingsView():loading?simpleLoader():error?_errorView():Scrollbar(
         child: ListView(
+
           children: [
+            Text("Time spent on mobile",textAlign: TextAlign.center,style: theme.headline5,),
+            Text(timeInSecs(sum),textAlign: TextAlign.center,style: theme.headline4,),
+            Text('in last 24 hrs',textAlign: TextAlign.center),
+
             // loading?simpleLoader():Padding(
             //   padding: const EdgeInsets.all(8.0),
             //   child: TextFormField(
@@ -96,11 +114,11 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
             // ),
             if (distinctApps.isNotEmpty)
               Container(
-                height: 0,
+                height: 250,
                 child: RallyPieChart(
-                  heroLabel: "Total usage",
+                  heroLabel: "",
                   wholeAmount: sum,
-                  heroAmount: timeInSecs(sum),
+                  heroAmount: '',
                   segments: distinctApps
                       .map(
                         (e) => RallyPieChartSegment(
@@ -122,7 +140,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                        width: 100,
                        child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal:8.0),
-                                child: LinearProgressIndicator(value:i.totalTimeInForeground/sum,minHeight: 14,),
+                                child: LinearProgressIndicator(value:1-i.totalTimeInForeground/sum,minHeight: 14,valueColor: AlwaysStoppedAnimation(i.color),),
                               ),
                      ),
                             leading:  Padding(
@@ -172,4 +190,10 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
     return "${mins.toStringAsFixed(0)} $label";
   }
+
+  gotoSettingsView() {
+    return Center(child: Text("Make tutorial on how to give access rights here"));
+  }
+
+  _errorView() =>Center(child: Text("An error occured"));
 }

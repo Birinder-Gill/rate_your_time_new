@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class UsageStat {
@@ -52,6 +53,9 @@ class UsageStat {
   );
     try{
       stat.appLogo= json["appLogo"] == null ? Uint8List(0) : base64.decode(json["appLogo"]);
+      PaletteGenerator.fromImageProvider(MemoryImage(stat.appLogo)).then((value){
+        stat.color =value.dominantColor.color;
+      });
     }catch(e){
       if(e is FormatException)
       consoleLog(e);
