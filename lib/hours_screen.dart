@@ -31,23 +31,26 @@ class HoursScreen extends StatelessWidget {
     );
   }
 
-  Widget _average(context) =>Row(
-    // crossAxisAlignment: CrossAxisAlignment.ce,
-    children: [
-     const Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: const Text('Average'),
-      ),
-      Expanded(
-        child: LinearProgressIndicator(
-          minHeight: 8,
-          value: average,
-          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
-          backgroundColor: Theme.of(context).primaryColor,
+  Widget _average(context) =>Material(
+    elevation: 4,
+    color: Theme.of(context).primaryColorDark,
+    child: Row(
+      children: [
+       const Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: const Text('Average'),
         ),
-      ),
-      const SizedBox(height: 70,)
-    ],
+        Expanded(
+          child: LinearProgressIndicator(
+            minHeight: 8,
+            value: average,
+            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+        ),
+        const SizedBox(height: 70,)
+      ],
+    ),
   );
 
   _emptyView() {
@@ -63,48 +66,58 @@ class HourWidget extends StatelessWidget {
 
   HourWidget(this.hour);
 
+
   @override
   Widget build(BuildContext context) {
+  final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical:2.0,horizontal: 1.0),
       child: Card(
+        color: hour.worth>0?theme.cardColor:theme.scaffoldBackgroundColor,
+        borderOnForeground:hour.worth==0,
         elevation: hour.worth>0?1:0,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 4,),
-              SizedBox(
-                  width: 50,
-                  child: Text('${TimeUtils.parseTimeHours(hour.time)}')),
-              const SizedBox(height: 42,),
-              Expanded(
-                child: (hour.worth>0)?LinearProgressIndicator(
-                  minHeight: 4,
-                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  value: (hour.worth/5),
-                ):
-                  _emptyWorthCard(),
-              ),
-              const SizedBox(height: 4,),
-              // Text("${hour.date}/${hour.month}/${hour.year}"),
-              // const SizedBox(height: 4,),
-            ],
+        child: Container(
+          decoration: BoxDecoration(
+            border: hour.worth>0?null:Border.all(color: theme.primaryColorDark),
+                borderRadius: BorderRadius.all(Radius.circular(4))
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 4,),
+                SizedBox(
+                    width: 50,
+                    child: Text('${TimeUtils.parseTimeHours(hour.time)}',style: TextStyle(color: theme.textTheme.bodyText2.color.withOpacity(hour.worth>0?1:.5)),)),
+                const SizedBox(height: 42,),
+                Expanded(
+                  child: (hour.worth>0)?LinearProgressIndicator(
+                    minHeight: 4,
+                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+                    backgroundColor: Theme.of(context).primaryColorDark,
+                    value: (hour.worth/5),
+                  ):
+                    _emptyWorthCard(theme),
+                ),
+                const SizedBox(height: 4,),
+                // Text("${hour.date}/${hour.month}/${hour.year}"),
+                // const SizedBox(height: 4,),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  _emptyWorthCard() => Row(
+  _emptyWorthCard(ThemeData theme) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
         // Icon(Icons.outlet),
-      Icon(Icons.close),
-      Text('Value not entered'),
-      Icon(Icons.close),
+      Icon(Icons.close,color: theme.primaryColorDark,),
+      Text('Value not entered',style: TextStyle(color: theme.primaryColorDark),),
+      Icon(Icons.close,color: theme.primaryColorDark),
     ],
   );
 

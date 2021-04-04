@@ -112,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
 
 
   backdrop() {
+    final theme=Theme.of(context);
     return PageStatus(
         cartController: _controller,
         menuController: _expandingController,
@@ -120,15 +121,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
             frontLayer: HoursScreen(model.hours, model.average),
             backLayer:  Container(
               height: double.infinity,
-              color: Theme.of(context).primaryColor,
-              child: CalendarDatePicker(
-                key: model.datePickerKey,
-                initialDate: model.date,
-                  firstDate: launchDate,
-                  lastDate: DateTime.now(), onDateChanged: (DateTime value) {
-                  model.refresh(value);
+              color: theme.primaryColor,
+              child: Theme(
+                data: theme.copyWith(
+                  colorScheme: theme.colorScheme.copyWith(
+                    onPrimary: theme.accentColor,
+                    primary: theme.primaryColorDark,
+                    onSurface: theme.colorScheme.onPrimary,
 
-                },),
+                  )
+                ),
+                child: CalendarDatePicker(
+                  key: model.datePickerKey,
+                  initialDate: model.date,
+                    firstDate: launchDate,
+                    lastDate: DateTime.now(), onDateChanged: (DateTime value) {
+                    model.refresh(value);
+                  },),
+              ),
             ),
             frontTitle: Text("${TimeUtils.formatDate(model.date)}"),
             backTitle:  Text("Select date"),

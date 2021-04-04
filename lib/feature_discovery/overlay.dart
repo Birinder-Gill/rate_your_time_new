@@ -260,10 +260,12 @@ class Ripple extends StatelessWidget {
   /// Status of the parent overlay.
   final FeatureDiscoveryStatus status;
 
+  final color;
+
   Ripple({
     @required this.animations,
     @required this.center,
-    @required this.status,
+    @required this.status,@required  this.color,
   }) {
     assert(animations != null);
     assert(center != null);
@@ -285,8 +287,8 @@ class Ripple extends StatelessWidget {
           child: Container(
             height: radius * 2,
             width: radius * 2,
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration:  BoxDecoration(
+              color: color,
               shape: BoxShape.circle,
             ),
           ),
@@ -313,12 +315,14 @@ class TapTarget extends StatelessWidget {
   /// Child widget that will be promoted by the overlay.
   final Icon child;
 
+  final color;
+
   TapTarget({
     @required this.animations,
     @required this.center,
     @required this.status,
     @required this.onTap,
-    @required this.child,
+    @required this.child,@required this.color,
   }) {
     assert(animations != null);
     assert(center != null);
@@ -344,8 +348,8 @@ class TapTarget extends StatelessWidget {
             child: Container(
               height: radius * 2,
               width: radius * 2,
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration:  BoxDecoration(
+                color: color,
                 shape: BoxShape.circle,
               ),
               child: child,

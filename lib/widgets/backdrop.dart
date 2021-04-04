@@ -36,7 +36,8 @@ class _FrontLayer extends StatelessWidget {
       height: 40,
       alignment: AlignmentDirectional.centerStart,
       child: Center(
-        child: TextButton.icon(
+        child: OutlinedButton.icon(
+          // style: ButtonStyle(elevation: MaterialStateProperty.resolveWith((states) => 0.0)),
             onPressed: () {
               _openAd();
             },
@@ -46,6 +47,7 @@ class _FrontLayer extends StatelessWidget {
     );
 
     return Material(
+      color: Theme.of(context).scaffoldBackgroundColor,
       elevation: 4,
       shape: const BeveledRectangleBorder(
         borderRadius: BorderRadiusDirectional.only(topEnd: Radius.circular(42)),
@@ -317,16 +319,18 @@ class _BackdropState extends State<Backdrop>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final appBar = AppBar(
       // leading: IconButton(icon: Icon(Icons.menu,color: Colors.transparent,), onPressed: null),
-      automaticallyImplyLeading: false,
-      brightness: Brightness.light,
+      automaticallyImplyLeading: true,
+      brightness: Brightness.dark,
+      // backgroundColor: theme.primaryColor,
       elevation: 0,
-      leading: IconButton(
-          icon: Icon(Icons.settings),
-          onPressed: () {
-            pushTo(context, SettingsScreen());
-          }),
+      // leading: IconButton(
+      //     icon: Icon(Icons.settings),
+      //     onPressed: () {
+      //       pushTo(context, SettingsScreen());
+      //     }),
       titleSpacing: 0,
       centerTitle: true,
       title: _BackdropTitle(
@@ -336,7 +340,7 @@ class _BackdropState extends State<Backdrop>
         backTitle: widget.backTitle,
       ),
       actions: [
-        if (false)
+        // if (false)
           IconButton(
             icon: const Icon(Icons.alarm),
             // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
@@ -368,7 +372,8 @@ class _BackdropState extends State<Backdrop>
                 ),
               )
             : IconButton(
-                icon: AnimatedIcon(icon: AnimatedIcons.close_menu, progress: _controller),
+                icon: RotationTransition(turns: Tween(begin: .625,end: 0.0).animate(_controller),
+                child: AnimatedIcon(icon: AnimatedIcons.add_event, progress: _controller)),
                 // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
                 onPressed: _toggleBackdropLayerVisibility,
               ),
@@ -379,6 +384,7 @@ class _BackdropState extends State<Backdrop>
       builder: (context, child) => ExcludeSemantics(
         excluding: cartPageIsVisible(context),
         child: Scaffold(
+          drawer: Drawer(child: SettingsScreen()),
           appBar: appBar,
           body: LayoutBuilder(
             builder: _buildStack,
@@ -409,7 +415,7 @@ class DesktopBackdrop extends StatelessWidget {
           ),
           child: Material(
             elevation: 16,
-            // color: Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: frontLayer,
           ),
         )

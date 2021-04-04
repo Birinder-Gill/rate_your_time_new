@@ -148,7 +148,8 @@ class _FeatureDiscoveryState extends State<FeatureDiscovery>
     debugCheckHasDirectionality(ctx);
 
     final deviceSize = MediaQuery.of(ctx).size;
-    final color = widget.color ?? Theme.of(ctx).primaryColor;
+    final color = widget.color ?? Theme.of(ctx).primaryColorDark;
+    final rippleColor=Theme.of(ctx).primaryColor;
 
     // Wrap in transparent [Material] to enable widgets that require one.
     return Material(
@@ -186,6 +187,7 @@ class _FeatureDiscoveryState extends State<FeatureDiscovery>
             animations: animations,
             status: status,
             center: center,
+            color: rippleColor,
           ),
           TapTarget(
             animations: animations,
@@ -193,6 +195,7 @@ class _FeatureDiscoveryState extends State<FeatureDiscovery>
             center: center,
             child: widget.child,
             onTap: tap,
+            color: rippleColor,
           ),
         ],
       ),

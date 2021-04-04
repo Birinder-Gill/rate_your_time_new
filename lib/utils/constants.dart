@@ -136,24 +136,14 @@ class Constants {
 
 
 double letterSpacingOrNone(double letterSpacing) => letterSpacing;
-const Color shrinePink50 = Color(0xFFFEEAE6);
-const Color shrinePink100 = Color(0xFFFEDBD0);
-const Color shrinePink300 = Color(0xFFFBB8AC);
-const Color shrinePink400 = Color(0xFFEAA4A4);
 
-const Color shrineBrown900 = Color(0xFF442B2D);
-const Color shrineBrown600 = Color(0xFF7D4F52);
-
-const Color shrineErrorRed = Color(0xFFC5032B);
-
-const Color shrineSurfaceWhite = Color(0xFFFFFBFA);
-const Color shrineBackgroundWhite = Colors.white;
 
 final DateTime launchDate = DateTime(2000);
 
 void pushTo(BuildContext context, Widget screen) {
   Navigator.push(context, CupertinoPageRoute(builder: (c) => screen));
 }
+void dialog(context,Widget screen)=>showDialog(context: context, builder: (c)=>screen);
 
 Widget simpleLoader()=>Center(child: CircularProgressIndicator());
 

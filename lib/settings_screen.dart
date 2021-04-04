@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
+import 'package:rate_your_time_new/themes/select_theme_widget.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -12,32 +13,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: ListView(
-        children: [
-          ListTile(
-            title: Text("Rate on Google play"),
-          ),
-          ListTile(
-            title: Text("Select theme"),
-          ),
-          ListTile(
-            onTap: (){
-              pushTo(context, AppsUsageScreen());
-            },
-            title: Text("Track app usage (beta)"),
-          ),
-          ListTile(
-            onTap: (){
-              showAboutDialog(context: context,applicationIcon: Icon(Icons.font_download),applicationName: "Rate your time",applicationVersion: '1.0',children: [
-                Text('This is a demo description for the application')
-              ]);
-            },
-            title: Text("Licences"),
-          ),
+          children: [
+            DrawerHeader(child: Container()),
+            ListTile(
+              title: Text("Rate on Google play"),
+            ),
+            ListTile(
+              onTap: (){
+                dialog(context,  SelectThemeWidget(),);
+              },
+              title: Text("Select theme"),
+            ),
+            ListTile(
+              onTap: (){
+                pushTo(context, AppsUsageScreen());
+              },
+              title: Text("Track app usage (beta)"),
+            ),
+            ListTile(
+              onTap: (){
+                showAboutDialog(context: context,applicationIcon: Icon(Icons.font_download),applicationName: "Rate your time",applicationVersion: '1.0',children: [
+                  Text('This is a demo description for the application')
+                ]);
+              },
+              title: Text("Licences"),
+            ),
 
-        ],
-      ),
+          ],
+        ),
     );
   }
 }

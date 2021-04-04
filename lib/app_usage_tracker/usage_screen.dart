@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,8 +51,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
        else
          distinctApps.add(element);
      });
-     distinctApps
-         .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
+     distinctApps.sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
    }catch(e){
      error=true;
    }
@@ -115,7 +115,8 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
             if (distinctApps.isNotEmpty)
               Container(
                 height: 250,
-                child: RallyPieChart(
+                // decoration: TestDeco(),
+                child: false?Container():RallyPieChart(
                   heroLabel: "",
                   wholeAmount: sum,
                   heroAmount: '',
@@ -140,7 +141,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                        width: 100,
                        child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal:8.0),
-                                child: LinearProgressIndicator(value:1-i.totalTimeInForeground/sum,minHeight: 14,valueColor: AlwaysStoppedAnimation(i.color),),
+                                child: LinearProgressIndicator(value:i.totalTimeInForeground/sum,minHeight: 14,valueColor: AlwaysStoppedAnimation(i.color),backgroundColor:Colors.grey,),
                               ),
                      ),
                             leading:  Padding(
@@ -196,4 +197,51 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   }
 
   _errorView() =>Center(child: Text("An error occured"));
+}
+
+
+class TestDeco extends Decoration{
+  @override
+  BoxPainter createBoxPainter([onChanged]) {
+    return TestPainter();
+  }
+
+}
+
+
+class TestPainter extends BoxPainter{
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    const strokeWidth = 4.0;
+    final outerRadius = math.min(
+      configuration.size.width,
+      configuration.size.height,
+    ) /
+        2;
+    final outerRect = Rect.fromCircle(
+      center: configuration.size.center(offset),
+      radius: outerRadius - strokeWidth * 3,
+    );
+    final innerRect = Rect.fromCircle(
+      center: configuration.size.center(offset),
+      radius: outerRadius - strokeWidth * 15,
+    );
+
+    // Paint each arc with spacing.
+    var cumulativeSpace = 0.0;
+    var cumulativeTotal = 0.0;
+      var colors=[Colors.red,Colors.blue,Colors.green,Colors.yellow,Colors.grey,Colors.purple,Colors.brown];
+    double startAngle =0 ;
+    double sweepAngle = 1;
+    for (final segment in [0,1,2,3,4,5]) {
+      final paint = Paint()..color = colors[segment];
+      canvas.drawArc(outerRect, startAngle, sweepAngle, true, paint);
+      startAngle += 1;
+    }
+    // final paint = Paint()..color = Colors.white;
+    // canvas.drawCircle(outerRect.center, innerRect.height/2, paint);
+
+
+  }
+
 }
