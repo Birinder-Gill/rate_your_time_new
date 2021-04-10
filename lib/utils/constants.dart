@@ -132,6 +132,8 @@ class Constants {
   static const String getRangeHours = 'getRangeHours';
 
   static const String CHANNEL_NAME = 'name';
+
+  static const String saveSettings='saveSettings';
 }
 
 
@@ -140,7 +142,15 @@ double letterSpacingOrNone(double letterSpacing) => letterSpacing;
 
 final DateTime launchDate = DateTime(2000);
 
-void pushTo(BuildContext context, Widget screen) {
+void pushTo(BuildContext context, Widget screen,{bool replace=false,bool clear=false}) {
+  if(clear){
+    Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (c)=>screen), (route) => false);
+    return;
+  }
+  if(replace){
+    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (c) => screen));
+    return;
+  }
   Navigator.push(context, CupertinoPageRoute(builder: (c) => screen));
 }
 void dialog(context,Widget screen)=>showDialog(context: context, builder: (c)=>screen);
