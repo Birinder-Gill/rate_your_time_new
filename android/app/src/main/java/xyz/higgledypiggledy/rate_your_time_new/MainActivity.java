@@ -3,6 +3,7 @@ package xyz.higgledypiggledy.rate_your_time_new;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -24,12 +25,15 @@ import io.flutter.plugin.common.MethodChannel;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmClockProvider;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmNotificationService;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.TimeUtil;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.Injection;
 
 public class MainActivity extends FlutterActivity {
 
 
     public static final int LAST_HOUR = 22;
+    private static final String SHARED_PREFERENCES_NAME = "rateYourTimePrefs";
+
 
     ArrayList<HashMap<String, Object>> loadAlarms() {
         Cursor data = getContentResolver().query(AlarmClockProvider.ALARMS_URI,
@@ -59,6 +63,27 @@ public class MainActivity extends FlutterActivity {
         return list;
 
     }
+
+    public int getInt(String key){
+        return getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getInt(key,0);
+    }
+
+    public void setInt(String key,int value,final MethodChannel.Result result){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                final boolean success=getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().putInt(key,value).commit();
+                AppExecutors.getInstance().mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        result.success(success);
+                    }
+                });
+            }
+        });
+    }
+
+
 
 
     public void createAlarms() {
@@ -106,8 +131,6 @@ public class MainActivity extends FlutterActivity {
                 case "getApps": {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                         UsageTracker.getRunningApps(getApplicationContext(),result::success);
-
-
                     }
                     return;
                 }
@@ -120,11 +143,21 @@ public class MainActivity extends FlutterActivity {
                     return;
                 }
                 case "isAccessGranted": {
+                    //TODO:CHECK SOMETHING FOR OLDER VERSIONS MAYBE HIDE STATS SCREEN IF ANDROID VERSION IS OLDER
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         result.success(isUsageAccessGranted());
                     }
                     return;
                 }
+                case "getInt": {
+                    result.success(getInt(call.argument("key")));
+                    return;
+                }
+                case "setInt": {
+                    setInt(call.argument("key"), call.argument("value"),result);
+                    return;
+                }
+
 
             }
         });

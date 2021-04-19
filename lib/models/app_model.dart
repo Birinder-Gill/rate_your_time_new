@@ -50,6 +50,16 @@ class AppModel with ChangeNotifier {
         primaryTextColor: Color(0xff000000),
         secondaryTextColor: Color(0xff000000),
         isDark: true),
+MyTheme(
+        primaryColor: Color(0xffb2b3b5),
+        primaryLightColor: Color(0xffbdbfbe),
+        primaryDarkColor: Color(0xffc1c1c1),
+        secondaryColor: Color(0xff060707),
+        secondaryLightColor: Color(0xff5c5c5e),
+        secondaryDarkColor: Color(0xff000000),
+        primaryTextColor: Color(0xff4c4c4e),
+        secondaryTextColor: Color(0xff969696),
+        isDark: true),
 
 
   ];
@@ -79,7 +89,7 @@ class AppModel with ChangeNotifier {
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith(
-                  (states) => theme.primaryDarkColor))),
+                  (states) => theme.secondaryColor))),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
               foregroundColor: MaterialStateProperty.resolveWith(
@@ -87,12 +97,23 @@ class AppModel with ChangeNotifier {
       outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
               foregroundColor: MaterialStateProperty.resolveWith(
-                  (states) => theme.primaryDarkColor))),
+                  (states) => theme.primaryTextColor))),
       scaffoldBackgroundColor: theme.primaryLightColor,
       cardColor: theme.primaryColor,
       dialogBackgroundColor: theme.primaryColor,
       dialogTheme: DialogTheme(),
       errorColor: theme.secondaryDarkColor,
+      timePickerTheme: TimePickerThemeData(
+        backgroundColor: theme.primaryColor,
+        hourMinuteTextColor: theme.secondaryColor,
+        hourMinuteColor: theme.primaryDarkColor,
+        dayPeriodTextColor: theme.secondaryColor,
+        dayPeriodColor: theme.primaryColor,
+        dialBackgroundColor: theme.primaryDarkColor,
+        dialHandColor: theme.secondaryColor,
+        dialTextColor: theme.primaryTextColor,
+
+        ),
       buttonTheme: ButtonThemeData(
         colorScheme: theme.colorScheme,
         textTheme: ButtonTextTheme.normal,
@@ -100,8 +121,9 @@ class AppModel with ChangeNotifier {
       highlightColor: theme.secondaryLightColor,
       primaryIconTheme: _customIconTheme(base.iconTheme, theme),
       inputDecorationTheme: InputDecorationTheme(
+
         border: CutCornersBorder(
-          borderSide: BorderSide(color: theme.primaryDarkColor, width: 0.5),
+          borderSide: BorderSide(color: theme.primaryTextColor, width: 0.5),
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' show lerpDouble;
@@ -124,11 +126,17 @@ class CutCornersBorder extends OutlineInputBorder {
   }
 }
 
+void nextTick(void Function() run) {
+  Timer.run(run);
+}
+
 class Constants {
   static const String getHours = "getHours";
   static const String addAlarms = "addAlarms";
   static const String getAlarms = "getAlarms";
   static const String deleteAlarms = "deleteAlarms";
+  static const String getInt = 'getInt';
+  static const String setInt = 'setInt';
   static const String getRangeHours = 'getRangeHours';
 
   static const String CHANNEL_NAME = 'name';

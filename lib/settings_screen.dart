@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
+import 'package:rate_your_time_new/select_time_screen.dart';
 import 'package:rate_your_time_new/themes/select_theme_widget.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
@@ -38,6 +39,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]);
               },
               title: Text("Licences"),
+            ),
+            ListTile(
+              onTap: (){
+                pushTo(context, SelectTimeScreen());
+              },
+              title: Text("Select time"),
             ),
 
           ],

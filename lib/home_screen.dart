@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +7,7 @@ import 'package:rate_your_time_new/alarms_screen.dart';
 import 'package:rate_your_time_new/hours_screen.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:rate_your_time_new/utils/shared_prefs.dart';
 import 'package:rate_your_time_new/widgets/backdrop.dart';
 import 'package:rate_your_time_new/widgets/page_status.dart';
 
@@ -22,6 +25,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
 
   // Animation Controller for expanding/collapsing the cart menu.
   AnimationController _expandingController;
+
+  bool firstDay=false;
 
 
   @override
@@ -49,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       model.calculateDatePickerHeight();
+      _checkFirstDay();
+
     });
     _controller = AnimationController(
       vsync: this,
@@ -81,20 +88,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
   Widget build(BuildContext context) {
     model = Provider.of<HoursModel>(context);
     if (!model.loaded) model.getHours();
-    return true
-        ? backdrop()
-        : Scaffold(
-            appBar: AppBar(
-              title: Text("${TimeUtils.formatDate(model.date)}"),
-              actions: [
-                IconButton(icon: Icon(Icons.date_range), onPressed: pickDate),
-                IconButton(icon: Icon(Icons.alarm), onPressed: gotoAlarms),
-              ],
-            ),
-            body: model.loading
-                ? simpleLoader()
-                : HoursScreen(model.hours, model.average),
-          );
+    // return true
+    //     ?
+    return backdrop();
+        // : Scaffold(
+        //     appBar: AppBar(
+        //       title: Text("${TimeUtils.formatDate(model.date)}"),
+        //       actions: [
+        //         IconButton(icon: Icon(Icons.date_range), onPressed: pickDate),
+        //         IconButton(icon: Icon(Icons.alarm), onPressed: gotoAlarms),
+        //       ],
+        //     ),
+        //     body: model.loading
+        //         ? simpleLoader()
+        //         : HoursScreen(model.hours, model.average),
+        //   );
   }
 
   void pickDate() {
@@ -118,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
         menuController: _expandingController,
         child: Backdrop(
           pickDate: pickDate,
-            frontLayer: HoursScreen(model.hours, model.average),
+            frontLayer: HoursScreen(model.hours, model.average,this.firstDay),
             backLayer:  Container(
               height: double.infinity,
               color: theme.primaryColor,
@@ -147,4 +155,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
 
   @override
   String get restorationId => 'rate_your_time_app_state';
+
+  Future<void> _checkFirstDay() async {
+    this.firstDay = await SharedPrefs.isFirstDayAtHome();
+    nextTick((){
+      setState(() { });
+    });
+  }
 }
+
