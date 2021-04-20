@@ -11,6 +11,8 @@ class SharedPrefs {
 
   static MethodChannel Function()  _channel = ()=> MethodChannel(Constants.CHANNEL_NAME);
 
+  static String themeIndex='themeIndex';
+
   static Future<bool> getBool(String key) async {
     int result = await _channel().invokeMethod(Constants.getInt,{
       'key':'$key'

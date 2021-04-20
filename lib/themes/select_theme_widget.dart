@@ -21,12 +21,15 @@ class _SelectThemeWidgetState extends State<SelectThemeWidget> {
           Expanded(
             child: Wrap(
               alignment: WrapAlignment.spaceEvenly,
-                children: List<Widget>.from(model.themes.map((e) => GestureDetector(
-                    onTap: (){
-                      model.setTheme(e);
-                      // Navigator.pop(context);
-                    },
-                    child: ThemeTile(e,height: 70,)))),
+                children: [
+                  for(int i=0;i<model.themes.length;i++)
+                    GestureDetector(
+                        onTap: (){
+                          model.setTheme(i);
+                          // Navigator.pop(context);
+                        },
+                        child: ThemeTile(model.themes[i],height: 70,))
+                ],
               ),
           ),
         ],

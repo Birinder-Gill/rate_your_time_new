@@ -22,7 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               onTap: (){
-                dialog(context,  SelectThemeWidget(),);
+                dialog(context,  AlertDialog(content: SelectThemeWidget()),);
               },
               title: Text("Select theme"),
             ),

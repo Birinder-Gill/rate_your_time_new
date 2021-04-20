@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:rate_your_time_new/themes/theme_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:rate_your_time_new/utils/shared_prefs.dart';
 
 const defaultLetterSpacing = 0.03;
 const mediumLetterSpacing = 0.04;
@@ -66,8 +67,9 @@ MyTheme(
 
   ThemeData get _defaultTheme => _buildFromMyTheme(themes[1]);
 
-  setTheme(MyTheme theme) {
-    this.selectedTheme = _buildFromMyTheme(theme);
+  setTheme(int index) {
+    this.selectedTheme = _buildFromMyTheme(themes[index]);
+    SharedPrefs.setInt(SharedPrefs.themeIndex, index);
     notifyListeners();
   }
 

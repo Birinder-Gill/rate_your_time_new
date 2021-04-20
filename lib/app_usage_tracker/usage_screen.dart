@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
@@ -78,6 +79,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     _granted = await channel.invokeMethod('isAccessGranted');
     if(_granted)
       getApps();
+    else {
+      setState(() {});
+    }
   }
 
   @override
@@ -87,9 +91,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
       appBar: AppBar(
         // title: Text("$_granted - $granted"),
         actions: [
-          !granted?
-            ElevatedButton(onPressed: openSettings, child: Text("Settings")):
-            ElevatedButton(onPressed: loading?null:getApps, child:loading?simpleLoader(): Text("Get apps"))
+            TextButton(onPressed: loading?null:getApps, child:loading?simpleLoader(): Text("Get apps"))
         ],
       ),
 
@@ -101,17 +103,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
             Text(timeInSecs(sum),textAlign: TextAlign.center,style: theme.headline4,),
             Text('in last 24 hrs',textAlign: TextAlign.center),
 
-            // loading?simpleLoader():Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: TextFormField(
-            //
-            //     onChanged: (e){
-            //       setState(() {
-            //         search=e;
-            //       });
-            //     },
-            //   ),
-            // ),
+
             if (distinctApps.isNotEmpty)
               Container(
                 height: 250,
@@ -193,7 +185,16 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   }
 
   gotoSettingsView() {
-    return Center(child: Text("Make tutorial on how to give access rights here"));
+    return Center(child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Make tutorial on how to give access rights here",textAlign: TextAlign.center,),
+          ElevatedButton(onPressed: openSettings, child: Text("Settings"))
+        ],
+      ),
+    ));
   }
 
   _errorView() =>Center(child: Text("An error occured"));
