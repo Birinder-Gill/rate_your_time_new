@@ -38,7 +38,7 @@ class AppModel with ChangeNotifier {
         secondaryColor: shrineBrown900,
         secondaryLightColor: shrineBrown600,
         secondaryDarkColor: shrineErrorRed,
-        secondaryTextColor: shrineBrown900,
+        secondaryTextColor: Colors.white,
         primaryTextColor: shrineBrown900,
         isDark: false),
     MyTheme(
@@ -91,7 +91,9 @@ MyTheme(
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith(
-                  (states) => theme.secondaryColor))),
+                  (states) => theme.secondaryColor),
+          foregroundColor:MaterialStateProperty.resolveWith(
+                  (states) => theme.secondaryTextColor) )),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
               foregroundColor: MaterialStateProperty.resolveWith(
