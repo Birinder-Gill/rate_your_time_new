@@ -6,12 +6,12 @@ import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.local.Loca
 public class DataRepository implements DataSource {
 
     private static DataRepository INSTANCE;
-    private final LocalDataSource dataSource;
+    private final DataSource dataSource;
 
-    private DataRepository(LocalDataSource dataSource){
+    private DataRepository(DataSource dataSource){
         this.dataSource=dataSource;
     }
-    public static DataRepository getInstance(LocalDataSource dataSource){
+    public static DataRepository getInstance(DataSource dataSource){
         if(INSTANCE==null)
         {
             INSTANCE=new DataRepository(dataSource);

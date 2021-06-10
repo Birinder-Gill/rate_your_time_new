@@ -34,13 +34,6 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
         vsync: this, duration: Duration(milliseconds: _duration));
 
     Timer(Duration(seconds: 1), (){_wTimeC.forward();});
-    // _wTimeC.forward();
-    // _wTimeC.addListener(() {
-    //   if (_wTimeC.isCompleted) _sTimeC.forward();
-    // });
-    // _sTimeC.addListener(() {
-    //   if (_sTimeC.isCompleted || _sTimeC.value == 0) setState(() {});
-    // });
     super.initState();
   }
 
@@ -123,11 +116,8 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
 
   Future<void> _savePrefs() async {
     if (_formKey.currentState.validate()) {
-      //TODO: SET WAKEUP HOUR AND SLEEP HOUR VALUES
-      final int wHour = 0;
-      final int sHour = 0;
-      await SharedPrefs.setInt(SharedPrefs.wakeUpHour, wHour);
-      await SharedPrefs.setInt(SharedPrefs.sleepHour, sHour);
+      await Utils.deleteAlarms();
+     await Utils.createAlarms();
       pushTo(context, HomeScreen(), clear: true);
     }
   }

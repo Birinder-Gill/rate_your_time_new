@@ -34,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if(await SharedPrefs.getBool(SharedPrefs.tutorialSeen)){
       int wakeUpTime = await SharedPrefs.getInt(SharedPrefs.wakeUpHour);
       int sleepTime = await SharedPrefs.getInt(SharedPrefs.sleepHour);
+      consoleLog("$wakeUpTime - $sleepTime");
       if(wakeUpTime!=0 && sleepTime!=0){
         pushTo(context, HomeScreen(),clear:true);
         return;

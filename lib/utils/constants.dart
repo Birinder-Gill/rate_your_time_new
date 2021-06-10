@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/widgets.dart';
+import 'package:rate_your_time_new/utils/shared_prefs.dart';
 
 class CutCornersBorder extends OutlineInputBorder {
   const CutCornersBorder({
@@ -189,5 +191,21 @@ class TimeUtils{
   static String parseTimeHours(int time,{int minutes=0}) {
     if(time>12) return "${time-12} pm";
     return "$time${minutes>0?":$minutes":''} am";
+  }
+
+}
+
+class Utils{
+  static Future createAlarms() async {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    return channel.invokeMethod(Constants.addAlarms,{
+      'wHour':await SharedPrefs.getInt(SharedPrefs.wakeUpHour),
+      'sHour':await SharedPrefs.getInt(SharedPrefs.sleepHour)
+    });
+  }
+
+  static deleteAlarms() {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    return channel.invokeMethod(Constants.deleteAlarms);
   }
 }

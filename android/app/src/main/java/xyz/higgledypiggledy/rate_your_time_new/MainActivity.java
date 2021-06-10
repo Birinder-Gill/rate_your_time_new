@@ -85,13 +85,13 @@ public class MainActivity extends FlutterActivity {
 
 
 
-
-    public void createAlarms() {
-        for (int i = 7; i <= MainActivity.LAST_HOUR; i++) {
+boolean test=false;
+    public void createAlarms(int wake, int sleep) {
+        for (int i = wake+1; i <= sleep; i++) {
             final Calendar c = Calendar.getInstance();
             final int secondsPastMidnight = 5 +
                     i * 3600 +
-                    ((c.get(Calendar.MINUTE) + 1) * 60);
+                    ((test?(c.get(Calendar.MINUTE) + 1):0) * 60);//TODO:SET MINUTES TO ZERO
             AlarmNotificationService.newAlarm(
                     getApplicationContext(), secondsPastMidnight);
         }
@@ -115,25 +115,29 @@ public class MainActivity extends FlutterActivity {
                 }
 
                 case "addAlarms": {
-                    createAlarms();
+                    createAlarms(call.argument("wHour"),call.argument("sHour"));
                     result.success("Alarms created...probably");
                     return;
                 }
+
                 case "getAlarms": {
                     result.success(loadAlarms());
                     return;
                 }
+
                 case "deleteAlarms": {
                     deleteAllAlarms();
                     result.success("Alarms deleted");
                     return;
                 }
+
                 case "getApps": {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                         UsageTracker.getRunningApps(getApplicationContext(),result::success);
                     }
                     return;
                 }
+
                 case "openSettings": {
                     Intent intent = null;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -142,6 +146,7 @@ public class MainActivity extends FlutterActivity {
                     startActivity(intent);
                     return;
                 }
+
                 case "isAccessGranted": {
                     //TODO:CHECK SOMETHING FOR OLDER VERSIONS MAYBE HIDE STATS SCREEN IF ANDROID VERSION IS OLDER
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -63,13 +63,12 @@ public class LocalDataSource implements DataSource {
     ArrayList<HashMap<String, Object>> getHoursFor(int day, int month, int year){
         List<Hour> list = (dao.getDataFor(day, month, year));
         final ArrayList<HashMap<String,Object>> finalList=new ArrayList<>();
-        int tempTime=7;
+        int tempTime=7;//TODO:: WAKE UP HOUR HERE
         for(Hour h:list)
         {
             int time=h.getTime();
             while(tempTime<time)
             {
-                Log.d(TAG, "run() called inside while loop tempTime = "+tempTime+" time = "+time);
                 finalList.add(new Hour(0,tempTime,day,month,year).toMap());
                 tempTime++;
             }
@@ -77,13 +76,12 @@ public class LocalDataSource implements DataSource {
             tempTime++;
         }
         Calendar now =Calendar.getInstance();
-        Log.d(TAG, "getHoursFor() called with: day = [" + day + "], month = [" + month + "], year = [" + year + "]");
-        Log.d(TAG, "getHoursFor: "+now.toString());
+        
+        ///IF THE USER FETCHING HOURS OF A PREVIOUS DATE, WE SHOULD SHOW DATA FROM WAKE UP TO SLEEP TIME.
+        /// IF USER'S LAST RATING WAS SOME HOURS BEFORE SLEEP TIME, IT FILLS THOSE HOURS WITH 0s
         if((!finalList.isEmpty()) && (now.get(Calendar.MONTH)==month) && (now.get(Calendar.YEAR)==year) && (now.get(Calendar.DATE)>day)){
-            Log.d(TAG, "getHoursFor: IN CONDITION");
              int lastHour = (int)finalList.get(finalList.size()-1).get("time");
             while(lastHour!= MainActivity.LAST_HOUR){
-                Log.d(TAG, "getHoursFor: IN LOOP");
                 finalList.add(new Hour(0,lastHour,day,month,year).toMap());
                 lastHour++;
             }

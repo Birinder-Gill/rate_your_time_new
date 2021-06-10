@@ -8,6 +8,7 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/splash_screen.dart';
 import 'package:rate_your_time_new/themes/gallery_theme_data.dart';
 import 'package:rate_your_time_new/themes/shrine_theme.dart';
+import 'package:rate_your_time_new/utils/test_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
           builder: (_,model,__)=>MaterialApp(
             debugShowCheckedModeBanner: false,
             theme:model.selectedTheme,
-            home:SplashScreen(),
+            home:false?TestScreen():SplashScreen(),
           ),
         ),
       ),

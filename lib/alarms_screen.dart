@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:rate_your_time_new/utils/shared_prefs.dart';
 
 class AlarmsScreen extends StatefulWidget {
   @override
@@ -20,15 +21,13 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   }
 
   deleteAlarms() {
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
-    channel.invokeMethod(Constants.deleteAlarms).then((value) {
+    Utils.deleteAlarms().then((value) {
       getAllAlarms();
     });
   }
 
-  createAlarms() {
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
-    channel.invokeMethod(Constants.addAlarms).then((value) {
+  createAlarms() async {
+    Utils.createAlarms().then((value) {
       getAllAlarms();
     });
   }

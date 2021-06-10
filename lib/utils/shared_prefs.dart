@@ -21,6 +21,7 @@ class SharedPrefs {
   }
 
   static Future<int> getInt(String key) async {
+    consoleLog("IN get int $key");
     int result = await _channel().invokeMethod(Constants.getInt,{
       'key':'$key'
     });
@@ -29,6 +30,7 @@ class SharedPrefs {
 
 
   static Future<void> setInt(String key,int value) async {
+    consoleLog("IN Set int $key:$value");
     bool result = await _channel().invokeMethod(Constants.setInt,{
       'key':'$key',
       'value':value
