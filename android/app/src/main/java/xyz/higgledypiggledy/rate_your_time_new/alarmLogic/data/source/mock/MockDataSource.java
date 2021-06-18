@@ -42,7 +42,7 @@ public class MockDataSource implements DataSource {
         int lastTime =((now.get(Calendar.MONTH)==month) && (now.get(Calendar.YEAR)==year) && (now.get(Calendar.DATE)>day)?22:now.get(Calendar.HOUR_OF_DAY));
         for(int i= 7;i<lastTime;i++)
         {
-           finalList.add(new Hour(random.nextInt(5),i,day,month,year).toMap());
+           finalList.add(new Hour(random.nextInt(4)+1,i,day,month,year).toMap());
          }
         return finalList;
     }

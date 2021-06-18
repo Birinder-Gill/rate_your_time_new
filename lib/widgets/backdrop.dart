@@ -33,16 +33,17 @@ class _FrontLayer extends StatelessWidget {
     // When the menu page is shown, tapping this area will close the menu
     // page and reveal the product page.
     final Widget pageTopArea = Container(
-      height: 40,
+      height: 45,
       alignment: AlignmentDirectional.centerStart,
       child: Center(
-        child: OutlinedButton.icon(
-          // style: ButtonStyle(elevation: MaterialStateProperty.resolveWith((states) => 0.0)),
-            onPressed: () {
-              _openAd();
-            },
-            icon: Icon(Icons.font_download),
-            label: Text("Watch an Ad")),
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: ToggleButtons(children: [
+            Icon(Icons.calendar_view_day),
+            Icon(Icons.view_week),
+            Icon(Icons.date_range)
+          ], isSelected: [true,false,false]),
+        ),
       ),
     );
 
@@ -72,10 +73,9 @@ class _FrontLayer extends StatelessWidget {
     );
   }
 
-  void _openAd() {
-    //TODO:IMPLEMENT OPEN AD METHOD
-  }
 }
+
+
 
 class _BackdropTitle extends AnimatedWidget {
   const _BackdropTitle({

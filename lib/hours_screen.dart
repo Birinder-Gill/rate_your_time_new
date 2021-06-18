@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:rate_your_time_new/widgets/hour_widget.dart';
 
 class HoursScreen extends StatelessWidget {
   final List<Hour> hours;
@@ -19,21 +22,115 @@ class HoursScreen extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: hoursLength == 0
-              ? _emptyView(context)
-              : ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: hoursLength,
-                  itemBuilder: (BuildContext context, int i) =>
-                      HourWidget(hours[i]),
-                ),
+          child: SingleChildScrollView(
+            // physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                // Text("Today's performance chart"),
+                // OutlinedButton(onPressed: (){}, child: Text('Show today\'s app usage report')),
+                   if(hoursLength == 0) _emptyView(context),
+                    for(final i in hours) HourWidget(i),
+
+              ],
+            ),
+          ),
         ),
         if (average > 0) _average(context)
       ],
     );
   }
 
-  Widget _average(context) => Material(
+  Widget _average(context) =>true? Row(
+    children: [
+      Container(
+        height: 90,
+        // padding: const EdgeInsets.symmetric(vertical:4.0),
+        child: Material(
+          color: Theme.of(context).primaryColor,
+          elevation: 4,
+          child: SizedBox(
+            width: 60,
+            child: Center(
+              child: Text(
+                'Average',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).textTheme.bodyText2.color),
+              ),
+            ),
+          ),
+        ),
+      ),
+      Expanded(
+        // child: Dismissible(
+        //    background: Container(color: Colors.red,),
+        //   secondaryBackground: Container(color: Colors.green,),
+
+        // key: ValueKey(hour.id),
+        child: Container(
+          height: 90,
+          // padding: const EdgeInsets.symmetric(vertical:4.0),
+          decoration: const BoxDecoration(
+              border:const Border(
+                left: const BorderSide(),
+              )),
+          child: Material(
+            color: Theme.of(context).primaryColor,
+            elevation: 4,
+            child: Stack(
+              children: [
+                Container(
+                    padding:const EdgeInsets.symmetric(vertical: 16.0, horizontal: 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+
+                        LinearProgressIndicator(
+                            minHeight: 16,
+                            backgroundColor: Colors.white,
+                            value: (average),
+                            valueColor:AlwaysStoppedAnimation(Theme.of(context).accentColor)
+                          // style: ProgressStyle(
+                          //   borderRadius: BorderRadius.zero,
+                          //   depth: 2,
+                          //   accent: true?_color[hour.worth]:Theme.of(context).accentColor,
+                          //   variant:true?_color[hour.worth]: Theme.of(context).accentColor,
+                          // ),
+                        ),
+                      ],
+                    )),
+                // Positioned(
+                //   top: 0,
+                //   right: 0,
+                //   child: Random.secure().nextInt(100)%2==0?Padding(
+                //     padding: const EdgeInsets.only(right:18.0,top: 4),
+                //     child: Icon(Icons.directions_bike_sharp,size: 16,color: _color[hour.worth],),
+                //   ):TextButton.icon(
+                //     onPressed: () {},
+                //     label: Text(
+                //       "Activity",
+                //       style: TextStyle(fontSize: 12),
+                //     ),
+                //     style: ButtonStyle(
+                //         minimumSize: MaterialStateProperty.resolveWith((states) => Size(12, 24)),
+                //         tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                //     ),
+                //     icon: Icon(
+                //       Icons.add,
+                //       size: 12,
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        ),
+        // ),
+      ),
+    ],
+  ): Material(
         elevation: 4,
         color: Theme.of(context).primaryColorDark,
         child: Row(
@@ -112,195 +209,3 @@ class HoursScreen extends StatelessWidget {
   }
 }
 
-class HourWidget extends StatelessWidget {
-  final Hour hour;
-
-  static const _color={
-    0:Colors.grey,
-    1:Colors.red,
-    2:Color(0xffbf360c),
-    3:Colors.orange,
-    4:Colors.lightGreen,
-    5:Colors.green
-  };
-
-  static const _emojis={
-    1:Icons.face_outlined,
-    2:Icons.face_outlined,
-    3:Icons.face_outlined,
-    4:Icons.tag_faces_sharp,
-    5:Icons.emoji_emotions_rounded
-  };
-
-
-
-
-  const HourWidget(this.hour);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final double emojiSize=14;
-    return  Material(
-      elevation: hour.worth>0?4:0,
-      child: Row(
-        children: [
-          SizedBox(
-            width: 50,
-            child: Text(
-              '  ${TimeUtils.parseTimeHours(hour.time)}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                  color: theme.textTheme.bodyText2.color
-                      .withOpacity(hour.worth > 0 ? .9 : .5)),
-            ),
-          ),
-          Expanded(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        left: BorderSide(color: _color[hour.worth]),
-                    )),
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16.0, horizontal: 0),
-                child: Column(
-                  children: [
-                    if(hour.worth>0)Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                       Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: Icon(
-                            _emojis[hour.worth],
-                            size: emojiSize,
-                            color: _color[hour.worth],
-                          ),
-                        ),
-                        Expanded(child:Container()),
-                        TextButton.icon(
-                          onPressed: () {},
-                          label: Text(
-                            "Activity",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                          style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.resolveWith((states) => Size(12, 24)),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap
-                          ),
-                          icon: Icon(
-                            Icons.add,
-                            size: 12,
-                          ),
-                        ),
-                        TextButton.icon(
-                          onPressed: () {},
-                          label: Text(
-                            "Note",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                          style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.resolveWith((states) => Size(12, 24)),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap
-                          ),
-                          icon: Icon(
-                            Icons.add,
-                            size: 12,
-                          ),
-                        )
-                      ],
-                    ),
-                    hour.worth==0?_emptyWorthCard(theme):LinearProgressIndicator(
-                      minHeight: 16,
-                      backgroundColor: Colors.white,
-                      value: (hour.worth / 5),
-                      valueColor:AlwaysStoppedAnimation(Theme.of(context).accentColor)
-                      // style: ProgressStyle(
-                      //   borderRadius: BorderRadius.zero,
-                      //   depth: 2,
-                      //   accent: true?_color[hour.worth]:Theme.of(context).accentColor,
-                      //   variant:true?_color[hour.worth]: Theme.of(context).accentColor,
-                      // ),
-                    ),
-                  ],
-                )),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _emptyWorthCard(ThemeData theme) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Icon(Icons.outlet),
-          Icon(
-            Icons.close,
-            color: theme.primaryColorDark,
-          ),
-          Text(
-            'Value not entered',
-            style: TextStyle(color: theme.primaryColorDark),
-          ),
-          Icon(Icons.close, color: theme.primaryColorDark),
-        ],
-      );
-
-  Widget y(double i) => SizedBox(
-        height: i,
-      );
-
-// Color getColor(Hour hour) =>hour.worth==1?Colors.red:hour.worth==2?Colors.deepOrange:hour.worth==3?Colors.orange:hour.worth==4?Colors.yellow:Colors.green;
-}
-
-///OLD HOUR WIDGET
-/**Card(
-    color: hour.worth > 0 ? theme.cardColor : theme.scaffoldBackgroundColor,
-    borderOnForeground: hour.worth == 0,
-    elevation: hour.worth > 0 ? 1 : 0,
-    child: Container(
-    decoration: BoxDecoration(
-    border: hour.worth > 0
-    ? null
-    : Border.all(color: theme.primaryColorDark),
-    borderRadius: BorderRadius.all(Radius.circular(4))),
-    child: Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-    const SizedBox(
-    height: 4,
-    ),
-    SizedBox(
-    width: 50,
-    child: Text(
-    '${TimeUtils.parseTimeHours(hour.time)}',
-    style: TextStyle(
-    color: theme.textTheme.bodyText2.color
-    .withOpacity(hour.worth > 0 ? 1 : .5)),
-    )),
-    const SizedBox(
-    height: 42,
-    ),
-    Expanded(
-    child: (hour.worth > 0)
-    ? LinearProgressIndicator(
-    minHeight: 4,
-    valueColor: AlwaysStoppedAnimation<Color>(
-    Theme.of(context).accentColor),
-    backgroundColor: Theme.of(context).primaryColorDark,
-    value: (hour.worth / 5),
-    )
-    : _emptyWorthCard(theme),
-    ),
-    const SizedBox(
-    height: 4,
-    ),
-    // Text("${hour.date}/${hour.month}/${hour.year}"),
-    // const SizedBox(height: 4,),
-    ],
-    ),
-    ),
-    ),
-    ),**/

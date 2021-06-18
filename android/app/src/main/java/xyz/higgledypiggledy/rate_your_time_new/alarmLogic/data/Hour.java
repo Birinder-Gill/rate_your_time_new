@@ -84,7 +84,7 @@ public class Hour {
         return worth;
     }
 
-    public HashMap<String, Integer> toMap(){
+    public HashMap toMap(){
         HashMap<String, Integer> map = new HashMap<String, Integer>();
         map.put("id",this.id);
         map.put("worth",this.worth);

@@ -149,6 +149,12 @@ class Constants {
 
 double letterSpacingOrNone(double letterSpacing) => letterSpacing;
 
+Widget adButton() =>OutlinedButton.icon(
+    onPressed: () {
+      // _openAd();
+    },
+    icon: Icon(Icons.font_download),
+    label: Text("Watch an Ad"));
 
 final DateTime launchDate = DateTime(2000);
 
@@ -192,6 +198,13 @@ class TimeUtils{
     if(time>12) return "${time-12} pm";
     return "$time${minutes>0?":$minutes":''} am";
   }
+  static String parseTimeRange(int time,{int minutes=0}) {
+    final bef=time-1;
+
+    if(time>12) return "${bef-12} - ${time-12} pm";
+    return "$bef - $time${minutes>0?":$minutes":''} am";
+  }
+
 
 }
 
@@ -209,3 +222,61 @@ class Utils{
     return channel.invokeMethod(Constants.deleteAlarms);
   }
 }
+
+
+
+
+
+
+
+///OLD HOUR WIDGET
+/**Card(
+    color: hour.worth > 0 ? theme.cardColor : theme.scaffoldBackgroundColor,
+    borderOnForeground: hour.worth == 0,
+    elevation: hour.worth > 0 ? 1 : 0,
+    child: Container(
+    decoration: BoxDecoration(
+    border: hour.worth > 0
+    ? null
+    : Border.all(color: theme.primaryColorDark),
+    borderRadius: BorderRadius.all(Radius.circular(4))),
+    child: Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+    const SizedBox(
+    height: 4,
+    ),
+    SizedBox(
+    width: 50,
+    child: Text(
+    '${TimeUtils.parseTimeHours(hour.time)}',
+    style: TextStyle(
+    color: theme.textTheme.bodyText2.color
+    .withOpacity(hour.worth > 0 ? 1 : .5)),
+    )),
+    const SizedBox(
+    height: 42,
+    ),
+    Expanded(
+    child: (hour.worth > 0)
+    ? LinearProgressIndicator(
+    minHeight: 4,
+    valueColor: AlwaysStoppedAnimation<Color>(
+    Theme.of(context).accentColor),
+    backgroundColor: Theme.of(context).primaryColorDark,
+    value: (hour.worth / 5),
+    )
+    : _emptyWorthCard(theme),
+    ),
+    const SizedBox(
+    height: 4,
+    ),
+    // Text("${hour.date}/${hour.month}/${hour.year}"),
+    // const SizedBox(height: 4,),
+    ],
+    ),
+    ),
+    ),
+    ),**/
