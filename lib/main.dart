@@ -27,12 +27,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<HoursModel>.value(value: hoursModel)
       ],
       child: ChangeNotifierProvider<AppModel>(
+
         create: (BuildContext context) =>_appModel,
         child: Consumer<AppModel>(
           builder: (_,model,__)=>MaterialApp(
             debugShowCheckedModeBanner: false,
             theme:model.selectedTheme,
-            home:false?TestScreen():SplashScreen(),
+            home:false?
+            TestScreen():SplashScreen(),
           ),
         ),
       ),

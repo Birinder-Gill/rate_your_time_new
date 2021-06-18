@@ -69,7 +69,7 @@ public class LocalDataSource implements DataSource {
             int time=h.getTime();
             while(tempTime<time)
             {
-                finalList.add(new Hour(0,tempTime,day,month,year).toMap());
+                finalList.add(new Hour(0,tempTime,day,month,year,0,"").toMap());
                 tempTime++;
             }
             finalList.add(h.toMap());
@@ -82,7 +82,7 @@ public class LocalDataSource implements DataSource {
         if((!finalList.isEmpty()) && (now.get(Calendar.MONTH)==month) && (now.get(Calendar.YEAR)==year) && (now.get(Calendar.DATE)>day)){
              int lastHour = (int)finalList.get(finalList.size()-1).get("time");
             while(lastHour!= MainActivity.LAST_HOUR){
-                finalList.add(new Hour(0,lastHour,day,month,year).toMap());
+                finalList.add(new Hour(0,lastHour,day,month,year,0,"").toMap());
                 lastHour++;
             }
         }

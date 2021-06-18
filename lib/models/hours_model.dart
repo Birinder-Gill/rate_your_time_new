@@ -58,6 +58,22 @@ class HoursModel with ChangeNotifier{
     }
   }
 
+  updateHour(int id,int activity,String note)async{
+    final body = {
+      "id":id,
+      'activity':activity,
+      'note':note
+    };
+    consoleLog("Calling gethours with body $body");
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    await channel.invokeMethod(Constants.updateHour,body);
+    hours.singleWhere((element) => element.id==id).update(activity:activity,note:note);
+    notifyListeners();
+
+  }
+
+
+
 
   void refresh(DateTime date){
     if(date==null) return;
@@ -93,6 +109,8 @@ class Hour {
     this.id,
     this.time,
     this.worth,
+    this.activity,
+    this.note
   });
 
   int date;
@@ -101,6 +119,8 @@ class Hour {
   int id;
   int time;
   int worth;
+  int activity;
+  String note;
 
   factory Hour.fromJson(String str) => Hour.fromMap(json.decode(str));
 
@@ -113,6 +133,8 @@ class Hour {
     id: json["id"] == null ? null : json["id"],
     time: json["time"] == null ? null : json["time"],
     worth: json["worth"] == null ? null : json["worth"],
+    activity: json["activity"] == null ? null : json["activity"],
+    note: json["note"] == null ? null : json["note"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -122,5 +144,12 @@ class Hour {
     "id": id == null ? null : id,
     "time": time == null ? null : time,
     "worth": worth == null ? null : worth,
+    "activity":activity,
+    "note":note
   };
+
+  void update({int activity, String note}) {
+    this.activity=activity;
+    this.note=note;
+  }
 }

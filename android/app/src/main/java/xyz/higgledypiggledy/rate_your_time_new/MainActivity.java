@@ -25,6 +25,7 @@ import io.flutter.plugin.common.MethodChannel;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmClockProvider;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmNotificationService;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.TimeUtil;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.local.ProgressDatabase;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.Injection;
 
@@ -162,10 +163,26 @@ boolean test=false;
                     setInt(call.argument("key"), call.argument("value"),result);
                     return;
                 }
+                case "updateHour": {
+                    updateHour(call.argument("id"), call.argument("activity"),call.argument("note"),result);
+                    return;
+                }
+                
 
 
             }
         });
+    }
+    
+    private void updateHour(int id, int activity, String note, MethodChannel.Result result){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                ProgressDatabase.getInstance(getApplicationContext()).dao().updateHour(id,activity,note);
+                result.success(true);
+            }
+        });
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

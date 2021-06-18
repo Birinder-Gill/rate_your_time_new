@@ -22,7 +22,7 @@ public class ClickReciever extends BroadcastReceiver {
         int date= c.get(Calendar.DAY_OF_MONTH);
         int month=c.get(Calendar.MONTH);
         int year=c.get(Calendar.YEAR);
-        final Hour hour=new Hour(worth,time,date,month,year);
+        final Hour hour=new Hour(worth,time,date,month,year,0,"");
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {

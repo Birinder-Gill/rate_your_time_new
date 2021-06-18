@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -93,10 +94,15 @@ class HourWidget extends StatelessWidget {
                   Positioned(
                     top: 0,
                     right: 0,
-                    child:Padding(
+                    child:Random.secure().nextInt(100)%2==0?Padding(
                       padding: const EdgeInsets.only(right:18.0,top: 4),
-                      child:  Random.secure().nextInt(100)%2==0?Icon(Icons.directions_bike_sharp,size: 16,color: _color[hour.worth],): Icon(Icons.add,size: 16,),
-                    )
+                      child:  Icon(Icons.directions_bike_sharp,size: 16,color: _color[hour.worth],)
+                    ): InkWell(child: Padding(
+                      padding: const EdgeInsets.only(right:18.0,top: 4),
+                      child: Icon(Icons.add,size: 16,),
+                    ),onTap: (){
+                      showCupertinoModalPopup(context: context, builder: (c)=>EditHourWidget(hour));
+                    },),
                   ),
                 ],
               ),
@@ -130,3 +136,22 @@ class HourWidget extends StatelessWidget {
 
 // Color getColor(Hour hour) =>hour.worth==1?Colors.red:hour.worth==2?Colors.deepOrange:hour.worth==3?Colors.orange:hour.worth==4?Colors.yellow:Colors.green;
 }
+
+class EditHourWidget extends StatefulWidget {
+  final Hour hour;
+
+  EditHourWidget(this.hour);
+  @override
+  _EditHourWidgetState createState() => _EditHourWidgetState();
+}
+
+class _EditHourWidgetState extends State<EditHourWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Update hour"),
+      content: Text("Assign an activity and a comment to the hour"),
+    );
+  }
+}
+

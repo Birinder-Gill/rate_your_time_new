@@ -3,7 +3,7 @@ package xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.local;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-
+import androidx.room.Update;
 
 
 import java.util.List;
@@ -18,4 +18,7 @@ public interface ProgressDao{
 
     @Insert
     void addHour(Hour hour);
+
+    @Query("UPDATE entries SET activity=:activity, note=:note WHERE id=:id")
+    void updateHour(int id,int activity,String note);
 }

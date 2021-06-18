@@ -140,6 +140,8 @@ class Constants {
   static const String getInt = 'getInt';
   static const String setInt = 'setInt';
   static const String getRangeHours = 'getRangeHours';
+  static const String updateHour = 'updateHour';
+
 
   static const String CHANNEL_NAME = 'name';
 
@@ -221,6 +223,9 @@ class Utils{
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     return channel.invokeMethod(Constants.deleteAlarms);
   }
+
+
+
 }
 
 
