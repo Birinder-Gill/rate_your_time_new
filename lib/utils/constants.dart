@@ -223,9 +223,6 @@ class Utils{
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     return channel.invokeMethod(Constants.deleteAlarms);
   }
-
-
-
 }
 
 

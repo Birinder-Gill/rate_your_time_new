@@ -179,7 +179,12 @@ boolean test=false;
             @Override
             public void run() {
                 ProgressDatabase.getInstance(getApplicationContext()).dao().updateHour(id,activity,note);
-                result.success(true);
+               AppExecutors.getInstance().mainThread().execute(new Runnable() {
+                   @Override
+                   public void run() {
+                       result.success(true);
+                   }
+               });
             }
         });
 
