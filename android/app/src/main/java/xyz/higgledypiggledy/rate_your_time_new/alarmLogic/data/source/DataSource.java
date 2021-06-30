@@ -22,6 +22,7 @@ public interface DataSource
 
     void getDataFor(int day, int month, int year, LoadProgressCallback callback);
     public void getDataFor(int day1, int month1, int year1, int day2, int month2, int year2, RangeProgressCallback callback);
+    
 
 
 

@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/alarms_screen.dart';
-import 'package:rate_your_time_new/hours_screen.dart';
+import 'package:rate_your_time_new/hours_screens/day_view.dart';
+import 'package:rate_your_time_new/hours_screens/week_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
@@ -16,7 +17,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,RestorationMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with TickerProviderStateMixin, RestorationMixin {
   HoursModel model;
 
   final RestorableDouble _expandingTabIndex = RestorableDouble(0);
@@ -26,8 +28,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
   // Animation Controller for expanding/collapsing the cart menu.
   AnimationController _expandingController;
 
-  bool firstDay=false;
-
+  bool firstDay = false;
 
   @override
   void restoreState(RestorationBucket oldBucket, bool initialRestore) {
@@ -55,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       model.calculateDatePickerHeight();
       _checkFirstDay();
-
     });
     _controller = AnimationController(
       vsync: this,
@@ -88,21 +88,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
   Widget build(BuildContext context) {
     model = Provider.of<HoursModel>(context);
     if (!model.loaded) model.getHours();
-    // return true
-    //     ?
+
     return backdrop();
-        // : Scaffold(
-        //     appBar: AppBar(
-        //       title: Text("${TimeUtils.formatDate(model.date)}"),
-        //       actions: [
-        //         IconButton(icon: Icon(Icons.date_range), onPressed: pickDate),
-        //         IconButton(icon: Icon(Icons.alarm), onPressed: gotoAlarms),
-        //       ],
-        //     ),
-        //     body: model.loading
-        //         ? simpleLoader()
-        //         : HoursScreen(model.hours, model.average),
-        //   );
+
   }
 
   void pickDate() {
@@ -118,39 +106,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
     pushTo(context, AlarmsScreen());
   }
 
-
   backdrop() {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     return PageStatus(
-        cartController: _controller,
-        menuController: _expandingController,
-        child: Backdrop(
+      cartController: _controller,
+      menuController: _expandingController,
+      child: Backdrop(
           pickDate: pickDate,
-            frontLayer: HoursScreen(model.hours, model.average,this.firstDay),
-            backLayer:  Container(
-              height: double.infinity,
-              color: theme.primaryColor,
-              child: Theme(
-                data: theme.copyWith(
+          frontLayer:true?WeekViewScreen() : DayViewScreen(model.hours, model.average, this.firstDay),
+          backLayer: Container(
+            height: double.infinity,
+            color: theme.primaryColor,
+            child: Theme(
+              data: theme.copyWith(
                   colorScheme: theme.colorScheme.copyWith(
-                    onPrimary: theme.accentColor,
-                    primary: theme.primaryColorDark,
-                    onSurface: theme.colorScheme.onPrimary,
-
-                  )
-                ),
-                child: CalendarDatePicker(
-                  key: model.datePickerKey,
-                  initialDate: model.date,
-                    firstDate: launchDate,
-                    lastDate: DateTime.now(), onDateChanged: (DateTime value) {
-                    model.refresh(value);
-                  },),
+                onPrimary: theme.accentColor,
+                primary: theme.primaryColorDark,
+                onSurface: theme.colorScheme.onPrimary,
+              )),
+              child: CalendarDatePicker(
+                key: model.datePickerKey,
+                initialDate: model.date,
+                firstDate: launchDate,
+                lastDate: DateTime.now(),
+                onDateChanged: (DateTime value) {
+                  model.refresh(value);
+                },
               ),
             ),
-            frontTitle: Text("${TimeUtils.formatDate(model.date)}"),
-            backTitle:  Text("Select date"),
-            controller: _controller));
+          ),
+          frontTitle: Text("${TimeUtils.formatDate(model.date)}"),
+          backTitle: Text("Select date"),
+          controller: _controller),
+    );
   }
 
   @override
@@ -158,9 +146,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin,R
 
   Future<void> _checkFirstDay() async {
     this.firstDay = await SharedPrefs.isFirstDayAtHome();
-    nextTick((){
-      setState(() { });
+    nextTick(() {
+      setState(() {});
     });
   }
 }
-

@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rate_your_time_new/home_screen.dart';
-import 'package:rate_your_time_new/hours_screen.dart';
-import 'package:rate_your_time_new/select_time_screen.dart';
 import 'package:rate_your_time_new/models/app_model.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/splash_screen.dart';
-import 'package:rate_your_time_new/themes/gallery_theme_data.dart';
-import 'package:rate_your_time_new/themes/shrine_theme.dart';
 import 'package:rate_your_time_new/utils/test_screen.dart';
 
 void main() {

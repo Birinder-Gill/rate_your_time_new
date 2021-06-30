@@ -6,14 +6,14 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/hour_widget.dart';
 
-class HoursScreen extends StatelessWidget {
+class DayViewScreen extends StatelessWidget {
   final List<Hour> hours;
 
   final double average;
 
   final bool firstDay;
 
-  HoursScreen(this.hours, this.average, this.firstDay);
+  DayViewScreen(this.hours, this.average, this.firstDay);
 
   get hoursLength => hours?.length ?? 0;
 
@@ -26,11 +26,8 @@ class HoursScreen extends StatelessWidget {
             // physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                // Text("Today's performance chart"),
-                // OutlinedButton(onPressed: (){}, child: Text('Show today\'s app usage report')),
                    if(hoursLength == 0) _emptyView(context),
                     for(final i in hours) HourWidget(i),
-
               ],
             ),
           ),
@@ -40,7 +37,7 @@ class HoursScreen extends StatelessWidget {
     );
   }
 
-  Widget _average(context) =>true? Row(
+  Widget _average(context) => Row(
     children: [
       Container(
         height: 90,
@@ -92,37 +89,9 @@ class HoursScreen extends StatelessWidget {
                             backgroundColor: Colors.white,
                             value: (average),
                             valueColor:AlwaysStoppedAnimation(Theme.of(context).accentColor)
-                          // style: ProgressStyle(
-                          //   borderRadius: BorderRadius.zero,
-                          //   depth: 2,
-                          //   accent: true?_color[hour.worth]:Theme.of(context).accentColor,
-                          //   variant:true?_color[hour.worth]: Theme.of(context).accentColor,
-                          // ),
                         ),
                       ],
                     )),
-                // Positioned(
-                //   top: 0,
-                //   right: 0,
-                //   child: Random.secure().nextInt(100)%2==0?Padding(
-                //     padding: const EdgeInsets.only(right:18.0,top: 4),
-                //     child: Icon(Icons.directions_bike_sharp,size: 16,color: _color[hour.worth],),
-                //   ):TextButton.icon(
-                //     onPressed: () {},
-                //     label: Text(
-                //       "Activity",
-                //       style: TextStyle(fontSize: 12),
-                //     ),
-                //     style: ButtonStyle(
-                //         minimumSize: MaterialStateProperty.resolveWith((states) => Size(12, 24)),
-                //         tapTargetSize: MaterialTapTargetSize.shrinkWrap
-                //     ),
-                //     icon: Icon(
-                //       Icons.add,
-                //       size: 12,
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -130,30 +99,7 @@ class HoursScreen extends StatelessWidget {
         // ),
       ),
     ],
-  ): Material(
-        elevation: 4,
-        color: Theme.of(context).primaryColorDark,
-        child: Row(
-          children: [
-            const Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: const Text('Average'),
-            ),
-            Expanded(
-              child: LinearProgressIndicator(
-                minHeight: 8,
-                value: average,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).accentColor),
-                backgroundColor: Theme.of(context).primaryColor,
-              ),
-            ),
-            const SizedBox(
-              height: 70,
-            )
-          ],
-        ),
-      );
+  );
 
   Widget _firstTimeEmptyView(BuildContext context) => Center(
           child: Padding(

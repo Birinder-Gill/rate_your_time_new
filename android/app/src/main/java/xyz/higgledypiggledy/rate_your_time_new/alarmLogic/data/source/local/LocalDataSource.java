@@ -102,7 +102,6 @@ public class LocalDataSource implements DataSource {
 
             while(!c1.after(c2))
             {
-
                 int d=c1.get(Calendar.DATE);
                 int m=c1.get(Calendar.MONTH);
                 int y=c1.get(Calendar.YEAR);
