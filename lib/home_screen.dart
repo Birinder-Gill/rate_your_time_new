@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/alarms_screen.dart';
 import 'package:rate_your_time_new/hours_screens/day_view.dart';
+import 'package:rate_your_time_new/hours_screens/month_view.dart';
 import 'package:rate_your_time_new/hours_screens/week_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -29,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen>
   AnimationController _expandingController;
 
   bool firstDay = false;
+
+  int toggle =0;
 
   @override
   void restoreState(RestorationBucket oldBucket, bool initialRestore) {
@@ -89,7 +93,22 @@ class _HomeScreenState extends State<HomeScreen>
     model = Provider.of<HoursModel>(context);
     if (!model.loaded) model.getHours();
 
-    return backdrop();
+    return Stack(
+      children: [
+        backdrop(),
+        SafeArea(
+          child: Material(
+            child: IconButton(icon: Icon(Icons.ac_unit_sharp), onPressed: (){
+              if(toggle==3)toggle=1;
+              else toggle++;
+              setState(() {
+
+              });
+            }),
+          ),
+        )
+      ],
+    );
 
   }
 
@@ -106,14 +125,14 @@ class _HomeScreenState extends State<HomeScreen>
     pushTo(context, AlarmsScreen());
   }
 
-  backdrop() {
+  Widget backdrop() {
     final theme = Theme.of(context);
     return PageStatus(
       cartController: _controller,
       menuController: _expandingController,
       child: Backdrop(
           pickDate: pickDate,
-          frontLayer:true?WeekViewScreen() : DayViewScreen(model.hours, model.average, this.firstDay),
+          frontLayer:toggle==1?MonthView() :toggle==2? DayViewScreen(model.hours, model.average, this.firstDay):WeekViewScreen(),
           backLayer: Container(
             height: double.infinity,
             color: theme.primaryColor,

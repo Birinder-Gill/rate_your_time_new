@@ -22,7 +22,7 @@ class GroupedBarChart extends StatelessWidget {
     return new charts.BarChart(
       seriesList,
       animate: animate,
-      barGroupingType: charts.BarGroupingType.grouped,
+      barGroupingType: charts.BarGroupingType.stacked,
     );
   }
 
@@ -56,12 +56,12 @@ class GroupedBarChart extends StatelessWidget {
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: desktopSalesData,
       ),
-      new charts.Series<OrdinalSales, String>(
-        id: 'Mobile',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: mobileSalesData,
-      ),
+      // new charts.Series<OrdinalSales, String>(
+      //   id: 'Mobile',
+      //   domainFn: (OrdinalSales sales, _) => sales.year,
+      //   measureFn: (OrdinalSales sales, _) => sales.sales,
+      //   data: mobileSalesData,
+      // ),
     ];
   }
 }
