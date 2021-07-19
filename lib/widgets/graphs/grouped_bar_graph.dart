@@ -1,6 +1,7 @@
 /// Bar chart example
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:rate_your_time_new/utils/constants.dart';
 
 class GroupedBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -8,9 +9,9 @@ class GroupedBarChart extends StatelessWidget {
 
   GroupedBarChart(this.seriesList, {this.animate});
 
-  factory GroupedBarChart.withSampleData() {
+  factory GroupedBarChart.withHoursData(List<SingleDayAverage> av) {
     return new GroupedBarChart(
-      _createSampleData(),
+      _createSampleData(av),
       // Disable animations for image tests.
       animate: true,
     );
@@ -27,34 +28,13 @@ class GroupedBarChart extends StatelessWidget {
   }
 
   /// Create series list with multiple series
-  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
-    final desktopSalesData = [
-      new OrdinalSales('Mon', 5),
-      new OrdinalSales('Tue', 25),
-      new OrdinalSales('Wed', 100),
-      new OrdinalSales('Thu', 75),
-      new OrdinalSales('Fri', 85),
-      new OrdinalSales('Sat', 65),
-      new OrdinalSales('Sun', 75),
-    ];
-
-
-    final mobileSalesData = [
-      new OrdinalSales('Mon', 10),
-      new OrdinalSales('Tue', 15),
-      new OrdinalSales('Wed', 25),
-      new OrdinalSales('Thu', 45),
-      new OrdinalSales('Fri', 15),
-      new OrdinalSales('Sat', 50),
-      new OrdinalSales('Sun', 45),
-    ];
-
+  static List<charts.Series<SingleDayAverage, String>> _createSampleData(List<SingleDayAverage> av) {
     return [
-      new charts.Series<OrdinalSales, String>(
-        id: 'Desktop',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: desktopSalesData,
+      new charts.Series<SingleDayAverage, String>(
+        id: 'mobile',
+        domainFn: (SingleDayAverage sales, _) => Utils.shortDays[sales.date.weekday],
+        measureFn: (SingleDayAverage sales, _) => sales.worth,
+        data: av,
       ),
       // new charts.Series<OrdinalSales, String>(
       //   id: 'Mobile',
@@ -67,9 +47,9 @@ class GroupedBarChart extends StatelessWidget {
 }
 
 /// Sample ordinal data type.
-class OrdinalSales {
-  final String year;
-  final int sales;
+class SingleDayAverage {
+  final DateTime date;
+  final double worth;
 
-  OrdinalSales(this.year, this.sales);
+  SingleDayAverage(this.date, this.worth);
 }

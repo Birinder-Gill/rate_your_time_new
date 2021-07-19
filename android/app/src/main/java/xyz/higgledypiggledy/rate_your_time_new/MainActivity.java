@@ -3,13 +3,11 @@ package xyz.higgledypiggledy.rate_your_time_new;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.Settings;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -104,14 +102,28 @@ boolean test=false;
         MethodChannel channel = new MethodChannel(flutterEngine.getDartExecutor(), "name");
         channel.setMethodCallHandler((call, result) -> {
             switch (call.method) {
-                case "getHours": {
+                case "getDayData": {
                     Calendar cal = Calendar.getInstance();
                     Injection.provideRepository(getApplicationContext()).getDataFor(call.argument("date"), call.argument("month"),call.argument("year"), result::success);
                     return;
                 }
                 case "getRangeHours": {
                     Calendar cal = Calendar.getInstance();
-                    Injection.provideRepository(getApplicationContext()).getDataFor(cal.get(Calendar.DATE), cal.get(Calendar.MONTH) - 1, cal.get(Calendar.YEAR), cal.get(Calendar.DATE), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), result::success);
+                    Injection.provideRepository(getApplicationContext()).getRangeDataFor(cal.get(Calendar.DATE), cal.get(Calendar.MONTH) - 1, cal.get(Calendar.YEAR), cal.get(Calendar.DATE), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), result::success);
+                    return;
+                }
+                
+                case "getWeekData": {
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(call.argument("year"), call.argument("month"),call.argument("date"));
+                    Injection.provideRepository(getApplicationContext()).getWeekData(cal, result::success);
+                    return;
+                }
+
+                case "getMonthData": {
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(call.argument("year"), call.argument("month"),call.argument("date"));
+                    Injection.provideRepository(getApplicationContext()).getMonthData(cal, result::success);
                     return;
                 }
 
@@ -175,18 +187,7 @@ boolean test=false;
     }
     
     private void updateHour(int id, int activity, String note, MethodChannel.Result result){
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                ProgressDatabase.getInstance(getApplicationContext()).dao().updateHour(id,activity,note);
-               AppExecutors.getInstance().mainThread().execute(new Runnable() {
-                   @Override
-                   public void run() {
-                       result.success(true);
-                   }
-               });
-            }
-        });
+        Injection.provideRepository(getApplicationContext()).updateHour(id,activity,note,result);
 
     }
 

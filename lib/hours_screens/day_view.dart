@@ -2,42 +2,58 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
+import 'package:rate_your_time_new/providers/day_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/hour_widget.dart';
 
-class DayViewScreen extends StatelessWidget {
-  final List<Hour> hours;
 
-  final double average;
-
+class DayViewWrapper extends StatelessWidget {
   final bool firstDay;
 
-  DayViewScreen(this.hours, this.average, this.firstDay);
-
-  get hoursLength => hours?.length ?? 0;
+  DayViewWrapper(this.firstDay);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            // physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                   if(hoursLength == 0) _emptyView(context),
-                    for(final i in hours) HourWidget(i),
-              ],
+    return ChangeNotifierProvider.value(
+      value:
+      DayModel(date: Provider.of<HoursModel>(context, listen: false).date),
+      child: DayViewScreen(firstDay),
+    );
+  }
+}
+
+
+
+class DayViewScreen extends StatelessWidget {
+   final bool firstDay;
+
+  DayViewScreen(this.firstDay);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<DayModel>(
+      builder: (_,model,__)=>!model.loaded?simpleLoader():Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              // physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                     if((model.hours?.length ?? 0) == 0) _emptyView(context),
+                      for(var i in model.hours) HourWidget(i),
+                ],
+              ),
             ),
           ),
-        ),
-        if (average > 0) _average(context)
-      ],
+          if (model.average > 0) _average(context,model.average)
+        ],
+      ),
     );
   }
 
-  Widget _average(context) => Row(
+  Widget _average(context,average) => Row(
     children: [
       Container(
         height: 90,

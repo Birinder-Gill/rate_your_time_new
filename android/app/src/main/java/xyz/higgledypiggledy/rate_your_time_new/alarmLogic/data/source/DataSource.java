@@ -4,14 +4,16 @@ package xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
+import io.flutter.plugin.common.MethodChannel;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Hour;
 
 
 public interface DataSource
 {
-
+    
     interface LoadProgressCallback {
         void onProgressLoaded(ArrayList<HashMap<String,Object>> list);
     }
@@ -21,8 +23,15 @@ public interface DataSource
     }
 
     void getDataFor(int day, int month, int year, LoadProgressCallback callback);
-    public void getDataFor(int day1, int month1, int year1, int day2, int month2, int year2, RangeProgressCallback callback);
+    void getRangeDataFor(int day1, int month1, int year1, int day2, int month2, int year2, RangeProgressCallback callback);
     
+    ///GET DATA FOR THIS WEEK
+    void getWeekData(Calendar cal, RangeProgressCallback success);
+
+    ///GET DATA FOR THIS MONTH
+    void getMonthData(Calendar cal, RangeProgressCallback success);
+
+    void updateHour(int id, int activity, String note, MethodChannel.Result result);
 
 
 

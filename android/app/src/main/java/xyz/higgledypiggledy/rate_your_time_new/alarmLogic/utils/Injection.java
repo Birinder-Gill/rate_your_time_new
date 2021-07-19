@@ -14,8 +14,8 @@ public class Injection {
         {
             throw new IllegalArgumentException("Context can not be null");
         }
-        LocalDataSource source=LocalDataSource.getInstance(ProgressDatabase.getInstance(context).dao(), AppExecutors.getInstance());
-//        MockDataSource source =MockDataSource.getInstance();
+//        LocalDataSource source=LocalDataSource.getInstance(ProgressDatabase.getInstance(context).dao(), AppExecutors.getInstance());
+        MockDataSource source =MockDataSource.getInstance();
         return DataRepository.getInstance(source);
     }
 }

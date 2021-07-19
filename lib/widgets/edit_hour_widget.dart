@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/data/activities.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
+import 'package:rate_your_time_new/providers/day_model.dart';
 
 class EditHourWidget extends StatefulWidget {
   final Hour hour;
@@ -27,7 +28,7 @@ class _EditHourWidgetState extends State<EditHourWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Wrap(
-            children: List<Widget>.from(activities.map((e) => Padding(
+            children: List<Widget>.from(activities.values.map((e) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
@@ -69,7 +70,7 @@ class _EditHourWidgetState extends State<EditHourWidget> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Provider.of<HoursModel>(context, listen: false)
+                        Provider.of<DayModel>(context, listen: false)
                             .updateHour(widget.hour.id, activityId, commentC.text);
                         Navigator.pop(context);
                       },

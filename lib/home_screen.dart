@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   bool firstDay = false;
 
-  int toggle =0;
+  int toggle = 0;
 
   @override
   void restoreState(RestorationBucket oldBucket, bool initialRestore) {
@@ -66,8 +65,7 @@ class _HomeScreenState extends State<HomeScreen>
       duration: const Duration(milliseconds: 450),
       value: 1,
     );
-    // Save state restoration animation values only when the cart page
-    // fully opens or closes.
+
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed ||
           status == AnimationStatus.dismissed) {
@@ -91,25 +89,24 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     model = Provider.of<HoursModel>(context);
-    if (!model.loaded) model.getHours();
-
     return Stack(
       children: [
         backdrop(),
         SafeArea(
           child: Material(
-            child: IconButton(icon: Icon(Icons.ac_unit_sharp), onPressed: (){
-              if(toggle==3)toggle=1;
-              else toggle++;
-              setState(() {
-
-              });
-            }),
+            child: IconButton(
+                icon: Icon(Icons.ac_unit_sharp),
+                onPressed: () {
+                  if (toggle == 3)
+                    toggle = 1;
+                  else
+                    toggle++;
+                  setState(() {});
+                }),
           ),
         )
       ],
     );
-
   }
 
   void pickDate() {
@@ -132,7 +129,11 @@ class _HomeScreenState extends State<HomeScreen>
       menuController: _expandingController,
       child: Backdrop(
           pickDate: pickDate,
-          frontLayer:toggle==1?MonthView() :toggle==2? DayViewScreen(model.hours, model.average, this.firstDay):WeekViewScreen(),
+          frontLayer: toggle == 1
+              ? MonthViewWrapper()
+              : toggle == 2
+                  ? DayViewWrapper(this.firstDay)
+                  : WeekViewWrapper(),
           backLayer: Container(
             height: double.infinity,
             color: theme.primaryColor,

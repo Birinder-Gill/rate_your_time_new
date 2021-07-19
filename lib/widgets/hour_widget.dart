@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rate_your_time_new/data/activities.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
+import 'package:rate_your_time_new/providers/day_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/edit_hour_widget.dart';
 
@@ -24,7 +27,7 @@ class HourWidget extends StatelessWidget {
     5: Icons.emoji_emotions_rounded
   };
 
-  const HourWidget(this.hour);
+  HourWidget(this.hour);
 
   get elevation => 1.0;
 
@@ -90,7 +93,7 @@ class HourWidget extends StatelessWidget {
                                   valueColor: AlwaysStoppedAnimation(
                                       Theme.of(context).accentColor)),
                           Text(
-                           " ${ hour.note??''}",
+                            " ${hour.note ?? ''}",
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme
@@ -99,31 +102,34 @@ class HourWidget extends StatelessWidget {
                           )
                         ],
                       )),
-                 if(hour.worth>0) Positioned(
-                    top: 0,
-                    right: 0,
-                    child: hour.activity != 0
-                        ? Padding(
-                            padding: const EdgeInsets.only(right: 18.0, top: 4),
-                            child: Icon(
-                              Icons.directions_bike_sharp,
-                              size: 16,
-                              color: _color[hour.worth],
-                            ))
-                        : InkWell(
-                            child: Padding(
+                  if (hour.worth > 0)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: hour.activity != 0
+                          ? Padding(
                               padding:
                                   const EdgeInsets.only(right: 18.0, top: 4),
-                              child: Icon(
-                                Icons.add,
-                                size: 16,
+                              child: activities[hour.activity].icon)
+                          : InkWell(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 18.0, top: 4),
+                                child: Icon(
+                                  Icons.add,
+                                  size: 16,
+                                ),
                               ),
+                              onTap: () {
+                                dialog(
+                                    context,
+                                    ChangeNotifierProvider.value(
+                                        value: Provider.of<DayModel>(context,
+                                            listen: false),
+                                        child: EditHourWidget(hour)));
+                              },
                             ),
-                            onTap: () {
-                              dialog(context, EditHourWidget(hour));
-                            },
-                          ),
-                  ),
+                    ),
                 ],
               ),
             ),
@@ -153,4 +159,4 @@ class HourWidget extends StatelessWidget {
   Widget y(double i) => SizedBox(
         height: i,
       );
- }
+}
