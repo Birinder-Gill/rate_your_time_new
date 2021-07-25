@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
+import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class DayModel with ChangeNotifier {
@@ -25,19 +26,12 @@ class DayModel with ChangeNotifier {
     if (_loading) return;
     _loading = true;
     try {
-      final body = {
-        "date": date.day,
-        'month': date.month,
-        'year': date.year
-      };
-      consoleLog("Calling gethours with body $body");
-      final channel = MethodChannel(Constants.CHANNEL_NAME);
-      final hours = await channel.invokeMethod(Constants.getDayData, body);
+      final hours = await ApiHelper.getData(date);
       consoleLog("Hours returned = $hours");
 
       setData(hours);
-    } catch (e) {
-      consoleLog("Error Caught = $e");
+    } catch (e,trace) {
+      consoleLog("Error Caught = $e,$trace");
     } finally {
       _loading = false;
     }
@@ -48,7 +42,7 @@ class DayModel with ChangeNotifier {
       'activity': activity,
       'note': note
     };
-    consoleLog("Calling gethours with body $body");
+    consoleLog("Calling updTE hours with body $body");
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     await channel.invokeMethod(Constants.updateHour, body);
     hours.singleWhere((element) => element.id == id).update(

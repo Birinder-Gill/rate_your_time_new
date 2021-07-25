@@ -22,7 +22,7 @@ public class DataRepository implements DataSource {
     }
     @Override
     public void getDataFor(int day,int month,int year,LoadProgressCallback callback) {
-        dataSource.getDataFor(day,(month-1),year,callback);
+        dataSource.getDataFor(day,(month),year,callback);
     }
 
     @Override

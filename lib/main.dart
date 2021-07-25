@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rate_your_time_new/models/app_model.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
+import 'package:rate_your_time_new/providers/app_model.dart';
 import 'package:rate_your_time_new/splash_screen.dart';
 import 'package:rate_your_time_new/utils/test_screen.dart';
 

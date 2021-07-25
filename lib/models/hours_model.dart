@@ -21,8 +21,18 @@ class HoursModel with ChangeNotifier {
 
   double patePickerHeight = 0.0;
 
+  final selections = [true,false,false];
+
   bool get loading => _loading;
   DateTime date = DateTime.now();
+  int toggle=0;
+
+  changeViewToggle(int e){
+    selections[toggle] = false;
+   toggle=e;
+    selections[toggle]=true;
+    notifyListeners();
+  }
 
   void calculateDatePickerHeight() {
     final RenderBox renderBoxRed = (datePickerKey.currentContext

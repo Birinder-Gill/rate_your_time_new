@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
+import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class WeekModel with ChangeNotifier {
@@ -20,12 +22,8 @@ class WeekModel with ChangeNotifier {
     if (_loading) return;
     _loading = true;
     try {
-      final body = {"date": date.day, 'month': date.month, 'year': date.year};
-      consoleLog("Calling gethours with body $body");
-      final channel = MethodChannel(Constants.CHANNEL_NAME);
-      Map hourData = await channel.invokeMethod(Constants.getWeekData, body);
-      this.hd=hourData;
-      // return;
+      Map hourData = await ApiHelper.getRangeData(date, (await TimeUtils.getWeekStart(date)));
+      this.hd=hourData; //used for debugging(can be removed in production)
       this.av = await compute<Map,
           AverageDataModel>(Utils.parseAveragesData, hourData);
       consoleLog("Hours returned = $av");

@@ -9,6 +9,7 @@ import 'package:rate_your_time_new/widgets/edit_hour_widget.dart';
 
 class HourWidget extends StatelessWidget {
   final Hour hour;
+  final void Function(int id, int activityId, String text) updateHour;
 
   static const _color = {
     0: Colors.grey,
@@ -27,7 +28,7 @@ class HourWidget extends StatelessWidget {
     5: Icons.emoji_emotions_rounded
   };
 
-  HourWidget(this.hour);
+  HourWidget(this.hour, {this.updateHour});
 
   get elevation => 1.0;
 
@@ -123,10 +124,7 @@ class HourWidget extends StatelessWidget {
                               onTap: () {
                                 dialog(
                                     context,
-                                    ChangeNotifierProvider.value(
-                                        value: Provider.of<DayModel>(context,
-                                            listen: false),
-                                        child: EditHourWidget(hour)));
+                                    EditHourWidget(hour,updateHour:updateHour));
                               },
                             ),
                     ),

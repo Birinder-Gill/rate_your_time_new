@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rate_your_time_new/models/app_model.dart';
+import 'file:///C:/Users/Birinder/AndroidStudioProjects/rate_your_time_new/lib/providers/app_model.dart';
 import 'package:rate_your_time_new/themes/theme_model.dart';
 
 class SelectThemeWidget extends StatefulWidget {

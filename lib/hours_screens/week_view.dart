@@ -10,9 +10,14 @@ import 'package:rate_your_time_new/widgets/graphs/grouped_bar_graph.dart';
 import 'widgets/activity_av_card.dart';
 
 class WeekViewWrapper extends StatelessWidget {
+  final bool firstDay;
+
+  WeekViewWrapper(this.firstDay);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
+
       value:
           WeekModel(date: Provider.of<HoursModel>(context, listen: false).date),
       child: WeekViewScreen(),

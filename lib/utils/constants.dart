@@ -145,6 +145,8 @@ class Constants {
   static const String deleteAlarms = "deleteAlarms";
   static const String getInt = 'getInt';
   static const String setInt = 'setInt';
+  static const String getString = 'getString';
+  static const String setString = 'setString';
   static const String getRangeHours = 'getRangeHours';
   static const String updateHour = 'updateHour';
   static const String getWeekData = 'getWeekData';
@@ -164,7 +166,6 @@ Widget adButton() => OutlinedButton.icon(
     icon: Icon(Icons.font_download),
     label: Text("Watch an Ad"));
 
-final DateTime launchDate = DateTime(2000);
 
 void pushTo(BuildContext context, Widget screen,
     {bool replace = false, bool clear = false}) {
@@ -199,25 +200,49 @@ double sumOf<T>(Iterable<T> where, num Function(T e) fun) {
 }
 
 class TimeUtils {
+  ///RETURNS DATE IN dd/mm/yyyy
   static String formatDate(DateTime date) {
     return "${date.day}/${date.month}/${date.year}";
   }
 
+  ///RETURNS DATE IN dd/mm/yyyy hh:mm
   static String formatDateTime(DateTime date) {
     return "${date.day}/${date.month}/${date.year} ${parseTimeHours(date.hour, minutes: date.minute)}";
   }
 
+  ///CONVERT 24 hrs INTO 12 hr(am pm) FORMAT
   static String parseTimeHours(int time, {int minutes = 0}) {
     if (time > 12) return "${time - 12} pm";
     return "$time${minutes > 0 ? ":$minutes" : ''} am";
   }
 
+  ///TAKES AN HOUR AND RETURNS A STRING OF ONE HOUR RANGE i.e 18 becomes 5 - 6 pm
   static String parseTimeRange(int time, {int minutes = 0}) {
     final bef = time - 1;
 
     if (time > 12) return "${bef - 12} - ${time - 12} pm";
     return "$bef - $time${minutes > 0 ? ":$minutes" : ''} am";
   }
+
+  static Future<DateTime> getWeekStart(DateTime to) async{
+    final from = to.subtract(Duration(days: to.weekday - 1));
+    final installDate = await SharedPrefs.checkInstallDate();
+    consoleLog('----------------------------');
+    consoleLog(from);
+    consoleLog(installDate);
+    return from.isBefore(installDate)?installDate:from;
+  }
+  static Future<DateTime> getMonthStart(DateTime to) async{
+    final from = DateTime.utc(to.year,to.month,1);
+    final installDate = await SharedPrefs.checkInstallDate();
+    consoleLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    consoleLog(from);
+    consoleLog(installDate);
+    return from.isBefore(installDate)?installDate:from;
+  }
+
+
+
 }
 
 class Utils {

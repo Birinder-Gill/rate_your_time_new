@@ -9,6 +9,8 @@ import 'package:rate_your_time_new/hours_screens/month_view.dart';
 import 'package:rate_your_time_new/hours_screens/week_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
 import 'package:rate_your_time_new/widgets/backdrop.dart';
 import 'package:rate_your_time_new/widgets/page_status.dart';
@@ -31,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   bool firstDay = false;
 
-  int toggle = 0;
+  DateTime launchDate;
 
   @override
   void restoreState(RestorationBucket oldBucket, bool initialRestore) {
@@ -89,33 +91,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     model = Provider.of<HoursModel>(context);
-    return Stack(
-      children: [
-        backdrop(),
-        SafeArea(
-          child: Material(
-            child: IconButton(
-                icon: Icon(Icons.ac_unit_sharp),
-                onPressed: () {
-                  if (toggle == 3)
-                    toggle = 1;
-                  else
-                    toggle++;
-                  setState(() {});
-                }),
-          ),
-        )
-      ],
-    );
-  }
-
-  void pickDate() {
-    showDatePicker(
-            context: context,
-            initialDate: model.date,
-            firstDate: launchDate,
-            lastDate: model.date)
-        .then(model.refresh);
+    return backdrop();
   }
 
   void gotoAlarms() {
@@ -128,12 +104,7 @@ class _HomeScreenState extends State<HomeScreen>
       cartController: _controller,
       menuController: _expandingController,
       child: Backdrop(
-          pickDate: pickDate,
-          frontLayer: toggle == 1
-              ? MonthViewWrapper()
-              : toggle == 2
-                  ? DayViewWrapper(this.firstDay)
-                  : WeekViewWrapper(),
+          frontLayer: _getFrontLayer(model.toggle),
           backLayer: Container(
             height: double.infinity,
             color: theme.primaryColor,
@@ -147,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen>
               child: CalendarDatePicker(
                 key: model.datePickerKey,
                 initialDate: model.date,
-                firstDate: launchDate,
+                firstDate: launchDate??DateTime(1900),
                 lastDate: DateTime.now(),
                 onDateChanged: (DateTime value) {
                   model.refresh(value);
@@ -165,9 +136,21 @@ class _HomeScreenState extends State<HomeScreen>
   String get restorationId => 'rate_your_time_app_state';
 
   Future<void> _checkFirstDay() async {
-    this.firstDay = await SharedPrefs.isFirstDayAtHome();
+    launchDate = await SharedPrefs.checkInstallDate();
+    this.firstDay = DateUtils.isSameDay(launchDate, DateTime.now());
     nextTick(() {
       setState(() {});
     });
+  }
+
+  Widget _getFrontLayer(int toggle) {
+    switch (toggle) {
+      case 0:
+        return DayViewWrapper(this.firstDay);
+      case 1:
+        return WeekViewWrapper(this.firstDay);
+      default:
+        return MonthViewWrapper(this.firstDay);
+    }
   }
 }

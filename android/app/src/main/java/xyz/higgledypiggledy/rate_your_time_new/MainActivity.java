@@ -23,7 +23,6 @@ import io.flutter.plugin.common.MethodChannel;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmClockProvider;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmNotificationService;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.TimeUtil;
-import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.local.ProgressDatabase;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.Injection;
 
@@ -63,15 +62,15 @@ public class MainActivity extends FlutterActivity {
 
     }
 
-    public int getInt(String key){
-        return getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getInt(key,0);
+    public String getStringVal(String key) {
+        return getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(key, "0");
     }
 
-    public void setInt(String key,int value,final MethodChannel.Result result){
+    public void setStringVal(String key,String value, final MethodChannel.Result result) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                final boolean success=getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().putInt(key,value).commit();
+                final boolean success = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().putString(key, value).commit();
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -83,14 +82,14 @@ public class MainActivity extends FlutterActivity {
     }
 
 
+    boolean test = false;
 
-boolean test=false;
     public void createAlarms(int wake, int sleep) {
-        for (int i = wake+1; i <= sleep; i++) {
+            for (int i = wake + 1; i <= sleep; i++) {
             final Calendar c = Calendar.getInstance();
             final int secondsPastMidnight = 5 +
                     i * 3600 +
-                    ((test?(c.get(Calendar.MINUTE) + 1):0) * 60);//TODO:SET MINUTES TO ZERO
+                    ((test ? (c.get(Calendar.MINUTE) + 1) : 0) * 60);//TODO:SET MINUTES TO ZERO
             AlarmNotificationService.newAlarm(
                     getApplicationContext(), secondsPastMidnight);
         }
@@ -103,32 +102,30 @@ boolean test=false;
         channel.setMethodCallHandler((call, result) -> {
             switch (call.method) {
                 case "getDayData": {
-                    Calendar cal = Calendar.getInstance();
-                    Injection.provideRepository(getApplicationContext()).getDataFor(call.argument("date"), call.argument("month"),call.argument("year"), result::success);
+                    Injection.provideRepository(getApplicationContext()).getDataFor(call.argument("date"), call.argument("month"), call.argument("year"), result::success);
                     return;
                 }
                 case "getRangeHours": {
-                    Calendar cal = Calendar.getInstance();
-                    Injection.provideRepository(getApplicationContext()).getRangeDataFor(cal.get(Calendar.DATE), cal.get(Calendar.MONTH) - 1, cal.get(Calendar.YEAR), cal.get(Calendar.DATE), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), result::success);
+                    Injection.provideRepository(getApplicationContext()).getRangeDataFor(call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"), result::success);
                     return;
                 }
-                
+
                 case "getWeekData": {
                     Calendar cal = Calendar.getInstance();
-                    cal.set(call.argument("year"), call.argument("month"),call.argument("date"));
+                    cal.set(call.argument("year"), call.argument("month"), call.argument("date"));
                     Injection.provideRepository(getApplicationContext()).getWeekData(cal, result::success);
                     return;
                 }
 
                 case "getMonthData": {
                     Calendar cal = Calendar.getInstance();
-                    cal.set(call.argument("year"), call.argument("month"),call.argument("date"));
+                    cal.set(call.argument("year"), call.argument("month"), call.argument("date"));
                     Injection.provideRepository(getApplicationContext()).getMonthData(cal, result::success);
                     return;
                 }
 
                 case "addAlarms": {
-                    createAlarms(call.argument("wHour"),call.argument("sHour"));
+                    createAlarms(call.argument("wHour"), call.argument("sHour"));
                     result.success("Alarms created...probably");
                     return;
                 }
@@ -146,7 +143,7 @@ boolean test=false;
 
                 case "getApps": {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        UsageTracker.getRunningApps(getApplicationContext(),result::success);
+                        UsageTracker.getRunningApps(getApplicationContext(), result::success);
                     }
                     return;
                 }
@@ -167,27 +164,26 @@ boolean test=false;
                     }
                     return;
                 }
-                case "getInt": {
-                    result.success(getInt(call.argument("key")));
+                case "getString":{
+                    result.success(getStringVal(call.argument("key")));
                     return;
                 }
-                case "setInt": {
-                    setInt(call.argument("key"), call.argument("value"),result);
+                case "setString": {
+                    setStringVal(call.argument("key"), call.argument("value"), result);
                     return;
                 }
                 case "updateHour": {
-                    updateHour(call.argument("id"), call.argument("activity"),call.argument("note"),result);
+                    updateHour(call.argument("id"), call.argument("activity"), call.argument("note"), result);
                     return;
                 }
-                
 
 
             }
         });
     }
-    
-    private void updateHour(int id, int activity, String note, MethodChannel.Result result){
-        Injection.provideRepository(getApplicationContext()).updateHour(id,activity,note,result);
+
+    private void updateHour(int id, int activity, String note, MethodChannel.Result result) {
+        Injection.provideRepository(getApplicationContext()).updateHour(id, activity, note, result);
 
     }
 

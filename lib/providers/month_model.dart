@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
+import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class MonthModel with ChangeNotifier {
@@ -20,10 +21,7 @@ class MonthModel with ChangeNotifier {
     if (_loading) return;
     _loading = true;
     try {
-      final body = {"date": date.day, 'month': date.month, 'year': date.year};
-      consoleLog("Calling gethours with body $body");
-      final channel = MethodChannel(Constants.CHANNEL_NAME);
-      Map hourData = await channel.invokeMethod(Constants.getMonthData, body);
+      Map hourData = await ApiHelper.getRangeData(date, (await TimeUtils.getMonthStart(date)));
       this.hd=hourData;
       // return;
       this.av = await compute<Map,

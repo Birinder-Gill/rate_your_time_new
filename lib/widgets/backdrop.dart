@@ -6,8 +6,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/alarms_screen.dart';
 import 'package:rate_your_time_new/feature_discovery/feature_discovery.dart';
+import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/settings_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/page_status.dart';
@@ -38,11 +40,19 @@ class _FrontLayer extends StatelessWidget {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: ToggleButtons(children: [
-            Icon(Icons.calendar_view_day),
-            Icon(Icons.view_week),
-            Icon(Icons.date_range)
-          ], isSelected: [true,false,false]),
+          child: Consumer<HoursModel>(
+            builder: (_, model,__) {
+              return ToggleButtons(
+                selectedColor: Theme.of(context).accentColor,
+
+                onPressed: model.changeViewToggle,
+                  children: [
+                Icon(Icons.calendar_view_day),
+                Icon(Icons.view_week),
+                Icon(Icons.date_range)
+              ], isSelected: model.selections);
+            }
+          ),
         ),
       ),
     );
@@ -72,10 +82,7 @@ class _FrontLayer extends StatelessWidget {
       ),
     );
   }
-
 }
-
-
 
 class _BackdropTitle extends AnimatedWidget {
   const _BackdropTitle({
@@ -165,15 +172,12 @@ class _BackdropTitle extends AnimatedWidget {
 /// can make a selection. The user can also configure the titles for when the
 /// front or back layer is showing.
 class Backdrop extends StatefulWidget {
-  final void Function() pickDate;
-
   const Backdrop({
     @required this.frontLayer,
     @required this.backLayer,
     @required this.frontTitle,
     @required this.backTitle,
     @required this.controller,
-    this.pickDate,
   })  : assert(frontLayer != null),
         assert(backLayer != null),
         assert(frontTitle != null),
@@ -196,7 +200,7 @@ class _BackdropState extends State<Backdrop>
   AnimationController _controller;
   Animation<RelativeRect> _layerAnimation;
 
-  bool _showGuide=true;
+  bool _showGuide = true;
 
   @override
   void initState() {
@@ -341,13 +345,13 @@ class _BackdropState extends State<Backdrop>
       ),
       actions: [
         // if (false)
-          IconButton(
-            icon: const Icon(Icons.alarm),
-            // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
-            onPressed: () {
-              pushTo(context, AlarmsScreen());
-            },
-          ),
+        IconButton(
+          icon: const Icon(Icons.alarm),
+          // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
+          onPressed: () {
+            pushTo(context, AlarmsScreen());
+          },
+        ),
         _showGuide
             ? FeatureDiscoveryController(
                 IconButton(
@@ -355,16 +359,12 @@ class _BackdropState extends State<Backdrop>
                       description: 'Test desc',
                       title: "Test title",
                       showOverlay: true,
-
-                      onDismiss:() {
-                        _showGuide=false;
+                      onDismiss: () {
+                        _showGuide = false;
                         // setState(() {
                         //
                         // });
                         // _toggleBackdropLayerVisibility();
-
-
-
                       },
                       child: Icon(Icons.menu)),
                   // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
@@ -372,8 +372,10 @@ class _BackdropState extends State<Backdrop>
                 ),
               )
             : IconButton(
-                icon: RotationTransition(turns: Tween(begin: .625,end: 0.0).animate(_controller),
-                child: AnimatedIcon(icon: AnimatedIcons.add_event, progress: _controller)),
+                icon: RotationTransition(
+                    turns: Tween(begin: .625, end: 0.0).animate(_controller),
+                    child: AnimatedIcon(
+                        icon: AnimatedIcons.add_event, progress: _controller)),
                 // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
                 onPressed: _toggleBackdropLayerVisibility,
               ),

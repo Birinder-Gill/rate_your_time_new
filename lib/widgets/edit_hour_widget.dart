@@ -8,10 +8,12 @@ import 'package:rate_your_time_new/providers/day_model.dart';
 class EditHourWidget extends StatefulWidget {
   final Hour hour;
 
-  EditHourWidget(this.hour);
+  EditHourWidget(this.hour, {this.updateHour});
 
   @override
   _EditHourWidgetState createState() => _EditHourWidgetState();
+
+  final void Function(int id, int activityId, String text) updateHour;
 }
 
 class _EditHourWidgetState extends State<EditHourWidget> {
@@ -70,8 +72,7 @@ class _EditHourWidgetState extends State<EditHourWidget> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Provider.of<DayModel>(context, listen: false)
-                            .updateHour(widget.hour.id, activityId, commentC.text);
+                       widget.updateHour(widget.hour.id, activityId, commentC.text);
                         Navigator.pop(context);
                       },
                       child: Text("Submit"),

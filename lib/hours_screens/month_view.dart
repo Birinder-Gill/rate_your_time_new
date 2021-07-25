@@ -9,6 +9,10 @@ import 'package:rate_your_time_new/providers/month_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class MonthViewWrapper extends StatelessWidget {
+  final bool firstDay;
+
+  MonthViewWrapper(this.firstDay);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
