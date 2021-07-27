@@ -33,7 +33,7 @@ class GroupedBarChart extends StatelessWidget {
       new charts.Series<SingleDayAverage, String>(
         id: 'mobile',
         domainFn: (SingleDayAverage sales, _) => Utils.shortDays[sales.date.weekday],
-        measureFn: (SingleDayAverage sales, _) => sales.worth,
+        measureFn: (SingleDayAverage sales, _) => sales.worth>0?sales.worth:0,
         data: av,
       ),
       // new charts.Series<OrdinalSales, String>(
@@ -52,4 +52,5 @@ class SingleDayAverage {
   final double worth;
 
   SingleDayAverage(this.date, this.worth);
+
 }

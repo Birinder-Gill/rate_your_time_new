@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
+import 'package:rate_your_time_new/utils/constants.dart';
 
 class ActivityAverageCard extends StatefulWidget {
   final AverageDataModel av;
@@ -11,6 +12,8 @@ class ActivityAverageCard extends StatefulWidget {
 }
 
 class _ActivityAverageCardState extends State<ActivityAverageCard> {
+  bool expanded=false;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -18,20 +21,36 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
         children: [
           Text("Activities you spent most time spent on"),
           for(final a in widget.av.activities)
-          // if(a.key>0)
+          if(a.id!=16)
             ListTile(
               horizontalTitleGap: 0,
               title: Text("$a"),
               subtitle: Text('${a.timeSpent} hrs'),
               leading: a.icon,
-            ),
-          for(final a in widget.av.others)
-            ListTile(
-              horizontalTitleGap: 0,
-              title: Text("$a"),
-              subtitle: Text('${a.timeSpent} hrs'),
-              leading: a.icon,
-            ),
+            )else
+              ExpansionTile(
+                onExpansionChanged: (e){
+                  expanded=e;
+                  // nextTick((){
+                  //   setState(() {
+                  //
+                  //   });
+                  // });
+                },
+                title: Text("$a"),
+                subtitle: Text('${a.timeSpent} hrs'),
+                trailing: TextButton.icon(onPressed: null, label: Icon(expanded?Icons.arrow_drop_up:Icons.arrow_drop_down), icon: Text("${widget.av.others.length} activities")),
+                leading: a.icon,
+                children: [
+                for(final a in widget.av.others)
+                  ListTile(
+                    horizontalTitleGap: 0,
+                    title: Text("$a"),
+                    subtitle: Text('${a.timeSpent} hrs'),
+                    leading: a.icon,
+                  ),
+              ],)
+
         ],
       ),
     );

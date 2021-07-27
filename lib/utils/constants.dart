@@ -166,7 +166,6 @@ Widget adButton() => OutlinedButton.icon(
     icon: Icon(Icons.font_download),
     label: Text("Watch an Ad"));
 
-
 void pushTo(BuildContext context, Widget screen,
     {bool replace = false, bool clear = false}) {
   if (clear) {
@@ -224,25 +223,23 @@ class TimeUtils {
     return "$bef - $time${minutes > 0 ? ":$minutes" : ''} am";
   }
 
-  static Future<DateTime> getWeekStart(DateTime to) async{
+  static Future<DateTime> getWeekStart(DateTime to) async {
     final from = to.subtract(Duration(days: to.weekday - 1));
     final installDate = await SharedPrefs.checkInstallDate();
     consoleLog('----------------------------');
     consoleLog(from);
     consoleLog(installDate);
-    return from.isBefore(installDate)?installDate:from;
+    return from.isBefore(installDate) ? installDate : from;
   }
-  static Future<DateTime> getMonthStart(DateTime to) async{
-    final from = DateTime.utc(to.year,to.month,1);
+
+  static Future<DateTime> getMonthStart(DateTime to) async {
+    final from = DateTime.utc(to.year, to.month, 1);
     final installDate = await SharedPrefs.checkInstallDate();
     consoleLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     consoleLog(from);
     consoleLog(installDate);
-    return from.isBefore(installDate)?installDate:from;
+    return from.isBefore(installDate) ? installDate : from;
   }
-
-
-
 }
 
 class Utils {
@@ -255,6 +252,8 @@ class Utils {
     6: "Sat",
     7: "Sun",
   };
+
+  static const int ACTIVITIES_TO_SHOW = 5;
 
   static Future createAlarms() async {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
@@ -290,13 +289,17 @@ class Utils {
       });
       double sales = total / element.value.length;
       final keys = element.key.split('-');
-      av.averages.add(SingleDayAverage(
-          DateTime(
-            int.parse(keys[0]),
-            int.parse(keys[1]),
-            int.parse(keys[2]),
-          ),
-          sales));
+      DateTime dt = DateTime(
+        int.parse(keys[0]),
+
+        ///ADDED ONE HERE BECAUSE MONTH RETURNED FROM JAVA SIDE IS ONE LESS THAN WHAT WE NEED HERE
+        ///(because months in java start from 0 and in dart start from 1)
+        int.parse(keys[1]) + 1,
+
+        int.parse(keys[2]),
+      );
+      consoleLog(dt);
+      av.averages.add(SingleDayAverage(dt, sales));
     });
     av.averages.sort((a, b) =>
         a.date.millisecondsSinceEpoch - b.date.millisecondsSinceEpoch);
@@ -306,16 +309,16 @@ class Utils {
       Activity act = activities[key]?.copyWith(timeSpent: value);
       if (act != null) av.activities.add(act);
     });
-    if (av.activities.length > 3) {
+    if (av.activities.length > ACTIVITIES_TO_SHOW) {
       final temp = List<Activity>.from(av.activities);
       consoleLog(temp.map((e) => e.timeSpent));
-      av.activities = temp.take(3).toList();
-      av.others = temp.sublist(3);
+      av.activities = temp.take(ACTIVITIES_TO_SHOW).toList();
+      av.others = temp.sublist(ACTIVITIES_TO_SHOW);
       av.activities.add(Activity(
           id: 16,
           name: "Others",
-          icon: FaIcon(FontAwesomeIcons.wizardsOfTheCoast),
-          timeSpent: temp.sublist(3).fold(0,
+          icon: FaIcon(FontAwesomeIcons.list),
+          timeSpent: temp.sublist(ACTIVITIES_TO_SHOW).fold(0,
               (previousValue, element) => previousValue + element.timeSpent)));
     }
 
