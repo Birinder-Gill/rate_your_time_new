@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/data/activities.dart';
 import 'package:rate_your_time_new/models/activity_model.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
@@ -323,6 +325,25 @@ class Utils {
     }
 
     return av;
+  }
+
+  static List<UsageStat> parseStatsData(List list){
+    var apps = List<UsageStat>.from(
+        list.map((e) => UsageStat.fromJson(jsonEncode(e))));
+    var distinctApps = [];
+    apps.forEach((element) {
+      int index =
+      distinctApps.indexWhere((s) => s.package == element.package);
+      if (index != -1)
+        distinctApps[index].totalTimeInForeground =
+            distinctApps[index].totalTimeInForeground +
+                element.totalTimeInForeground;
+      else
+        distinctApps.add(element);
+    });
+    distinctApps
+        .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
+    return distinctApps;
   }
 }
 

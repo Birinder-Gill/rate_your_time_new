@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
+import 'package:rate_your_time_new/providers/app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/finance_entity.dart';
 import 'package:rate_your_time_new/widgets/pie_chart.dart';
@@ -38,23 +39,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
       loading = true;
     });
     try {
-      final channel = MethodChannel(Constants.CHANNEL_NAME);
-      final List list = await channel.invokeMethod('getApps');
-      apps = List<UsageStat>.from(
-          list.map((e) => UsageStat.fromJson(jsonEncode(e))));
-      distinctApps = [];
-      apps.forEach((element) {
-        int index =
-            distinctApps.indexWhere((s) => s.package == element.package);
-        if (index != -1)
-          distinctApps[index].totalTimeInForeground =
-              distinctApps[index].totalTimeInForeground +
-                  element.totalTimeInForeground;
-        else
-          distinctApps.add(element);
-      });
-      distinctApps
-          .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
+        final model = AppUsageModel();
+        await model.getApps();
+        distinctApps = model.distinctApps;
     } catch (e) {
       error = true;
     }
@@ -193,10 +180,11 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     final day = hour * 24;
     var mins = 0.0;
     var label = '';
-    if (i >= day) {
-      mins = i / day;
-      label = 'Days';
-    } else if (i >= hour) {
+    // if (i >= day) {
+    //   mins = i / day;
+    //   label = 'Days';
+    // } else
+      if (i >= hour) {
       mins = i / hour;
       label = 'Hours';
     } else if (i >= min) {

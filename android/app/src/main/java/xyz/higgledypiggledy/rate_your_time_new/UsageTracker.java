@@ -43,10 +43,10 @@ public class UsageTracker {
 //            long time = System.currentTimeMillis();
                     Calendar now = Calendar.getInstance();
                     long end = now.getTimeInMillis();
-                    now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DATE), 0, 0);
+                    now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH)-1, now.get(Calendar.DATE), 0, 0);
                     long begin = now.getTimeInMillis();
                     // We get usage stats for the last 10 seconds
-                    List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, begin, end);
+                    List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_YEARLY, begin, end);
 
                     // Sort the stats by the last time used
                     if (stats != null) {
