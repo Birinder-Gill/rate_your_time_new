@@ -30,47 +30,45 @@ import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 
 public class UsageTracker {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-    public static void getRunningApps(final Context context, DataSource.LoadProgressCallback callback) {
+    public static void getRunningApps(final Context context, int d1, int m1, int y1, int d2, int m2, int y2, DataSource.LoadProgressCallback callback) {
         ArrayList<HashMap<String, Object>> result = new ArrayList<>();
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    UsageStatsManager mUsageStatsManager = null;
+                    UsageStatsManager mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
 
-                    mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+                    Calendar fromC = Calendar.getInstance();
+                    fromC.set(y1,m1,d1);
+                    long from = fromC.getTimeInMillis();
 
-//            long time = System.currentTimeMillis();
-                    Calendar now = Calendar.getInstance();
-                    long end = now.getTimeInMillis();
-                    now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH)-1, now.get(Calendar.DATE), 0, 0);
-                    long begin = now.getTimeInMillis();
+                    Calendar toC = Calendar.getInstance();
+                    toC.set(y2,m2,d2);
+                    long to = toC.getTimeInMillis();
                     // We get usage stats for the last 10 seconds
-                    List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_YEARLY, begin, end);
+                    List<UsageStats> stats = new ArrayList<>(mUsageStatsManager.queryAndAggregateUsageStats(from, to).values());
 
                     // Sort the stats by the last time used
-                    if (stats != null) {
-                        for (UsageStats u : stats) {
-                            final HashMap<String, Object> map = new HashMap<>();
-                            map.put("package", u.getPackageName());
-                            map.put("firstTimeStamp", u.getFirstTimeStamp());
-                            map.put("LastTimeStamp", u.getLastTimeStamp());
-                            map.put("LastTimeUsed", u.getLastTimeUsed());
-                            map.put("TotalTimeInForeground", u.getTotalTimeInForeground());
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                map.put("TotalTimeVisible", u.getTotalTimeVisible());
-                            }
-                            map.put("appName", getAppName(context, u.getPackageName()));
-                            if (u.getTotalTimeInForeground() > 0 && hasLauncher(context, u.getPackageName())) {
-                                String logo=getAppLogo(context, u.getPackageName());
-                                Log.d(TAG, "getAppLogo: Icon = FOR "+u.getPackageName()+"Length = "+logo.length()+" logo = "+logo);
-                                map.put("appLogo", logo);
-//                                map.put("color",getColor(context,u.getPackageName()));
-                                result.add(map);
-                            }
-
-
+                    for (UsageStats u : stats) {
+                        final HashMap<String, Object> map = new HashMap<>();
+                        map.put("package", u.getPackageName());
+                        map.put("firstTimeStamp", u.getFirstTimeStamp());
+                        map.put("LastTimeStamp", u.getLastTimeStamp());
+                        map.put("LastTimeUsed", u.getLastTimeUsed());
+                        map.put("TotalTimeInForeground", u.getTotalTimeInForeground());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            map.put("TotalTimeVisible", u.getTotalTimeVisible());
                         }
+                        map.put("appName", getAppName(context, u.getPackageName()));
+                        if (u.getTotalTimeInForeground() > 0 && hasLauncher(context, u.getPackageName())) {
+                            String logo=getAppLogo(context, u.getPackageName());
+//                            Log.d(TAG, "getAppLogo: Icon = FOR "+u.getPackageName()+"Length = "+logo.length()+" logo = "+logo);
+                            map.put("appLogo", logo);
+//                                map.put("color",getColor(context,u.getPackageName()));
+                            result.add(map);
+                        }
+
+
                     }
                 }
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
@@ -181,6 +179,4 @@ public class UsageTracker {
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.NO_WRAP);
     }
-
-
 }

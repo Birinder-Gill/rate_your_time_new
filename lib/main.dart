@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme:model.selectedTheme,
             home:false?
-            TestScreen():SplashScreen(),
+            TestScreen([]):SplashScreen(),
           ),
         ),
       ),

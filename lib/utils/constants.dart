@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/data/activities.dart';
 import 'package:rate_your_time_new/models/activity_model.dart';
+import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
 import 'package:rate_your_time_new/widgets/graphs/grouped_bar_graph.dart';
@@ -206,6 +207,34 @@ class TimeUtils {
     return "${date.day}/${date.month}/${date.year}";
   }
 
+  static String convertMillsToTime(num i) {
+    final sec = 1000;
+    final min = sec * 60;
+    final hour = min * 60;
+    final day = hour * 24;
+    var mins = 0.0;
+    var label = '';
+    // if (i >= day) {
+    //   mins = i / day;
+    //   label = 'Days';
+    // } else
+    if (i >= hour) {
+      mins = i / hour;
+      label = 'Hours';
+    } else if (i >= min) {
+      mins = i / min;
+      label = 'Minutes';
+    } else if (i >= sec) {
+      mins = i / sec;
+      label = 'Seconds';
+    } else {
+      mins = i.toDouble();
+      label = "ms";
+    }
+
+    return "${mins.toStringAsFixed(0)} $label";
+  }
+
   ///RETURNS DATE IN dd/mm/yyyy hh:mm
   static String formatDateTime(DateTime date) {
     return "${date.day}/${date.month}/${date.year} ${parseTimeHours(date.hour, minutes: date.minute)}";
@@ -256,6 +285,7 @@ class Utils {
   };
 
   static const int ACTIVITIES_TO_SHOW = 5;
+  static const int APPS_TO_SHOW = 3;
 
   static Future createAlarms() async {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
@@ -327,23 +357,39 @@ class Utils {
     return av;
   }
 
-  static List<UsageStat> parseStatsData(List list){
+  static AverageAppUsageModel parseStatsData(List list){
+    consoleLog("In parsestat data with list = $list");
+    final result = AverageAppUsageModel();
     var apps = List<UsageStat>.from(
         list.map((e) => UsageStat.fromJson(jsonEncode(e))));
-    var distinctApps = [];
-    apps.forEach((element) {
-      int index =
-      distinctApps.indexWhere((s) => s.package == element.package);
-      if (index != -1)
-        distinctApps[index].totalTimeInForeground =
-            distinctApps[index].totalTimeInForeground +
-                element.totalTimeInForeground;
-      else
-        distinctApps.add(element);
-    });
-    distinctApps
-        .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
-    return distinctApps;
+    apps.sort((b,a)=>a.totalTimeInForeground-b.totalTimeInForeground);
+
+    if (apps.length > APPS_TO_SHOW) {
+      final temp = List<UsageStat>.from(apps);
+      consoleLog(temp.map((e) => e.totalTimeInForeground));
+      apps = temp.take(APPS_TO_SHOW).toList();
+      final others = temp.sublist(APPS_TO_SHOW);
+      result.highApps = apps;
+      result.otherApps = others;
+    }else{
+      result.highApps = apps;
+      result.otherApps = [];
+    }
+    return result;
+    // var distinctApps = <UsageStat>[];
+    // apps.forEach((element) {
+    //   int index =
+    //   distinctApps.indexWhere((s) => s.package == element.package);
+    //   if (index != -1)
+    //     distinctApps[index].totalTimeInForeground =
+    //         distinctApps[index].totalTimeInForeground +
+    //             element.totalTimeInForeground;
+    //   else
+    //     distinctApps.add(element);
+    // });
+    // distinctApps
+    //     .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
+    // return distinctApps;
   }
 }
 

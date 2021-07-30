@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/providers/app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:rate_your_time_new/utils/test_screen.dart';
 import 'package:rate_your_time_new/widgets/finance_entity.dart';
 import 'package:rate_your_time_new/widgets/pie_chart.dart';
 
@@ -100,30 +101,30 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                             style: theme.headline5,
                           ),
                           Text(
-                            timeInSecs(sum),
+                            TimeUtils.convertMillsToTime(sum),
                             textAlign: TextAlign.center,
                             style: theme.headline4,
                           ),
                           Text('in last 24 hrs', textAlign: TextAlign.center),
-                          if (distinctApps.isNotEmpty)
-                            Container(
-                              height: 200,
-                              width: MediaQuery.of(context).size.width,
-                              child: RallyPieChart(
-                                heroLabel: "",
-                                wholeAmount: sum,
-                                heroAmount: '',
-                                segments: distinctApps
-                                    .sublist(0, 4)
-                                    .map(
-                                      (e) => RallyPieChartSegment(
-                                          color: e.color,
-                                          value: e.totalTimeInForeground
-                                              .toDouble()),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
+                          // if (distinctApps.isNotEmpty)
+                          //   Container(
+                          //     height: 200,
+                          //     width: MediaQuery.of(context).size.width,
+                          //     child: RallyPieChart(
+                          //       heroLabel: "",
+                          //       wholeAmount: sum,
+                          //       heroAmount: '',
+                          //       segments: distinctApps
+                          //           .sublist(0, 4)
+                          //           .map(
+                          //             (e) => RallyPieChartSegment(
+                          //                 color: e.color,
+                          //                 value: e.totalTimeInForeground
+                          //                     .toDouble()),
+                          //           )
+                          //           .toList(),
+                          //     ),
+                          //   ),
                           for (UsageStat i in distinctApps ?? [])
                             if (i.package.contains(search) ||
                                 i.appName.contains(search))
@@ -132,7 +133,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                 children: [
                                   ListTile(
                                     subtitle: Text(
-                                      timeInSecs(
+                                      TimeUtils.convertMillsToTime(
                                         i.totalTimeInForeground,
                                       ),
                                     ),
@@ -173,33 +174,6 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     );
   }
 
-  timeInSecs(num i) {
-    final sec = 1000;
-    final min = sec * 60;
-    final hour = min * 60;
-    final day = hour * 24;
-    var mins = 0.0;
-    var label = '';
-    // if (i >= day) {
-    //   mins = i / day;
-    //   label = 'Days';
-    // } else
-      if (i >= hour) {
-      mins = i / hour;
-      label = 'Hours';
-    } else if (i >= min) {
-      mins = i / min;
-      label = 'Minutes';
-    } else if (i >= sec) {
-      mins = i / sec;
-      label = 'Seconds';
-    } else {
-      mins = i.toDouble();
-      label = "ms";
-    }
-
-    return "${mins.toStringAsFixed(0)} $label";
-  }
 
   gotoSettingsView() {
     return Center(

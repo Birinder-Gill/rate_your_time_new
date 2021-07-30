@@ -53,9 +53,9 @@ class UsageStat {
   );
     try{
       stat.appLogo= json["appLogo"] == null ? Uint8List(0) : base64.decode(json["appLogo"]);
-      PaletteGenerator.fromImageProvider(MemoryImage(stat.appLogo)).then((value){
-        stat.color =value.dominantColor.color;
-      });
+      // PaletteGenerator.fromImageProvider(MemoryImage(stat.appLogo)).then((value){
+      //   stat.color =value.dominantColor.color;
+      // });
     }catch(e){
       if(e is FormatException)
       consoleLog(e);
@@ -71,6 +71,6 @@ class UsageStat {
     "LastTimeUsed": lastTimeUsed == null ? null : lastTimeUsed,
     "TotalTimeInForeground": totalTimeInForeground == null ? null : totalTimeInForeground,
     "appName":appName,
-    "appLogo":base64.encode(appLogo),
+    // "appLogo":base64.encode(appLogo),
   };
 }

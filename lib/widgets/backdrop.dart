@@ -5,6 +5,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meta/meta.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/alarms_screen.dart';
@@ -42,15 +43,21 @@ class _FrontLayer extends StatelessWidget {
           padding: const EdgeInsets.all(2.0),
           child: Consumer<HoursModel>(
             builder: (_, model,__) {
-              return ToggleButtons(
-                selectedColor: Theme.of(context).accentColor,
-
-                onPressed: model.changeViewToggle,
-                  children: [
-                Icon(Icons.calendar_view_day),
-                Icon(Icons.view_week),
-                Icon(Icons.date_range)
-              ], isSelected: model.selections);
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if(model.toggle!=0)IconButton(icon: Icon(Icons.chevron_left), onPressed: (){}),
+                  ToggleButtons(
+                    selectedColor: Theme.of(context).accentColor,
+                    onPressed: model.changeViewToggle,
+                      children: [
+                    Icon(Icons.calendar_view_day),
+                    Icon(Icons.view_week),
+                    Icon(Icons.date_range)
+                  ], isSelected: model.selections),
+                  if(model.toggle!=0)IconButton(icon: Icon(Icons.chevron_right), onPressed: (){}),
+                ],
+              );
             }
           ),
         ),
@@ -352,6 +359,7 @@ class _BackdropState extends State<Backdrop>
             pushTo(context, AlarmsScreen());
           },
         ),
+        if(Provider.of<HoursModel>(context).toggle==0)
         _showGuide
             ? FeatureDiscoveryController(
                 IconButton(

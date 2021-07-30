@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/activity_av_card.dart';
+import 'package:rate_your_time_new/hours_screens/widgets/app_usage_card.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/month_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -97,22 +98,7 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: Column(
-                    children: [
-                      Text('Most used app this week: '),
-                      ListTile(
-                        horizontalTitleGap: 0,
-                        title: Text("Instagram"),
-                        subtitle: Text('12 hrs 56 mins'),
-                        trailing: TextButton(onPressed: () {}, child: Text(
-                            "Detailed report"),),
-                        leading: FaIcon(
-                          FontAwesomeIcons.instagram, color: Colors.red,),
-                      ),
-                    ],
-                  ),
-                ),
+                child: AppUSageCard(model.appUsage),
               ),
             ],
           );

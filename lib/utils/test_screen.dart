@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/home_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class TestScreen extends StatefulWidget {
+  final List<UsageStat> distinctApps;
+  TestScreen(this.distinctApps);
+
   @override
   _TestScreenState createState() => _TestScreenState();
 }
@@ -14,8 +18,22 @@ class _TestScreenState extends State<TestScreen> {
 
   RangeValues rangeVal=RangeValues(7, 20);
 
+
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: [
+          for(var i in widget.distinctApps)
+            ListTile(
+              leading: Image.memory(i.appLogo),
+                    title: Text(i.appName),
+              subtitle: Text(DateTime.fromMillisecondsSinceEpoch(i.lastTimeUsed).toString()),
+
+            )
+        ],
+      ),
+    );
     return Scaffold(
       // appBar: AppBar(),
       backgroundColor: Color(0xffefefef),

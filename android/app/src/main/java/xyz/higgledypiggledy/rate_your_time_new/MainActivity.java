@@ -143,7 +143,7 @@ public class MainActivity extends FlutterActivity {
 
                 case "getApps": {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        UsageTracker.getRunningApps(getApplicationContext(), result::success);
+                        UsageTracker.getRunningApps(getApplicationContext(), call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"),result::success);
                     }
                     return;
                 }
