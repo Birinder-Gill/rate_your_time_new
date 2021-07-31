@@ -4,6 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/home_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class TestScreen extends StatefulWidget {
   final List<UsageStat> distinctApps;
@@ -18,19 +19,46 @@ class _TestScreenState extends State<TestScreen> {
 
   RangeValues rangeVal=RangeValues(7, 20);
 
+  final DateRangePickerController _controller = DateRangePickerController();
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+    int firstDayOfWeek = DateTime.sunday % 7;
+    int endDayOfWeek = (firstDayOfWeek - 1) % 7;
+    endDayOfWeek = endDayOfWeek < 0? 7 + endDayOfWeek : endDayOfWeek;
+    PickerDateRange ranges = args.value;
+    DateTime date1 = ranges.startDate;
+    DateTime date2 = (ranges.endDate?? ranges.startDate);
+    if(date1.isAfter(date2))
+    {
+      var date=date1;
+      date1=date2;
+      date2=date;
+    }
+    int day1 = date1.weekday % 7;
+    int day2 = date2.weekday % 7;
 
+    DateTime dat1 = date1.add(Duration(days: (firstDayOfWeek - day1)));
+    DateTime dat2 = date2.add(Duration(days: (endDayOfWeek - day2)));
+
+    if( !DateUtils.isSameDay(dat1, ranges.startDate)|| !DateUtils.isSameDay(dat2,ranges.endDate))
+    {
+      _controller.selectedRange = PickerDateRange(dat1, dat2);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          for(var i in widget.distinctApps)
-            ListTile(
-              leading: Image.memory(i.appLogo),
-                    title: Text(i.appName),
-              subtitle: Text(DateTime.fromMillisecondsSinceEpoch(i.lastTimeUsed).toString()),
-
-            )
+      body: Column(
+        children: <Widget>[
+          Card(
+            margin: const EdgeInsets.fromLTRB(50, 100, 50, 100),
+            child: SfDateRangePicker(
+              // controller: _controller,
+              view: DateRangePickerView.year,
+              // selectionMode: DateRangePickerSelectionMode.range,
+              // onSelectionChanged: selectionChanged,
+              monthViewSettings: DateRangePickerMonthViewSettings(enableSwipeSelection: false),
+            ),
+          )
         ],
       ),
     );

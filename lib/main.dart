@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           builder: (_,model,__)=>MaterialApp(
             debugShowCheckedModeBanner: false,
             theme:model.selectedTheme,
-            home:false?
+            home:true?
             TestScreen([]):SplashScreen(),
           ),
         ),

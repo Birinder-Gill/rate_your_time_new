@@ -11,6 +11,7 @@ import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/test_screen.dart';
 import 'package:rate_your_time_new/widgets/finance_entity.dart';
 import 'package:rate_your_time_new/widgets/pie_chart.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AppsUsageScreen extends StatefulWidget {
   @override
