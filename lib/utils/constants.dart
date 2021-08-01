@@ -263,6 +263,17 @@ class TimeUtils {
     return from.isBefore(installDate) ? installDate : from;
   }
 
+  static Future<DateTime> getWeekEnd(DateTime from) async {
+    final to = from.add(Duration(days: 7-from.weekday));
+    final installDate = await SharedPrefs.checkInstallDate();
+    consoleLog('----------------------------');
+    consoleLog(from);
+    consoleLog(installDate);
+    return to.isBefore(installDate) ? installDate : to;
+  }
+
+
+
   static Future<DateTime> getMonthStart(DateTime to) async {
     final from = DateTime.utc(to.year, to.month, 1);
     final installDate = await SharedPrefs.checkInstallDate();

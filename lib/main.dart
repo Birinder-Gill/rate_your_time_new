@@ -4,6 +4,7 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/app_model.dart';
 import 'package:rate_your_time_new/splash_screen.dart';
 import 'package:rate_your_time_new/utils/test_screen.dart';
+import 'package:rate_your_time_new/widgets/date_pickers/week_range_picker.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,8 +29,8 @@ class MyApp extends StatelessWidget {
           builder: (_,model,__)=>MaterialApp(
             debugShowCheckedModeBanner: false,
             theme:model.selectedTheme,
-            home:true?
-            TestScreen([]):SplashScreen(),
+            home:false?
+            WeekRangePicker(model: hoursModel,firstDate: DateTime(1900),):SplashScreen(),
           ),
         ),
       ),

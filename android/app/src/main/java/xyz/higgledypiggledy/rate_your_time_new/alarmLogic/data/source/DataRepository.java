@@ -1,6 +1,8 @@
 package xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source;
 
 
+import android.content.Context;
+
 import java.util.Calendar;
 
 import io.flutter.plugin.common.MethodChannel;
@@ -43,5 +45,10 @@ public class DataRepository implements DataSource {
     @Override
     public void updateHour(int id, int activity, String note, MethodChannel.Result result) {
         dataSource.updateHour(id,activity,note,result);
+    }
+
+    @Override
+    public void getRunningApps(Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback) {
+        dataSource.getRunningApps(context,d1,m1,y1,d2,m2,y2,callback);
     }
 }

@@ -3,6 +3,8 @@ package xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source;
 
 
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -32,6 +34,8 @@ public interface DataSource
     void getMonthData(Calendar cal, RangeProgressCallback success);
 
     void updateHour(int id, int activity, String note, MethodChannel.Result result);
+
+    void getRunningApps(final Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback);
 
 
 

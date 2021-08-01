@@ -66,7 +66,7 @@ public class MainActivity extends FlutterActivity {
         return getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(key, "0");
     }
 
-    public void setStringVal(String key,String value, final MethodChannel.Result result) {
+    public void setStringVal(String key, String value, final MethodChannel.Result result) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -85,7 +85,7 @@ public class MainActivity extends FlutterActivity {
     boolean test = false;
 
     public void createAlarms(int wake, int sleep) {
-            for (int i = wake + 1; i <= sleep; i++) {
+        for (int i = wake + 1; i <= sleep; i++) {
             final Calendar c = Calendar.getInstance();
             final int secondsPastMidnight = 5 +
                     i * 3600 +
@@ -143,7 +143,7 @@ public class MainActivity extends FlutterActivity {
 
                 case "getApps": {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        UsageTracker.getRunningApps(getApplicationContext(), call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"),result::success);
+                        Injection.provideRepository(getApplicationContext()).getRunningApps(getApplicationContext(), call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"), result::success);
                     }
                     return;
                 }
@@ -164,7 +164,7 @@ public class MainActivity extends FlutterActivity {
                     }
                     return;
                 }
-                case "getString":{
+                case "getString": {
                     result.success(getStringVal(call.argument("key")));
                     return;
                 }

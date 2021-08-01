@@ -41,25 +41,26 @@ class _FrontLayer extends StatelessWidget {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: Consumer<HoursModel>(
-            builder: (_, model,__) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if(model.toggle!=0)IconButton(icon: Icon(Icons.chevron_left), onPressed: (){}),
-                  ToggleButtons(
+          child: Consumer<HoursModel>(builder: (_, model, __) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (model.toggle != 0)
+                  IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
+                ToggleButtons(
                     selectedColor: Theme.of(context).accentColor,
                     onPressed: model.changeViewToggle,
-                      children: [
-                    Icon(Icons.calendar_view_day),
-                    Icon(Icons.view_week),
-                    Icon(Icons.date_range)
-                  ], isSelected: model.selections),
-                  if(model.toggle!=0)IconButton(icon: Icon(Icons.chevron_right), onPressed: (){}),
-                ],
-              );
-            }
-          ),
+                    children: [
+                      Icon(Icons.calendar_view_day),
+                      Icon(Icons.view_week),
+                      Icon(Icons.date_range)
+                    ],
+                    isSelected: model.selections),
+                if (model.toggle != 0)
+                  IconButton(icon: Icon(Icons.chevron_right), onPressed: () {}),
+              ],
+            );
+          }),
         ),
       ),
     );
@@ -294,7 +295,7 @@ class _BackdropState extends State<Backdrop>
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
     const layerTitleHeight = 48;
     final layerSize =
-        Size(constraints.biggest.width, constraints.biggest.height / 2);
+        Size(constraints.biggest.width,450);
     final layerTop = layerSize.height - layerTitleHeight;
 
     _layerAnimation = _getLayerAnimation(layerSize, layerTop);
@@ -359,34 +360,34 @@ class _BackdropState extends State<Backdrop>
             pushTo(context, AlarmsScreen());
           },
         ),
-        if(Provider.of<HoursModel>(context).toggle==0)
-        _showGuide
-            ? FeatureDiscoveryController(
-                IconButton(
-                  icon: FeatureDiscovery(
-                      description: 'Test desc',
-                      title: "Test title",
-                      showOverlay: true,
-                      onDismiss: () {
-                        _showGuide = false;
-                        // setState(() {
-                        //
-                        // });
-                        // _toggleBackdropLayerVisibility();
-                      },
-                      child: Icon(Icons.menu)),
+          _showGuide
+              ? FeatureDiscoveryController(
+                  IconButton(
+                    icon: FeatureDiscovery(
+                        description: 'Test desc',
+                        title: "Test title",
+                        showOverlay: true,
+                        onDismiss: () {
+                          _showGuide = false;
+                          // setState(() {
+                          //
+                          // });
+                          // _toggleBackdropLayerVisibility();
+                        },
+                        child: Icon(Icons.menu)),
+                    // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
+                    onPressed: _toggleBackdropLayerVisibility,
+                  ),
+                )
+              : IconButton(
+                  icon: RotationTransition(
+                      turns: Tween(begin: .625, end: 0.0).animate(_controller),
+                      child: AnimatedIcon(
+                          icon: AnimatedIcons.add_event,
+                          progress: _controller)),
                   // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
                   onPressed: _toggleBackdropLayerVisibility,
                 ),
-              )
-            : IconButton(
-                icon: RotationTransition(
-                    turns: Tween(begin: .625, end: 0.0).animate(_controller),
-                    child: AnimatedIcon(
-                        icon: AnimatedIcons.add_event, progress: _controller)),
-                // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
-                onPressed: _toggleBackdropLayerVisibility,
-              ),
       ],
     );
     return AnimatedBuilder(

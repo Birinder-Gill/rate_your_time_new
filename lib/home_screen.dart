@@ -13,6 +13,7 @@ import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
 import 'package:rate_your_time_new/widgets/backdrop.dart';
+import 'file:///C:/Users/Birinder/AndroidStudioProjects/rate_your_time_new/lib/widgets/date_pickers/date_picker_widget.dart';
 import 'package:rate_your_time_new/widgets/page_status.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -99,32 +100,13 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget backdrop() {
-    final theme = Theme.of(context);
     return PageStatus(
       cartController: _controller,
       menuController: _expandingController,
       child: Backdrop(
           frontLayer: _getFrontLayer(model.toggle),
-          backLayer: Container(
-            height: double.infinity,
-            color: theme.primaryColor,
-            child: Theme(
-              data: theme.copyWith(
-                  colorScheme: theme.colorScheme.copyWith(
-                onPrimary: theme.accentColor,
-                primary: theme.primaryColorDark,
-                onSurface: theme.colorScheme.onPrimary,
-              )),
-              child: CalendarDatePicker(
-                key: model.datePickerKey,
-                initialDate: model.date,
-                firstDate: launchDate??DateTime(1900),
-                lastDate: DateTime.now(),
-                onDateChanged: (DateTime value) {
-                  model.refresh(value);
-                },
-              ),
-            ),
+          backLayer: DatePickerWidget(
+            firstDate: launchDate ?? DateTime(1900),
           ),
           frontTitle: Text("${TimeUtils.formatDate(model.date)}"),
           backTitle: Text("Select date"),

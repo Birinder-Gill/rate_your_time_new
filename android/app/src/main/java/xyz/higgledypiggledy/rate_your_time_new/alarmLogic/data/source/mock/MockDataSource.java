@@ -1,5 +1,7 @@
 package xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.mock;
 
+import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -11,12 +13,14 @@ import io.flutter.plugin.common.MethodChannel;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Hour;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.DataSource;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.local.LocalDataSource;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 import xyz.higgledypiggledy.rate_your_time_new.utils.Utils;
 
 public class MockDataSource implements DataSource {
 
 
     private static MockDataSource INSTANCE;
+    private String[] mockApps = new String[]{"Instagram","Facebook","Snapchat","Twitter"};
 
     public static MockDataSource getInstance() {
         if (INSTANCE == null) {
@@ -72,6 +76,33 @@ public class MockDataSource implements DataSource {
     public void updateHour(int id, int activity, String note, MethodChannel.Result result) {
         Log.d(TAG, "updateHour() called with: id = [" + id + "], activity = [" + activity + "], note = [" + note + "], result = [" + result + "]");
     }
+
+    @Override
+    public void getRunningApps(Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback) {
+        ArrayList<HashMap<String, Object>> result = new ArrayList<>();
+        for (String u:mockApps) {
+            Random random = new Random();
+            final HashMap<String, Object> map = new HashMap<>();
+            map.put("package", "android.package."+u);
+            map.put("firstTimeStamp", random.nextInt());
+            map.put("LastTimeStamp", random.nextInt());
+            map.put("LastTimeUsed", random.nextInt());
+            map.put("TotalTimeInForeground", random.nextInt());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                map.put("TotalTimeVisible", random.nextInt());
+            }
+            map.put("appName", u);
+            map.put("appLogo", "");
+                result.add(map);
+            }
+        AppExecutors.getInstance().mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onProgressLoaded(result);
+            }
+        });
+        }
+
 
     private static final String TAG = "MockDataSource";
 

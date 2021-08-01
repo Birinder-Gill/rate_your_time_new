@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HoursModel with ChangeNotifier {
 
@@ -23,6 +24,9 @@ class HoursModel with ChangeNotifier {
 
   final selections = [true,false,false];
 
+  final DateRangePickerController controller = DateRangePickerController();
+
+
   bool get loading => _loading;
   DateTime date = DateTime.now();
   int toggle=0;
@@ -35,11 +39,11 @@ class HoursModel with ChangeNotifier {
   }
 
   void calculateDatePickerHeight() {
-    final RenderBox renderBoxRed = (datePickerKey.currentContext
-        .findRenderObject());
-    final size = (renderBoxRed.size);
-    patePickerHeight = size.height;
-    notifyListeners();
+    // final RenderBox renderBoxRed = (datePickerKey.currentContext
+    //     .findRenderObject());
+    // final size = (renderBoxRed.size);
+    // patePickerHeight = size.height;
+    // notifyListeners();
   }
 
   void refresh(DateTime date) {
