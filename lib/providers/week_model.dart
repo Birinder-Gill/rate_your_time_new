@@ -11,9 +11,8 @@ class WeekModel extends AverageModel with ChangeNotifier {
   }
 
   loadData() async {
-      final to = date;
-      final from = (await TimeUtils.getWeekStart(date));
-
+    final to =  await TimeUtils.getWeekEnd(date);
+    final from = await TimeUtils.getWeekStart(date);
       await getHours(from,to);
     notifyListeners();
   }

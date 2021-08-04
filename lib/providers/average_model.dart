@@ -21,7 +21,8 @@ class AverageModel{
       Map hourData = await ApiHelper.getRangeData(to,from);
       this.av = await compute<Map,
           AverageDataModel>(Utils.parseAveragesData, hourData);
-      if(sumOf<SingleDayAverage>(this.av.averages, (a)=>a.worth)==0){
+      var sum= sumOf<SingleDayAverage>(this.av.averages, (a)=>a.worth);
+      if(sum==0 || sum ==double.nan){
         isEmpty=true;
       }else{
         isEmpty=false;

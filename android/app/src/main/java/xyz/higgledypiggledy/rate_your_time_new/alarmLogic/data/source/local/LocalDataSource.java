@@ -89,7 +89,7 @@ public class LocalDataSource implements DataSource {
                 lastHour++;
             }
         }
-        Log.d(TAG, "getHoursFor() called with: day = [" + day + "], month = [" + month + "], year = [" + year + "]");
+//        Log.d(TAG, "getHoursFor() called with: day = [" + day + "], month = [" + month + "], year = [" + year + "]");
         return finalList;
     }
 
@@ -102,7 +102,7 @@ public class LocalDataSource implements DataSource {
             c1.set(year1, month1, day1);
             Calendar c2 = Calendar.getInstance();
             c2.set(year2, month2, day2);
-            Log.d(TAG, "getDataFor() called with: day1 = [" + day1 + "], month1 = [" + month1 + "], year1 = [" + year1 + "], day2 = [" + day2 + "], month2 = [" + month2 + "], year2 = [" + year2 + "], callback = [" + callback + "]");
+//            Log.d(TAG, "getDataFor() called with: day1 = [" + day1 + "], month1 = [" + month1 + "], year1 = [" + year1 + "], day2 = [" + day2 + "], month2 = [" + month2 + "], year2 = [" + year2 + "], callback = [" + callback + "]");
 
             while (!c1.after(c2)) {
                 int d = c1.get(Calendar.DATE);

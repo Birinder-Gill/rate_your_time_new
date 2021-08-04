@@ -64,11 +64,11 @@ public class AlarmNotificationService extends Service {
         ContentValues v = new ContentValues();
         v.put(AlarmClockProvider.AlarmEntry.TIME, secondsPastMidnight);
         int repeat = TimeUtil.EVERYDAY;
-        Log.d(TAG, "newAlarm() called with: c = [" + c + "], secondsPastMidnight = [" + secondsPastMidnight + ", Repeat = " + v.get(AlarmClockProvider.AlarmEntry.DAY_OF_WEEK) + " ]");
+//        Log.d(TAG, "newAlarm() called with: c = [" + c + "], secondsPastMidnight = [" + secondsPastMidnight + ", Repeat = " + v.get(AlarmClockProvider.AlarmEntry.DAY_OF_WEEK) + " ]");
         v.put(AlarmClockProvider.AlarmEntry.DAY_OF_WEEK, repeat);
         Uri u = c.getContentResolver().insert(AlarmClockProvider.ALARMS_URI, v);
         long alarmid = ContentUris.parseId(u);
-        Log.i(TAG, "New alarm: " + alarmid + " (" + u + ")");
+//        Log.i(TAG, "New alarm: " + alarmid + " (" + u + ")");
         Calendar ts = TimeUtil.nextOccurrence(secondsPastMidnight, repeat);
         scheduleAlarmTrigger(c, alarmid, ts.getTimeInMillis());
 

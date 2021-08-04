@@ -13,7 +13,7 @@ class MonthModel extends AverageModel with ChangeNotifier {
   }
 
   loadData() async {
-    final to = date;
+    final to = (await TimeUtils.getMonthEnd(date));
     final from = (await TimeUtils.getMonthStart(date));
     await getHours(from,to);
     notifyListeners();

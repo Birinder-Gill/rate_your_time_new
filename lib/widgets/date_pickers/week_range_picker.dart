@@ -14,21 +14,22 @@ class WeekRangePicker extends StatelessWidget {
   void selectionChanged(DateRangePickerSelectionChangedArgs args)async {
     PickerDateRange ranges = args.value;
     DateTime date1 = ranges.startDate;
-    model.controller.selectedRange = PickerDateRange(await TimeUtils.getWeekStart(date1), await TimeUtils.getWeekEnd(date1));
+    final to =  await TimeUtils.getWeekEnd(date1);
+    final from = await TimeUtils.getWeekStart(date1);
+    model.controller.selectedRange = PickerDateRange(from,to);
+    model.refresh(date1);
+
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SfDateRangePicker(
+    return SfDateRangePicker(
         controller: model.controller,
         view: DateRangePickerView.month,
         minDate: firstDate,
-
         maxDate: DateTime.now(),
         selectionMode: DateRangePickerSelectionMode.range,
         onSelectionChanged: selectionChanged,
         monthViewSettings: DateRangePickerMonthViewSettings(enableSwipeSelection: false,firstDayOfWeek: 1),
-      ),
-    );
+      );
   }
 }

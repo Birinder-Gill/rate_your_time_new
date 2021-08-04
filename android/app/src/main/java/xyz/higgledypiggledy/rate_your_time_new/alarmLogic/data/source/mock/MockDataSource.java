@@ -110,7 +110,11 @@ public class MockDataSource implements DataSource {
         final ArrayList<HashMap<String, Object>> finalList = new ArrayList<>();
         Random random = new Random();
         Calendar now = Calendar.getInstance();
-        int lastTime = ((now.get(Calendar.MONTH) >= month) && (now.get(Calendar.YEAR) >= year) && (now.get(Calendar.DATE) > day) ? 22 : now.get(Calendar.HOUR_OF_DAY));
+        now.set(now.get(Calendar.YEAR),now.get(Calendar.MONTH),now.get(Calendar.DATE),0,0,0);
+        Calendar checkWith = Calendar.getInstance();
+        checkWith.set(year,month,day,0,0,0);
+        int lastTime = now.getTimeInMillis()>checkWith.getTimeInMillis() ? 22 : now.get(Calendar.HOUR_OF_DAY);
+        Log.i(TAG, "getHoursFor: LAST TIME  = "+lastTime);
         for (int i = 7; i < lastTime; i++) {
             finalList.add(new Hour(finalList.size()+1,random.nextInt(4) + 1, i, day, month, year, random.nextInt(15), "").toMap());
         }

@@ -110,8 +110,8 @@ public class UsageTracker {
 
             return bitmapToString(drawableToBitmap(icon));
         } catch (Exception e) {
-            Log.d(TAG, "getAppLogo() called with: packageName = [" + packageName + "]");
-            Log.e(TAG, "getAppLogo: ", e);
+//            Log.d(TAG, "getAppLogo() called with: packageName = [" + packageName + "]");
+//            Log.e(TAG, "getAppLogo: ", e);
         }
         return null;
     }

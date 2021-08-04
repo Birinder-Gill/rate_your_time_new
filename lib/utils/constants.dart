@@ -190,7 +190,7 @@ void dialog(context, Widget screen) =>
 Widget simpleLoader() => Center(child: CircularProgressIndicator());
 
 consoleLog(e) {
-  print("$e");
+  // print("$e");
 }
 
 double sumOf<T>(Iterable<T> where, num Function(T e) fun) {
@@ -265,11 +265,20 @@ class TimeUtils {
 
   static Future<DateTime> getWeekEnd(DateTime from) async {
     final to = from.add(Duration(days: 7-from.weekday));
-    final installDate = await SharedPrefs.checkInstallDate();
+    final now = DateTime.now();
     consoleLog('----------------------------');
     consoleLog(from);
-    consoleLog(installDate);
-    return to.isBefore(installDate) ? installDate : to;
+    return to.isBefore(now) ? to : now;
+  }
+
+
+  static Future<DateTime> getMonthEnd(DateTime from) async {
+
+    final to = DateTime(from.year,from.month,DateUtils.getDaysInMonth(from.year, from.month));
+    final now = DateTime.now();
+    consoleLog('----------------------------');
+    consoleLog(from);
+    return to.isBefore(now) ? to : now;
   }
 
 
@@ -282,6 +291,7 @@ class TimeUtils {
     consoleLog(installDate);
     return from.isBefore(installDate) ? installDate : from;
   }
+
 }
 
 class Utils {
