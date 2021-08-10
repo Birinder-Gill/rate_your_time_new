@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
@@ -10,6 +9,10 @@ class AppUSageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(appUsage==null)
+      return simpleLoader();
+    if(appUsage.highApps?.isEmpty??true)
+      return Text("No app usage found for this time period");
     return Card(
       child: Column(
         children: [

@@ -9,17 +9,16 @@ class WeekRangePicker extends StatelessWidget {
 
   final DateTime firstDate;
 
-  WeekRangePicker({Key key, this.model, this.firstDate}) : super(key: key);
+  WeekRangePicker({Key key, this.model, this.firstDate}) : super(key: key){
+    setSelection(model.date,refreshModel:false);
+  }
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args)async {
     PickerDateRange ranges = args.value;
     DateTime date1 = ranges.startDate;
-    final to =  await TimeUtils.getWeekEnd(date1);
-    final from = await TimeUtils.getWeekStart(date1);
-    model.controller.selectedRange = PickerDateRange(from,to);
-    model.refresh(date1);
-
+    setSelection(date1);
   }
+
   @override
   Widget build(BuildContext context) {
     return SfDateRangePicker(
@@ -31,5 +30,13 @@ class WeekRangePicker extends StatelessWidget {
         onSelectionChanged: selectionChanged,
         monthViewSettings: DateRangePickerMonthViewSettings(enableSwipeSelection: false,firstDayOfWeek: 1),
       );
+  }
+
+  void setSelection(DateTime date1, {bool refreshModel = true}) async{
+    final to =  await TimeUtils.getWeekEnd(date1);
+    final from = await TimeUtils.getWeekStart(date1);
+    model.controller.selectedRange = PickerDateRange(from,to);
+    if(refreshModel)
+    model.refresh(date1);
   }
 }

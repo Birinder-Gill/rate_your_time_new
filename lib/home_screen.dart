@@ -27,10 +27,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   final RestorableDouble _expandingTabIndex = RestorableDouble(0);
   final RestorableDouble _tabIndex = RestorableDouble(1);
-  AnimationController _controller;
-
-  // Animation Controller for expanding/collapsing the cart menu.
-  AnimationController _expandingController;
+  
 
   bool firstDay = false;
 
@@ -43,14 +40,14 @@ class _HomeScreenState extends State<HomeScreen>
       _expandingTabIndex,
       'expanding_tab_index',
     );
-    _controller.value = _tabIndex.value;
-    _expandingController.value = _expandingTabIndex.value;
+    model.animController.value = _tabIndex.value;
+    model.expandingController.value = _expandingTabIndex.value;
   }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _expandingController.dispose();
+    model.animController.dispose();
+    model.expandingController.dispose();
     _tabIndex.dispose();
     _expandingTabIndex.dispose();
     super.dispose();
@@ -59,32 +56,33 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+    model = Provider.of<HoursModel>(context,listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       model.calculateDatePickerHeight();
       _checkFirstDay();
     });
-    _controller = AnimationController(
+    model.animController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 450),
       value: 1,
     );
 
-    _controller.addStatusListener((status) {
+    model.animController.addStatusListener((status) {
       if (status == AnimationStatus.completed ||
           status == AnimationStatus.dismissed) {
-        _tabIndex.value = _controller.value;
+        _tabIndex.value = model.animController.value;
       }
     });
-    _expandingController = AnimationController(
+    model.expandingController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
     // Save state restoration animation values only when the menu page
     // fully opens or closes.
-    _expandingController.addStatusListener((status) {
+    model.expandingController.addStatusListener((status) {
       if (status == AnimationStatus.completed ||
           status == AnimationStatus.dismissed) {
-        _expandingTabIndex.value = _expandingController.value;
+        _expandingTabIndex.value = model.expandingController.value;
       }
     });
   }
@@ -101,8 +99,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget backdrop() {
     return PageStatus(
-      cartController: _controller,
-      menuController: _expandingController,
+      cartController: model.animController,
+      menuController: model.expandingController,
       child: Backdrop(
           frontLayer: _getFrontLayer(model.toggle),
           backLayer: DatePickerWidget(
@@ -110,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           frontTitle: Text("${TimeUtils.formatDate(model.date)}"),
           backTitle: Text("Select date"),
-          controller: _controller),
+          controller: model.animController),
     );
   }
 

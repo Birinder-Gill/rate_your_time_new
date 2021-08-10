@@ -12,6 +12,10 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HoursModel with ChangeNotifier {
 
+  AnimationController animController;
+
+  // Animation Controller for expanding/collapsing the cart menu.
+  AnimationController expandingController;
 
   bool loaded = false;
 
@@ -51,6 +55,9 @@ class HoursModel with ChangeNotifier {
     this.date = date;
     loaded = false;
     notifyListeners();
+    nextTick((){
+      animController.forward();
+    });
   }
 }
 

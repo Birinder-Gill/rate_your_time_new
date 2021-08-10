@@ -3,31 +3,35 @@ import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
 import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
-import 'package:rate_your_time_new/widgets/graphs/grouped_bar_graph.dart';
+import 'package:rate_your_time_new/utils/data_cache.dart';
 
-class AverageModel{
+class AverageModel {
   bool _loading = false;
   AverageDataModel av;
   bool loaded = false;
-  bool isEmpty=false;
+  bool isEmpty = false;
   AverageAppUsageModel appUsage;
 
+  DataCache cache = DataCache();
 
-  getHours(DateTime from,DateTime to) async {
+  Future getHours(DateTime from, DateTime to) async {
     if (_loading) return;
     _loading = true;
     try {
+      loaded=false;
       consoleLog("Get hours called with from = [$from] and to =[$to]");
-      Map hourData = await ApiHelper.getRangeData(to,from);
-      this.av = await compute<Map,
-          AverageDataModel>(Utils.parseAveragesData, hourData);
-      var sum= sumOf<SingleDayAverage>(this.av.averages, (a)=>a.worth);
-      if(sum==0 || sum ==double.nan){
-        isEmpty=true;
-      }else{
-        isEmpty=false;
+      this.av = cache.getAverageData(to, from);
+      if (this.av == null) {
+        Map hourData = await ApiHelper.getRangeData(to, from);
+        this.av = await compute<Map, AverageDataModel>(
+            Utils.parseAveragesData, hourData);
+        cache.addAverageCache(to, from, this.av);
       }
-      this.appUsage = await ApiHelper.trackUsageData(from,to);
+      isEmpty = true;
+      this.av.averages.forEach((element) {
+        if (!element.worth.isNaN) isEmpty = false;
+        return;
+      });
       loaded = true;
     } catch (e, trace) {
       consoleLog("Error Caught = $e,$trace");
@@ -36,4 +40,12 @@ class AverageModel{
     }
   }
 
+  Future loadAppUsages(DateTime from, DateTime to) async {
+    this.appUsage = (cache.getAppsData(to, from));
+
+    if(this.appUsage==null) {
+      this.appUsage = (await ApiHelper.trackUsageData(from, to));
+      cache.addAppDataCache(to, from, this.appUsage);
+    }
+  }
 }

@@ -53,4 +53,8 @@ class SingleDayAverage {
 
   SingleDayAverage(this.date, this.worth);
 
+  @override
+  String toString() {
+    return "$date ---> $worth";
+  }
 }

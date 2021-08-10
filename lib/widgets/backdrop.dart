@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -45,19 +46,22 @@ class _FrontLayer extends StatelessWidget {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (model.toggle != 0)
-                  IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
-                ToggleButtons(
-                    selectedColor: Theme.of(context).accentColor,
-                    onPressed: model.changeViewToggle,
-                    children: [
-                      Icon(Icons.calendar_view_day),
-                      Icon(Icons.view_week),
-                      Icon(Icons.date_range)
-                    ],
-                    isSelected: model.selections),
-                if (model.toggle != 0)
-                  IconButton(icon: Icon(Icons.chevron_right), onPressed: () {}),
+                // if (model.toggle != 0)
+                //   IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
+                Opacity(
+                  opacity: model.animController.value,
+                  child: ToggleButtons(
+                      selectedColor: Theme.of(context).accentColor,
+                      onPressed: model.animController.value == 1?model.changeViewToggle:null,
+                      children: [
+                        Icon(Icons.calendar_view_day),
+                        Icon(Icons.view_week),
+                        Icon(Icons.date_range)
+                      ],
+                      isSelected: model.selections),
+                ),
+                // if (model.toggle != 0)
+                //   IconButton(icon: Icon(Icons.chevron_right), onPressed: () {}),
               ],
             );
           }),
@@ -295,7 +299,7 @@ class _BackdropState extends State<Backdrop>
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
     const layerTitleHeight = 48;
     final layerSize =
-        Size(constraints.biggest.width,450);
+        Size(constraints.biggest.width,Constants.datePickerHeight);
     final layerTop = layerSize.height - layerTitleHeight;
 
     _layerAnimation = _getLayerAnimation(layerSize, layerTop);
@@ -316,9 +320,10 @@ class _BackdropState extends State<Backdrop>
               builder: (context, child) => AnimatedBuilder(
                 animation: PageStatus.of(context).menuController,
                 builder: (context, child) => _FrontLayer(
-                  onTap: menuPageIsVisible(context)
-                      ? _toggleBackdropLayerVisibility
-                      : null,
+                  onTap: null,
+    // menuPageIsVisible(context)
+    //                   ? _toggleBackdropLayerVisibility
+    //                   : null,
                   child: widget.frontLayer,
                 ),
               ),
@@ -380,11 +385,9 @@ class _BackdropState extends State<Backdrop>
                   ),
                 )
               : IconButton(
-                  icon: RotationTransition(
-                      turns: Tween(begin: .625, end: 0.0).animate(_controller),
-                      child: AnimatedIcon(
-                          icon: AnimatedIcons.add_event,
-                          progress: _controller)),
+                  icon: AnimatedIcon(
+                      icon: AnimatedIcons.add_event,
+                      progress: _controller),
                   // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
                   onPressed: _toggleBackdropLayerVisibility,
                 ),

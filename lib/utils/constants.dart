@@ -158,6 +158,9 @@ class Constants {
   static const String CHANNEL_NAME = 'name';
 
   static const String saveSettings = 'saveSettings';
+
+  static const double datePickerHeight =450;
+
 }
 
 double letterSpacingOrNone(double letterSpacing) => letterSpacing;
@@ -189,8 +192,8 @@ void dialog(context, Widget screen) =>
 
 Widget simpleLoader() => Center(child: CircularProgressIndicator());
 
-consoleLog(e) {
-  // print("$e");
+consoleLog(e, {bool log = false}) {
+ if(log) print("$e");
 }
 
 double sumOf<T>(Iterable<T> where, num Function(T e) fun) {
@@ -329,7 +332,7 @@ class Utils {
                 List<Map<String, dynamic>>.from(value.map((e) =>
                     Map<String, dynamic>.from(
                         e.map((k, v) => MapEntry("$k", v))))))));
-    consoleLog(hours);
+    consoleLog(hours,log:true);
     AverageDataModel av = AverageDataModel();
     if (av.averages == null) av.averages = [];
     final tempActivityMap = {};
@@ -374,6 +377,7 @@ class Utils {
           timeSpent: temp.sublist(ACTIVITIES_TO_SHOW).fold(0,
               (previousValue, element) => previousValue + element.timeSpent)));
     }
+    consoleLog(av,log:true);
 
     return av;
   }

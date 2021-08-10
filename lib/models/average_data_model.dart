@@ -11,6 +11,6 @@ class AverageDataModel{
 
   @override
   String toString() {
-    return averages.map((e) => "${e.date.toIso8601String().substring(0,10)} -> ${e.worth}").toString();
+    return averages.toString();
   }
 }

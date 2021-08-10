@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
+import 'package:rate_your_time_new/utils/constants.dart';
 
 class MonthRangePicker extends StatefulWidget {
   final HoursModel model;
@@ -28,53 +29,170 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
     "Dec"
   ];
 
-  var years = List<int>.generate(20, (index) => 2020 + index);
+  PageController pageController;
+  DateTime selectedDate;
+  int displayedYear;
 
-  int year;
+  final List<int> years = [2021];
 
-  String month;
+  Color get accentColor =>
+      Theme
+          .of(context)
+          .accentColor;
+
+  get primary => Colors.orange;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if(year!=null && month!=null)Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("$month, $year",style: Theme.of(context).textTheme.headline3,),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: DropdownButton(
-              value: year,
-              onChanged: (e) {
-                setState(() {
-                  year = e;
-                });
-              },
-              items: years
-                  .map((e) => DropdownMenuItem(
-                        child: Text('$e'),
-                        value: e,
-                      ))
-                  .toList()),
-        ),
-        Expanded(
-          child: GridView.builder(
-              itemCount: months.length,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              itemBuilder: (c, i) => TextButton(
-                  onPressed: () {
-                    setState(() {
-                      month = months[i];
-                      widget.model.refresh(DateTime(year,i+1));
-                    });
-                  },
-                  child: Text(months[i]))),
-        ),
-      ],
+    return Container(
+      height: Constants.datePickerHeight,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          buildHeader(),
+          Expanded(
+            child: buildPager(),
+          )
+        ],
+      ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController();
+    selectedDate = widget.model.date;
+    displayedYear = selectedDate.year;
+  }
+
+  buildHeader() {
+    return Material(
+      color: Theme
+          .of(context)
+          .primaryColor,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('$displayedYear', style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline6,),
+                Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.keyboard_arrow_up),
+                      onPressed: () =>
+                          pageController.animateToPage(
+                              displayedYear - 1,
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves.easeInOut),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      onPressed: () =>
+                          pageController.animateToPage(
+                              displayedYear + 1,
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves.easeInOut),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  buildPager() =>
+      PageView(
+          controller: pageController,
+          scrollDirection: Axis.vertical,
+          onPageChanged: (index) {
+            setState(() {
+              displayedYear = index;
+            });
+          },
+          children: [
+            for(final year in years)
+              GridView.count(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(12.0),
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: 4,
+                children: List<int>.generate(12, (i) => i + 1)
+                    .map((month) => DateTime(year, month))
+                    .map(
+                      (date) =>
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: OutlinedButton(
+                          onPressed: () =>
+                              setState(() {
+                                selectedDate = DateTime(date.year, date.month);
+                                widget.model.refresh(selectedDate);
+                              }),
+
+
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.resolveWith(
+                                  (states) =>
+                              date.month == selectedDate.month &&
+                                  date.year == selectedDate.year
+                                  ? 4.0
+                                  : 0,
+                            ),
+                            backgroundColor: MaterialStateProperty.resolveWith(
+                                  (states) =>
+                              date.month == selectedDate.month &&
+                                  date.year == selectedDate.year
+                                  ? accentColor
+                                  : null,
+                            ),
+                            textStyle: MaterialStateProperty.resolveWith((
+                                states) =>
+                                TextStyle(
+                                    color: date.month == selectedDate.month &&
+                                        date.year == selectedDate.year
+                                        ? Colors.white
+                                        : date.month == DateTime
+                                        .now()
+                                        .month &&
+                                        date.year == DateTime
+                                            .now()
+                                            .year
+                                        ? accentColor
+                                        : null)),
+                          ),
+                          child: Text(
+                              months[date.month - 1],
+                              style: TextStyle(
+                                  color: date.month == selectedDate.month &&
+                                      date.year == selectedDate.year
+                                      ? Colors.white
+                                      : date.month == DateTime
+                                      .now()
+                                      .month &&
+                                      date.year == DateTime
+                                          .now()
+                                          .year
+                                      ? primary
+                                      : null)
+                          ),
+                        ),
+                      ),
+                )
+                    .toList(),
+              )
+          ],
+      );
 }

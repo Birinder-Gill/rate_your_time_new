@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
+import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/date_pickers/month_range_picker.dart';
 import 'package:rate_your_time_new/widgets/date_pickers/week_range_picker.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -27,7 +28,7 @@ class DatePickerWidget extends StatelessWidget {
         child: Column(
           children: [
             Container(
-                height: 450,
+                height: Constants.datePickerHeight,
                 child: model.toggle == 1
                     ? WeekRangePicker(model: model,firstDate:firstDate,)
                     : model.toggle==0?SingleDatePicker(model: model,firstDate: firstDate):
