@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen>
           backLayer: DatePickerWidget(
             firstDate: launchDate ?? DateTime(1900),
           ),
-          frontTitle: Text("${TimeUtils.formatDate(model.date)}"),
+          frontTitle: Text(model.frontLabel),
           backTitle: Text("Select date"),
           controller: model.animController),
     );

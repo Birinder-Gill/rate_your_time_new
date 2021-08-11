@@ -10,10 +10,12 @@ class WeekModel extends AverageModel with ChangeNotifier {
     this.date = date;
     loadData();
   }
+  String dateLabel = "";
 
   loadData() async {
     final to = await TimeUtils.getWeekEnd(date);
     final from = await TimeUtils.getWeekStart(date);
+    this.dateLabel = "${from.day}/${from.month}-${to.day}/${to.month}${to.year}";
     getHours(from, to).then((value) {
       notifyListeners();
     });

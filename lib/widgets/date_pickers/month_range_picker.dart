@@ -13,21 +13,8 @@ class MonthRangePicker extends StatefulWidget {
   _MonthRangePickerState createState() => _MonthRangePickerState();
 }
 
+
 class _MonthRangePickerState extends State<MonthRangePicker> {
-  final months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec"
-  ];
 
   PageController pageController;
   DateTime selectedDate;
@@ -174,7 +161,7 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
                                         : null)),
                           ),
                           child: Text(
-                              months[date.month - 1],
+                              Constants.months[date.month - 1],
                               style: TextStyle(
                                   color: date.month == selectedDate.month &&
                                       date.year == selectedDate.year

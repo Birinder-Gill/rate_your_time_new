@@ -14,23 +14,14 @@ import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.mock.MockD
 public class Injection {
     private static final String TAG = "Injection";
 
-    public static DataRepository provideRepository(Context context, boolean test) {
+    public static DataRepository provideRepository(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("Context can not be null");
         }
-        Log.d(TAG, "provideRepository() called with: context = [" + context + "], test = [" + test + "]");
+//        Log.d(TAG, "provideRepository() called with: context = [" + context + "], test = [" + test + "]");
 
-        Toast.makeText(context, "VALUE OF TEST IS "+test, Toast.LENGTH_SHORT).show();
-        if (test) {
-            Log.i(TAG, "provideRepository: INSIDE TEST");
-            MockDataSource source = MockDataSource.getInstance();
-            return DataRepository.getInstance(source);
-        }
+//      MockDataSource source = MockDataSource.getInstance();
         LocalDataSource source = LocalDataSource.getInstance(ProgressDatabase.getInstance(context).dao(), AppExecutors.getInstance());
         return DataRepository.getInstance(source);
-
-
-
-
-    }
+}
 }

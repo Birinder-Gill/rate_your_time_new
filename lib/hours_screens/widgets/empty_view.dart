@@ -14,7 +14,7 @@ class EmptyView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          "Tell here about what will be shown on this screen. ${Constants.testFlag}",
+          "Tell here about what will be shown on this screen.",
 
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5,

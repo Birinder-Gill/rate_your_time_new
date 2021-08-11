@@ -11,6 +11,7 @@ class GroupedBarChart extends StatelessWidget {
 
   factory GroupedBarChart.withHoursData(List<SingleDayAverage> av) {
     return new GroupedBarChart(
+
       _createSampleData(av),
       // Disable animations for image tests.
       animate: true,

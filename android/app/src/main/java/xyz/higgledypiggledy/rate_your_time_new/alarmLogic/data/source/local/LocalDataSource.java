@@ -89,7 +89,6 @@ public class LocalDataSource implements DataSource {
                 lastHour++;
             }
         }
-//        Log.d(TAG, "getHoursFor() called with: day = [" + day + "], month = [" + month + "], year = [" + year + "]");
         return finalList;
     }
 

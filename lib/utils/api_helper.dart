@@ -24,9 +24,9 @@ class ApiHelper{
 
   static Future<T> _invokeMethod<T>(String method, [ Map<String,int> arguments ]) async {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
-    if(arguments!=null && arguments is Map){
-      arguments.addAll(<String,int>{"test": Constants.testFlag ? 1 : 0}) ;
-    }
+    // if(arguments!=null && arguments is Map){
+    //   arguments.addAll(<String,int>{"test": Constants.testFlag ? 1 : 0}) ;
+    // }
     consoleLog("Arguments = $arguments");
     final data = await channel.invokeMethod<T>(method,arguments);
     return data;

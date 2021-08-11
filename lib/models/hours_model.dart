@@ -30,15 +30,18 @@ class HoursModel with ChangeNotifier {
 
   final DateRangePickerController controller = DateRangePickerController();
 
+  String frontLabel = '';
+
 
   bool get loading => _loading;
   DateTime date = DateTime.now();
   int toggle=0;
 
-  changeViewToggle(int e){
+  changeViewToggle(int e)async{
     selections[toggle] = false;
    toggle=e;
     selections[toggle]=true;
+    frontLabel = await _setLabel();
     notifyListeners();
   }
 
@@ -50,14 +53,30 @@ class HoursModel with ChangeNotifier {
     // notifyListeners();
   }
 
-  void refresh(DateTime date) {
+  void refresh(DateTime date) async{
     if (date == null) return;
     this.date = date;
     loaded = false;
+    frontLabel = await _setLabel();
     notifyListeners();
     nextTick((){
       animController.forward();
     });
+  }
+
+  Future<String> _setLabel() async{
+    switch(toggle){
+      case 0:{
+        return "${TimeUtils.formatDate(date)}";
+      }
+      case 1:{
+        return "${date.day}/${date.month} to ${TimeUtils.formatDate(await TimeUtils.getWeekEnd(date))}";
+      }
+      default:{
+        return "${Constants.months[date.month-1]} ${date.year}";
+      }
+
+    }
   }
 }
 

@@ -8,6 +8,8 @@ class MonthModel extends AverageModel with ChangeNotifier {
 
   AverageAppUsageModel appUsage;
 
+  String dateLabel = "";
+
   changeDate(DateTime date) {
     this.date = date;
     loadData();
@@ -16,6 +18,7 @@ class MonthModel extends AverageModel with ChangeNotifier {
   loadData() async {
     final to = (await TimeUtils.getMonthEnd(date));
     final from = (await TimeUtils.getMonthStart(date));
+    this.dateLabel = "${Constants.months[date.month-1]} ${date.year}";
     getHours(from, to).then((value) {
       notifyListeners();
     });
