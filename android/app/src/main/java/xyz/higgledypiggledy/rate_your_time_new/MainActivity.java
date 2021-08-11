@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -28,7 +29,7 @@ import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.Injection;
 
 public class MainActivity extends FlutterActivity {
 
-
+    private static final String TAG = "MainActivity";
     public static final int LAST_HOUR = 22;
     private static final String SHARED_PREFERENCES_NAME = "rateYourTimePrefs";
 
@@ -102,25 +103,30 @@ public class MainActivity extends FlutterActivity {
         channel.setMethodCallHandler((call, result) -> {
             switch (call.method) {
                 case "getDayData": {
-                    Injection.provideRepository(getApplicationContext()).getDataFor(call.argument("date"), call.argument("month"), call.argument("year"), result::success);
+                    boolean testFlag = call.argument("test")!=null&& ((int)call.argument("test")) == 1;
+                    Injection.provideRepository(getApplicationContext(),testFlag).getDataFor(call.argument("date"), call.argument("month"), call.argument("year"), result::success);
                     return;
                 }
                 case "getRangeHours": {
-                    Injection.provideRepository(getApplicationContext()).getRangeDataFor(call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"), result::success);
+                    Log.i(TAG, "configureFlutterEngine: "+call.arguments());
+                    boolean testFlag = call.argument("test")!=null&& ((int)call.argument("test")) == 1;
+                    Injection.provideRepository(getApplicationContext(),testFlag).getRangeDataFor(call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"), result::success);
                     return;
                 }
 
                 case "getWeekData": {
                     Calendar cal = Calendar.getInstance();
                     cal.set(call.argument("year"), call.argument("month"), call.argument("date"));
-                    Injection.provideRepository(getApplicationContext()).getWeekData(cal, result::success);
+                    boolean testFlag = call.argument("test")!=null&& ((int)call.argument("test")) == 1;
+                    Injection.provideRepository(getApplicationContext(),testFlag).getWeekData(cal, result::success);
                     return;
                 }
 
                 case "getMonthData": {
                     Calendar cal = Calendar.getInstance();
                     cal.set(call.argument("year"), call.argument("month"), call.argument("date"));
-                    Injection.provideRepository(getApplicationContext()).getMonthData(cal, result::success);
+                    boolean testFlag = call.argument("test")!=null&& ((int)call.argument("test")) == 1;
+                    Injection.provideRepository(getApplicationContext(),testFlag).getMonthData(cal, result::success);
                     return;
                 }
 
@@ -143,7 +149,8 @@ public class MainActivity extends FlutterActivity {
 
                 case "getApps": {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        Injection.provideRepository(getApplicationContext()).getRunningApps(getApplicationContext(), call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"), result::success);
+                        boolean testFlag = call.argument("test")!=null&& ((int)call.argument("test")) == 1;
+                        Injection.provideRepository(getApplicationContext(),testFlag).getRunningApps(getApplicationContext(), call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"), result::success);
                     }
                     return;
                 }
@@ -183,7 +190,7 @@ public class MainActivity extends FlutterActivity {
     }
 
     private void updateHour(int id, int activity, String note, MethodChannel.Result result) {
-        Injection.provideRepository(getApplicationContext()).updateHour(id, activity, note, result);
+        Injection.provideRepository(getApplicationContext(),false).updateHour(id, activity, note, result);
 
     }
 

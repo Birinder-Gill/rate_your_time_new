@@ -8,7 +8,7 @@ class ApiHelper{
 
   ///SUBTRACT 1 FROM MONTH BECAUSE MONTHS START FROM 0 IN JAVA AND 1 N DART
   static Future<Map> getRangeData(DateTime to,DateTime from)async{
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
+
     final body = {
       'd1':from.day,
       'm1':from.month-1,
@@ -18,7 +18,17 @@ class ApiHelper{
       'y2':to.year
     };
     consoleLog("MONTH BODY + $body");
-    final data = await channel.invokeMethod<Map>(Constants.getRangeHours,body);
+    final data = await _invokeMethod<Map>(Constants.getRangeHours,body);
+    return data;
+  }
+
+  static Future<T> _invokeMethod<T>(String method, [ Map<String,int> arguments ]) async {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    if(arguments!=null && arguments is Map){
+      arguments.addAll(<String,int>{"test": Constants.testFlag ? 1 : 0}) ;
+    }
+    consoleLog("Arguments = $arguments");
+    final data = await channel.invokeMethod<T>(method,arguments);
     return data;
   }
 
@@ -31,13 +41,11 @@ class ApiHelper{
       'year': date.year
     };
     consoleLog("Calling gethours with body $body");
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
-    final hours = await channel.invokeMethod(Constants.getDayData, body);
+    final hours = await _invokeMethod(Constants.getDayData, body);
     return hours;
   }
 
   static Future<AverageAppUsageModel> trackUsageData(DateTime from,DateTime to) async {
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
     final body = {
       'd1':from.day,
       'm1':from.month-1,
@@ -47,7 +55,7 @@ class ApiHelper{
       'y2':to.year
     };
     consoleLog("Body = $body");
-    final List list = await channel.invokeMethod('getApps',body);
+    final List list = await _invokeMethod<List>('getApps',body);
     return await compute<List, AverageAppUsageModel>(Utils.parseStatsData, list);
   }
 

@@ -117,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _checkFirstDay() async {
     launchDate = await SharedPrefs.checkInstallDate();
+
     this.firstDay = DateUtils.isSameDay(launchDate, DateTime.now());
     nextTick(() {
       setState(() {});

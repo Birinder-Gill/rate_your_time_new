@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/select_time_screen.dart';
@@ -46,6 +47,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               title: Text("Select time"),
             ),
+            ListTile(
+              onTap: (){
+                setState(() {
+                  Constants.testFlag = !Constants.testFlag;
+                });
+              },
+              leading: Icon(Icons.bug_report_sharp,color: Constants.testFlag?Colors.green:Colors.grey,),
+              title: Text("Debug mode"),
+              trailing: CupertinoSwitch(value: Constants.testFlag, onChanged: (e){
+                setState(() {
+                  Constants.testFlag = e;
+                });
+              }),
+            ),
+
 
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rate_your_time_new/utils/constants.dart';
 
 class EmptyView extends StatelessWidget {
   final bool firstDay;
@@ -13,7 +14,8 @@ class EmptyView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          "Tell here about what will be shown on this screen.",
+          "Tell here about what will be shown on this screen. ${Constants.testFlag}",
+
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5,
         ),

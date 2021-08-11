@@ -161,6 +161,8 @@ class Constants {
 
   static const double datePickerHeight =450;
 
+  static var testFlag = false;
+
 }
 
 double letterSpacingOrNone(double letterSpacing) => letterSpacing;
@@ -192,7 +194,7 @@ void dialog(context, Widget screen) =>
 
 Widget simpleLoader() => Center(child: CircularProgressIndicator());
 
-consoleLog(e, {bool log = false}) {
+consoleLog(e, {bool log = true}) {
  if(log) print("$e");
 }
 

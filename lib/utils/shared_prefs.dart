@@ -53,10 +53,12 @@ class SharedPrefs {
   //   return (result==today);
   // }
 
-  static const TEST_FLAG=true;
 
   static Future<DateTime> checkInstallDate()async{
-    if(TEST_FLAG) return DateTime(2000);
+    if(Constants.testFlag) {
+      consoleLog("Returning 2000");
+      return DateTime(2000);
+    }
     var installTime = await getInt(installDate,);
     if(installTime==0){
       var now=DateTime.now();
