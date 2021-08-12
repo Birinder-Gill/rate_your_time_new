@@ -49,7 +49,7 @@ class SharedPrefs {
   //   return (result==today);
   // }
 
-  static const testFlag = false;
+  static const testFlag = true;
 
   static Future<DateTime> checkInstallDate() async {
     if (testFlag) {

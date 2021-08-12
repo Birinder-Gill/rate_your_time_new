@@ -8,22 +8,35 @@ class WeekModel extends AverageModel with ChangeNotifier {
 
   changeDate(DateTime date) {
     this.date = date;
-    loadData();
+    _loadData();
   }
   String dateLabel = "";
 
-  loadData() async {
+  _loadData({bool hours = true,bool apps=true}) async {
     final to = await TimeUtils.getWeekEnd(date);
     final from = await TimeUtils.getWeekStart(date);
-    this.dateLabel = "${from.day}/${from.month}-${to.day}/${to.month}${to.year}";
-    getHours(from, to).then((value) {
-      notifyListeners();
-    });
-    loadAppUsages(from, to).then((value) {
-      notifyListeners();
-    });
+    if(hours)
+    _loadHours(from,to);
+    if(apps)
+    _loadApps(from,to);
     nextTick((){
       notifyListeners();
     });
+  }
+  void _loadApps(DateTime from, DateTime to){
+    loadAppUsages(from, to).then((value) {
+      notifyListeners();
+    });
+  }
+
+  void _loadHours(DateTime from, DateTime to) {
+    this.dateLabel = "${from.day}/${from.month}-${to.day}/${to.month}${to.year}";
+    this.dateLabel = "${Constants.months[date.month-1]} ${date.year}";
+    getHours(from, to).then((value) {
+      notifyListeners();
+    });
+  }
+  void refresh({bool hours = true,bool apps=true}) {
+    _loadData(hours: hours,apps:apps);
   }
 }

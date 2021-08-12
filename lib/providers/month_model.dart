@@ -12,21 +12,35 @@ class MonthModel extends AverageModel with ChangeNotifier {
 
   changeDate(DateTime date) {
     this.date = date;
-    loadData();
+    _loadData();
   }
 
-  loadData() async {
+  _loadData({bool hours = true,bool apps=true}) async {
     final to = (await TimeUtils.getMonthEnd(date));
     final from = (await TimeUtils.getMonthStart(date));
+    if(hours)
+    _loadHours(from,to);
+    if(apps)
+    _loadApps(from,to);
+
+    nextTick((){
+      notifyListeners();
+    });
+  }
+  void _loadApps(DateTime from, DateTime to){
+    loadAppUsages(from, to).then((value) {
+      notifyListeners();
+    });
+  }
+
+  void _loadHours(DateTime from, DateTime to) {
     this.dateLabel = "${Constants.months[date.month-1]} ${date.year}";
     getHours(from, to).then((value) {
       notifyListeners();
     });
-    loadAppUsages(from, to).then((value) {
-      notifyListeners();
-    });
-    nextTick((){
-      notifyListeners();
-    });
+  }
+
+  void refresh({bool hours = true,bool apps=true}) {
+    _loadData(hours: hours,apps:apps);
   }
 }

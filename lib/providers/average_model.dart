@@ -14,6 +14,8 @@ class AverageModel {
 
   DataCache cache = DataCache();
 
+  bool accessGranted=false;
+
   Future getHours(DateTime from, DateTime to) async {
     if (_loading) return;
     _loading = true;
@@ -41,6 +43,7 @@ class AverageModel {
   }
 
   Future loadAppUsages(DateTime from, DateTime to) async {
+    this.accessGranted = await Utils.isUsageAccessGranted();
     this.appUsage = (cache.getAppsData(to, from));
 
     if(this.appUsage==null) {

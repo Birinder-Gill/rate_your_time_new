@@ -432,6 +432,16 @@ class Utils {
     //     .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
     // return distinctApps;
   }
+
+  static Future<bool> isUsageAccessGranted() async {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    return await channel.invokeMethod('isAccessGranted');
+  }
+
+  static void openUsageSettingsScreen() {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    channel.invokeMethod('openSettings');
+  }
 }
 
 ///OLD HOUR WIDGET

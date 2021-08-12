@@ -53,8 +53,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   }
 
   openSettings() {
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
-    channel.invokeMethod('openSettings');
+  Utils.openUsageSettingsScreen();
   }
 
   @override
@@ -66,8 +65,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   }
 
   Future<void> isAccessGranted() async {
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
-    _granted = await channel.invokeMethod('isAccessGranted');
+    _granted = await Utils.isUsageAccessGranted();
     if (_granted)
       getApps();
     else {
@@ -80,7 +78,6 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     final theme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
-        // title: Text("$_granted - $granted"),
         actions: [
           TextButton(
               onPressed: loading ? null : getApps,

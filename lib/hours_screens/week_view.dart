@@ -45,7 +45,9 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
                 _WeekViewStats(model, widget.firstDay),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: AppUSageCard(model.appUsage),
+                  child: AppUsageCard(model.appUsage,model.accessGranted,(){
+                    model.refresh(hours: false);
+                  }),
                 ),
                 SizedBox(
                   height: 24,

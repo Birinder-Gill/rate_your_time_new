@@ -45,7 +45,9 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
               _MonthViewStats(model, widget.firstDay),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: AppUSageCard(model.appUsage),
+                child: AppUsageCard(model.appUsage,model.accessGranted,(){
+                  model.refresh(hours: false);
+                }),
               ),
             ],
           );

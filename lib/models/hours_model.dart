@@ -53,9 +53,13 @@ class HoursModel with ChangeNotifier {
     // notifyListeners();
   }
 
-  void refresh(DateTime date) async{
-    if (date == null) return;
-    this.date = date;
+  void refresh([DateTime date]) async{
+    if (date == null) {
+      if(this.date==null)
+      return;
+    }else {
+      this.date = date;
+    }
     loaded = false;
     frontLabel = await _setLabel();
     notifyListeners();
