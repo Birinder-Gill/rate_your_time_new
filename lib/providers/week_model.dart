@@ -13,6 +13,7 @@ class WeekModel extends AverageModel with ChangeNotifier {
   String dateLabel = "";
 
   _loadData({bool hours = true,bool apps=true}) async {
+    consoleLog("LOAD DATA IN WEEK MODEL DATE = $date");
     final to = await TimeUtils.getWeekEnd(date);
     final from = await TimeUtils.getWeekStart(date);
     if(hours)

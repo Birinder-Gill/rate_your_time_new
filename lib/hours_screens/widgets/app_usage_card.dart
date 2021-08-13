@@ -22,7 +22,7 @@ class AppUsageCard extends StatelessWidget {
     if(appUsage==null)
       return simpleLoader();
     if(appUsage.highApps?.isEmpty??true)
-      return Center(child: Text("No app usage found for this time period"));
+      return Center(child: Text("Could not get app usage stats for this time period"));
     return Card(
       child: Column(
         children: [

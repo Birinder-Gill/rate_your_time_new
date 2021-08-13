@@ -17,10 +17,13 @@ class MonthViewWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: Provider.of<MonthModel>(context,listen: false)
-        ..changeDate(Provider.of<HoursModel>(context, listen: false).date),
-      child: MonthViewScreen(firstDay),
+    return Selector<MonthModel,MonthModel>(
+      selector: (c,model)=>model,
+      shouldRebuild: (p,c)=>!DateUtils.isSameDay(p.date,c.date),
+      builder:(_,model,__){
+        model.changeDate(Provider.of<HoursModel>(context, listen: false).date);
+        return MonthViewScreen(firstDay);
+      },
     );
   }
 }
@@ -88,24 +91,31 @@ class _MonthViewStats extends StatelessWidget {
                   padding: EdgeInsets.all(1),
                   width: width / 5,
                   height: 86,
-                  child: Container(
-                    color:
-                        Colors.blue.withOpacity(i.worth > 0 ? i.worth / 5 : 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text(
-                            "${i.date.day}",
-                            textAlign: TextAlign.center,
+                  child: InkWell(
+                    onTap: (){
+                      final hm= Provider.of<HoursModel>(context,listen: false);
+                      hm.changeViewToggle(0);
+                      hm.refresh(i.date);
+                    },
+                    child: Container(
+                      color:
+                          Colors.blue.withOpacity(i.worth > 0 ? i.worth / 5 : 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              "${i.date.day}",
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                        Text(i.worth > 0 ? "${(i.worth * 20).toInt()}%" : ".",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text("")
-                      ],
+                          Text(i.worth > 0 ? "${(i.worth * 20).toInt()}%" : ".",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text("")
+                        ],
+                      ),
                     ),
                   ),
                 )

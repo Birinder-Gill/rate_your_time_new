@@ -434,6 +434,7 @@ class Utils {
   }
 
   static Future<bool> isUsageAccessGranted() async {
+    consoleLog("Is Usage granted getting called");
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     return await channel.invokeMethod('isAccessGranted');
   }

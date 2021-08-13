@@ -38,6 +38,7 @@ class HoursModel with ChangeNotifier {
   int toggle=0;
 
   changeViewToggle(int e)async{
+    if(toggle==e)return;
     selections[toggle] = false;
    toggle=e;
     selections[toggle]=true;

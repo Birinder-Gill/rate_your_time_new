@@ -16,10 +16,13 @@ class WeekViewWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: Provider.of<WeekModel>(context,listen: false)
-        ..changeDate(Provider.of<HoursModel>(context, listen: false).date),
-      child: WeekViewScreen(firstDay),
+    return Selector<WeekModel,WeekModel>(
+      selector: (c,model)=>model,
+      shouldRebuild: (p,c)=>!DateUtils.isSameDay(p.date,c.date),
+      builder:(_,model,__){
+        model.changeDate(Provider.of<HoursModel>(context, listen: false).date);
+        return WeekViewScreen(firstDay);
+      },
     );
   }
 }
@@ -83,7 +86,11 @@ class _WeekViewStats extends StatelessWidget {
                 Text('Average of hourly ratings given by yourself this week.')),
         Container(
             height: 300,
-            child: GroupedBarChart.withHoursData(model.av.averages)),
+            child: GroupedBarChart.withHoursData(model.av.averages,(i){
+              final hm= Provider.of<HoursModel>(context,listen: false);
+              hm.changeViewToggle(0);
+              hm.refresh(model.av.averages[i].date);
+            })),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: ActivityAverageCard(model.av),

@@ -1,3 +1,4 @@
+import 'package:charts_flutter/flutter.dart';
 /// Bar chart example
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -6,15 +7,15 @@ import 'package:rate_your_time_new/utils/constants.dart';
 class GroupedBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
+  final void Function(int index) onBarSelected;
 
-  GroupedBarChart(this.seriesList, {this.animate});
+  GroupedBarChart(this.seriesList, {this.animate, this.onBarSelected});
 
-  factory GroupedBarChart.withHoursData(List<SingleDayAverage> av) {
+  factory GroupedBarChart.withHoursData(List<SingleDayAverage> av,void Function(int index) onBarSelected) {
     return new GroupedBarChart(
-
       _createSampleData(av),
-      // Disable animations for image tests.
       animate: true,
+      onBarSelected:onBarSelected,
     );
   }
 
@@ -25,6 +26,14 @@ class GroupedBarChart extends StatelessWidget {
       seriesList,
       animate: animate,
       barGroupingType: charts.BarGroupingType.stacked,
+      selectionModels: [
+        SelectionModelConfig(
+            changedListener: (SelectionModel model) {
+              if(model.hasDatumSelection && onBarSelected!=null)
+                onBarSelected(model.selectedDatum[0].index);
+            }
+        )
+      ],
     );
   }
 
@@ -45,6 +54,8 @@ class GroupedBarChart extends StatelessWidget {
       // ),
     ];
   }
+
+
 }
 
 /// Sample ordinal data type.
