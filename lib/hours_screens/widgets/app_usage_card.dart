@@ -34,7 +34,7 @@ class AppUsageCard extends StatelessWidget {
             subtitle: Text('${TimeUtils.convertMillsToTime(i.totalTimeInForeground)}'),
             leading: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Image.memory(i.appLogo),
+              child: Image.memory(i.appLogo,errorBuilder: (w,o,s)=>Image.network('https://freepikpsd.com/media/2019/10/android-app-icon-png-Free-PNG-Images-Transparent.png'),),
             ),
           ),
           ListTile(

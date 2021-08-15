@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import io.flutter.plugin.common.MethodChannel;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Hour;
@@ -20,7 +21,7 @@ public class MockDataSource implements DataSource {
 
 
     private static MockDataSource INSTANCE;
-    private String[] mockApps = new String[]{"Instagram","Facebook","Snapchat","Twitter"};
+    private final String[] mockApps = new String[]{"Instagram","Facebook","Snapchat","Twitter","9Gag","Clash of clans","PUBG","Camera","Calendar","Rate your time"};
 
     public static MockDataSource getInstance() {
         if (INSTANCE == null) {
@@ -81,15 +82,21 @@ public class MockDataSource implements DataSource {
     public void getRunningApps(Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback) {
         ArrayList<HashMap<String, Object>> result = new ArrayList<>();
         for (String u:mockApps) {
-            Random random = new Random();
+
+            int max = m2<m1?100:d2-d1;
+            int random=0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                random = ThreadLocalRandom.current().nextInt(1, max *1000*3600 + 1);
+            }
+
             final HashMap<String, Object> map = new HashMap<>();
             map.put("package", "android.package."+u);
-            map.put("firstTimeStamp", random.nextInt());
-            map.put("LastTimeStamp", random.nextInt());
-            map.put("LastTimeUsed", random.nextInt());
-            map.put("TotalTimeInForeground", random.nextInt());
+            map.put("firstTimeStamp", random);
+            map.put("LastTimeStamp", random);
+            map.put("LastTimeUsed", random);
+            map.put("TotalTimeInForeground", random);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                map.put("TotalTimeVisible", random.nextInt());
+                map.put("TotalTimeVisible", random);
             }
             map.put("appName", u);
             map.put("appLogo", "");

@@ -357,6 +357,13 @@ class _BackdropState extends State<Backdrop>
         backTitle: widget.backTitle,
       ),
       actions: [
+        IconButton(
+          icon: const Icon(Icons.settings),
+          // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
+          onPressed: () {
+            Utils.openUsageSettingsScreen();
+          },
+        ),
         // if (false)
         IconButton(
           icon: const Icon(Icons.alarm),
