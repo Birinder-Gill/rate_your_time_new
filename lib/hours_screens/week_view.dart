@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/app_usage_card.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
@@ -91,10 +92,15 @@ class _WeekViewStats extends StatelessWidget {
               hm.changeViewToggle(0);
               hm.refresh(model.av.averages[i].date);
             })),
+        Text("Looks like monday was the most productive day of your week."),
+        Text("See what times were you most productive and doing what."),
+        OutlinedButton.icon(onPressed: (){}, icon: Icon(Icons.list_rounded), label: Text("Self analysis")),
+
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: ActivityAverageCard(model.av),
         ),
+        Text("You are only concentrating on work, you need to balance between every activity")
       ],
     );
   }

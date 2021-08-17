@@ -22,9 +22,18 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
           Text("Activities you spent most time spent on"),
           for(final a in widget.av.activities)
           if(a.id!=16)
-            ListTile(
-              horizontalTitleGap: 0,
+            ExpansionTile(
+              // horizontalTitleGap: 0,
               title: Text("$a"),
+              initiallyExpanded: true,
+              children: [
+                for(var i in [1,2,3,4,5,6,7])
+                ListTile(
+                  title: Text(Utils.shortDays[i]),
+                  trailing: Text("34 mins"),
+                  subtitle: Divider(),
+                )
+              ],
               subtitle: Text('${a.timeSpent} hrs'),
               leading: a.icon,
             )else
