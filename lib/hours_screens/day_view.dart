@@ -7,6 +7,7 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/day_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/hour_widget.dart';
+import 'package:rate_your_time_new/widgets/ratings_widget.dart';
 
 class DayViewWrapper extends StatelessWidget {
   final bool firstDay;
@@ -103,7 +104,7 @@ class DayViewScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            LinearProgressIndicator(
+                           true?RatingStars(size: 50,): LinearProgressIndicator(
                                 minHeight: 16,
                                 backgroundColor: Colors.white,
                                 value: (average),

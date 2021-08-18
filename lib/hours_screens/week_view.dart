@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,8 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/week_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/graphs/grouped_bar_graph.dart';
+import 'package:rate_your_time_new/widgets/ratings_widget.dart';
+import 'package:rate_your_time_new/widgets/self_analysis.dart';
 
 import 'widgets/activity_av_card.dart';
 
@@ -17,10 +20,10 @@ class WeekViewWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<WeekModel,WeekModel>(
-      selector: (c,model)=>model,
-      shouldRebuild: (p,c)=>!DateUtils.isSameDay(p.date,c.date),
-      builder:(_,model,__){
+    return Selector<WeekModel, WeekModel>(
+      selector: (c, model) => model,
+      shouldRebuild: (p, c) => !DateUtils.isSameDay(p.date, c.date),
+      builder: (_, model, __) {
         model.changeDate(Provider.of<HoursModel>(context, listen: false).date);
         return WeekViewScreen(firstDay);
       },
@@ -49,10 +52,12 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
                 _WeekViewStats(model, widget.firstDay),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: AppUsageCard(model.appUsage,model.accessGranted,(){
+                  child: AppUsageCard(model.appUsage, model.accessGranted, () {
                     model.refresh(hours: false);
                   }),
                 ),
+                Text(
+                    "Use this data to review your week. What worked? Where did you focus? Where did you get distracted? What did you learn that will help make next week more productive"),
                 SizedBox(
                   height: 24,
                 )
@@ -87,20 +92,30 @@ class _WeekViewStats extends StatelessWidget {
                 Text('Average of hourly ratings given by yourself this week.')),
         Container(
             height: 300,
-            child: GroupedBarChart.withHoursData(model.av.averages,(i){
-              final hm= Provider.of<HoursModel>(context,listen: false);
+            child: GroupedBarChart.withHoursData(model.av.averages, (i) {
+              final hm = Provider.of<HoursModel>(context, listen: false);
               hm.changeViewToggle(0);
               hm.refresh(model.av.averages[i].date);
             })),
         Text("Looks like monday was the most productive day of your week."),
         Text("See what times were you most productive and doing what."),
-        OutlinedButton.icon(onPressed: (){}, icon: Icon(Icons.list_rounded), label: Text("Self analysis")),
-
+        Center(
+            child: RatingStars(
+          size: 50,
+        )),
+        OutlinedButton.icon(
+            onPressed: () {
+              showCupertinoModalPopup(
+                  context: context, builder: (c) => SelfAnalysisView());
+            },
+            icon: Icon(Icons.list_rounded),
+            label: Text("Self analysis")),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: ActivityAverageCard(model.av),
         ),
-        Text("You are only concentrating on work, you need to balance between every activity")
+        Text(
+            "You are only concentrating on work, you need to balance between every activity")
       ],
     );
   }

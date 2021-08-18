@@ -373,6 +373,7 @@ class Utils {
       consoleLog(dt);
       av.averages.add(SingleDayAverage(dt, sales));
     });
+    consoleLog("${tempActivityMap.map((key, value) => MapEntry("${activities[key]}",value))}");
     av.averages.sort((a, b) =>
         a.date.millisecondsSinceEpoch - b.date.millisecondsSinceEpoch);
     final sorted = SplayTreeMap<int, int>.from(tempActivityMap,

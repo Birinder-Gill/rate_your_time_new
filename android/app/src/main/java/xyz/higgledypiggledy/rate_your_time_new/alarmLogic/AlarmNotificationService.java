@@ -46,6 +46,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Locale;
 
+import xyz.higgledypiggledy.rate_your_time_new.InputScreen;
 import xyz.higgledypiggledy.rate_your_time_new.MainActivity;
 import xyz.higgledypiggledy.rate_your_time_new.R;
 
@@ -54,6 +55,7 @@ public class AlarmNotificationService extends Service {
     private static final String TIME_UTC = "time_utc";
     public static final String CLICK_EXTRAS = "clickExtra";
     public static final String CLICK_TITLE = "clickTitle";
+    private static final int UNIQUE_ID = 234;
 
     /**
      * Write new alarm information to the data store and schedule it.
@@ -357,6 +359,11 @@ public class AlarmNotificationService extends Service {
                 notification.headsUpContentView = remoteView;
             }
         }
+        Intent notifyIntent = new Intent(this, InputScreen.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//UNIQUE_ID if you expect more than one notification to appear
+        notification.contentIntent = PendingIntent.getActivity(this, UNIQUE_ID,
+                notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notification.flags |= Notification.FLAG_INSISTENT;  // Loop sound/vib/blink
         startForeground(FIRING_ALARM_NOTIFICATION_ID, notification);
 

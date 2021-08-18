@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rate_your_time_new/about_screen.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/select_time_screen.dart';
 import 'package:rate_your_time_new/themes/select_theme_widget.dart';
@@ -35,11 +36,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               onTap: (){
-                showAboutDialog(context: context,applicationIcon: Icon(Icons.font_download),applicationName: "Rate your time",applicationVersion: '1.0',children: [
-                  Text('This is a demo description for the application')
-                ]);
+                showCupertinoModalPopup(context: context, builder: (c)=>AboutScreen());
               },
-              title: Text("Licences"),
+              title: Text("About Rate your time"),
             ),
             ListTile(
               onTap: (){

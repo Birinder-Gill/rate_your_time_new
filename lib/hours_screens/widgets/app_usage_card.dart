@@ -26,7 +26,7 @@ class AppUsageCard extends StatelessWidget {
     return Card(
       child: Column(
         children: [
-          Text('Most used app this week: '),
+          Text('Time spent on mobile this week: '),
           for(final i in appUsage.highApps)
           ListTile(
             horizontalTitleGap: 0,
