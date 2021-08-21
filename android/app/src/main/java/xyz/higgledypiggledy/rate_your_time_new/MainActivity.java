@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
@@ -83,7 +84,7 @@ public class MainActivity extends FlutterActivity {
     }
 
 
-    boolean test = false;
+    boolean test = true;
 
     public void createAlarms(int wake, int sleep) {
         for (int i = wake + 1; i <= sleep; i++) {
@@ -163,6 +164,11 @@ public class MainActivity extends FlutterActivity {
                     startActivity(intent);
                     return;
                 }
+                case "openNotificationSettings": {
+                    openNotificationSettings();
+                    return;
+                }
+
 
                 case "isAccessGranted": {
                     //TODO:CHECK SOMETHING FOR OLDER VERSIONS MAYBE HIDE STATS SCREEN IF ANDROID VERSION IS OLDER
@@ -230,6 +236,24 @@ public class MainActivity extends FlutterActivity {
         for (long id : ids)
             AlarmNotificationService.removeAlarmTrigger(
                     getContext(), id);
+    }
+
+
+    void openNotificationSettings(){
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("app_package", getPackageName());
+            intent.putExtra("app_uid", getApplicationInfo().uid);
+        } else {
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+        }
+        startActivity(intent);
     }
 
 }

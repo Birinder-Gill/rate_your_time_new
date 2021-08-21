@@ -15,6 +15,6 @@ public class InputScreen extends Activity {
         TextView txt=new TextView(this);
 
         txt.setText("This is the message!");
-        setContentView(txt);
+        setContentView(R.layout.notification_rate);
     }
 }

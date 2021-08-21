@@ -154,6 +154,8 @@ class Constants {
   static const String updateHour = 'updateHour';
   static const String getWeekData = 'getWeekData';
   static const String getMonthData = 'getMonthData';
+  static const String openNotificationSettings = 'openNotificationSettings';
+  static const String openSettings = 'openSettings';
 
   static const String CHANNEL_NAME = 'name';
 
@@ -442,8 +444,15 @@ class Utils {
 
   static void openUsageSettingsScreen() {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
-    channel.invokeMethod('openSettings');
+    channel.invokeMethod(Constants.openSettings);
   }
+
+  static void openNotificationSettings() {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    channel.invokeMethod(Constants.openNotificationSettings);
+  }
+
+
 }
 
 ///OLD HOUR WIDGET
