@@ -8,10 +8,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
@@ -34,6 +36,10 @@ public class MainActivity extends FlutterActivity {
     public static final int LAST_HOUR = 22;
     private static final String SHARED_PREFERENCES_NAME = "rateYourTimePrefs";
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     ArrayList<HashMap<String, Object>> loadAlarms() {
         Cursor data = getContentResolver().query(AlarmClockProvider.ALARMS_URI,

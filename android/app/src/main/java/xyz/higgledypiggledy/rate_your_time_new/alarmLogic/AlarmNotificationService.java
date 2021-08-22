@@ -41,6 +41,7 @@ import android.provider.Settings;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.RemoteViews;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -52,6 +53,7 @@ import xyz.higgledypiggledy.rate_your_time_new.R;
 
 public class AlarmNotificationService extends Service {
     public static final String ALARM_ID = "alarm_id";
+    public static final String CLICK_NOTES = "clickNotes";
     private static final String TIME_UTC = "time_utc";
     public static final String CLICK_EXTRAS = "clickExtra";
     public static final String CLICK_TITLE = "clickTitle";
@@ -360,8 +362,8 @@ public class AlarmNotificationService extends Service {
             }
         }
         Intent notifyIntent = new Intent(this, InputScreen.class);
-        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//UNIQUE_ID if you expect more than one notification to appear
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+
         notification.contentIntent = PendingIntent.getActivity(this, UNIQUE_ID,
                 notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notification.flags |= Notification.FLAG_INSISTENT;  // Loop sound/vib/blink
@@ -372,7 +374,7 @@ public class AlarmNotificationService extends Service {
         // NOTE: As of API 29, this only works when the app is in the foreground.
         // https://developer.android.com/guide/components/activities/background-starts
         // The setFullScreenIntent option above handles the lock screen case.
-//    startActivity(notify);
+        startActivity(notifyIntent);
     }
 
     private PendingIntent makePiWith(int i, int title) {
@@ -380,6 +382,7 @@ public class AlarmNotificationService extends Service {
         Intent i1 = new Intent(this.getApplicationContext(), ClickReciever.class);
         i1.putExtra(CLICK_EXTRAS, i);
         i1.putExtra(CLICK_TITLE, title);
+        i1.putExtra(CLICK_NOTES, "");
 //    i1.putExtra("ID",id);
         i1.setAction("");
         return PendingIntent.getBroadcast(this.getApplicationContext(), i, i1, PendingIntent.FLAG_UPDATE_CURRENT);

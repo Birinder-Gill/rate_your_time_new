@@ -24,7 +24,10 @@
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="rate_your_time_new">
-        <activity android:name=".InputScreen" android:theme="@style/Theme.Transparent"></activity>
+        <activity
+            android:name=".InputScreen"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.Transparent" />
 
         <receiver
             android:name=".alarmLogic.ClickReciever"

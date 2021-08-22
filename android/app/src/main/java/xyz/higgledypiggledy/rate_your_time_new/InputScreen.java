@@ -2,19 +2,115 @@ package xyz.higgledypiggledy.rate_your_time_new;
 
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
-public class InputScreen extends Activity {
+import java.util.Calendar;
+
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmNotificationService;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.ClickReciever;
+
+
+public class InputScreen extends Activity implements View.OnClickListener{
+    private Button button1,button2,button3,button4,button5,buttonAdd;
+    private EditText noteInput;
+    private int i;
+    public static String exitAction = "com.exit.input";
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
-        TextView txt=new TextView(this);
+        setContentView(R.layout.notification_input_dialog);
+       initViews();
+       setListeners();
+       setUpExitReceiver();
+    }
 
-        txt.setText("This is the message!");
-        setContentView(R.layout.notification_rate);
+    private void setUpExitReceiver() {
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                exitActivity();
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(exitAction);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
+
+    private void setListeners() {
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+        button4.setOnClickListener(this);
+        buttonAdd.setEnabled(false);
+        buttonAdd.setOnClickListener(new MyClickListener(i,noteInput.getText().toString()));
+        button5.setOnClickListener(this);
+
+        //CLICKING ANYWHERE IN THE BACKGROUND FINISHES THE ACTIVITY
+        findViewById(R.id.root).setOnClickListener(view -> exitActivity());
+    }
+
+    private void exitActivity() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAndRemoveTask();
+        }else{
+            finish();
+        }
+    }
+
+    private void initViews() {
+        button1 = findViewById(R.id.button1);
+        button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
+        button4 = findViewById(R.id.button4);
+        button5 = findViewById(R.id.button5);
+        buttonAdd = findViewById(R.id.button_add);
+        noteInput = findViewById(R.id.noteInput);
+    }
+
+    @Override
+    public void onClick(View view) {
+        final Button b= (Button)view;
+        this.i = Integer.parseInt(b.getText().toString());
+        buttonAdd.setEnabled(true);
+    }
+
+    private class MyClickListener implements View.OnClickListener {
+        private final int i;
+        private final String notes;
+
+        public MyClickListener(int i,String notes) {
+            this.i=i;
+            this.notes = notes;
+        }
+        void addToDb(int title) {
+            Intent i1 = new Intent(getApplicationContext(), ClickReciever.class);
+            i1.putExtra(AlarmNotificationService.CLICK_EXTRAS, i);
+            i1.putExtra(AlarmNotificationService.CLICK_TITLE, title);
+            i1.putExtra(AlarmNotificationService.CLICK_NOTES, notes);
+            i1.setAction("");
+            sendBroadcast(i1);
+            exitActivity();
+        }
+
+        @Override
+        public void onClick(View view) {
+                addToDb(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));//Ideally this should be the hour when notification was shown not clicked.
+        }
     }
 }
