@@ -36,6 +36,8 @@ class _SelfAnalysisViewState extends State<SelfAnalysisView> {
               subtitle: Divider(),
             )
           ,
+          Text(
+              "Use this data to review your week. What worked? Where did you focus? Where did you get distracted? What did you learn that will help make next week more productive"),
         ],
       ),
     );

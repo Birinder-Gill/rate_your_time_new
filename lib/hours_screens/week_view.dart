@@ -56,8 +56,6 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
                     model.refresh(hours: false);
                   }),
                 ),
-                Text(
-                    "Use this data to review your week. What worked? Where did you focus? Where did you get distracted? What did you learn that will help make next week more productive"),
                 SizedBox(
                   height: 24,
                 )
@@ -97,8 +95,8 @@ class _WeekViewStats extends StatelessWidget {
               hm.changeViewToggle(0);
               hm.refresh(model.av.averages[i].date);
             })),
-        Text("Looks like monday was the most productive day of your week."),
-        Text("See what times were you most productive and doing what."),
+        // Text("Looks like monday was the most productive day of your week."),
+        // Text("See what times were you most productive and doing what."),
         Center(
             child: RatingStars(
           size: 50,
@@ -114,8 +112,8 @@ class _WeekViewStats extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ActivityAverageCard(model.av),
         ),
-        Text(
-            "You are only concentrating on work, you need to balance between every activity")
+        // Text(
+        //     "You are only concentrating on work, you need to balance between every activity")
       ],
     );
   }

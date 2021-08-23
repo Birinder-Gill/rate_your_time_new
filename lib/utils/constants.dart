@@ -354,13 +354,22 @@ class Utils {
     AverageDataModel av = AverageDataModel();
     if (av.averages == null) av.averages = [];
     final tempActivityMap = {};
+    final dayActivityMap = <int,Map<String,int>>{};
+    ///Looping through every day data.
     hours.entries.forEach((element) {
       double total = 0.0;
+      ///Looping through every hour of single day data
       element.value.forEach((e) {
         total += e['worth'];
         tempActivityMap[e['activity']] =
             (tempActivityMap[e['activity']] ?? 0) + 1;
+        if(dayActivityMap[e['activity']]==null){
+          dayActivityMap[e['activity']]={};
+        }
+        dayActivityMap[e['activity']][element.key] =
+            (1 + (dayActivityMap[e['activity']][element.key] ?? 0));
       });
+
       double sales = total / element.value.length;
       final keys = element.key.split('-');
       DateTime dt = DateTime(
@@ -375,7 +384,9 @@ class Utils {
       consoleLog(dt);
       av.averages.add(SingleDayAverage(dt, sales));
     });
+
     consoleLog("${tempActivityMap.map((key, value) => MapEntry("${activities[key]}",value))}");
+    consoleLog("Day activity map = $dayActivityMap");
     av.averages.sort((a, b) =>
         a.date.millisecondsSinceEpoch - b.date.millisecondsSinceEpoch);
     final sorted = SplayTreeMap<int, int>.from(tempActivityMap,
@@ -395,6 +406,7 @@ class Utils {
           icon: FaIcon(FontAwesomeIcons.list),
           timeSpent: temp.sublist(ACTIVITIES_TO_SHOW).fold(0,
               (previousValue, element) => previousValue + element.timeSpent)));
+      av.dayActivities  = dayActivityMap;
     }
     consoleLog(av,log:true);
 
@@ -454,55 +466,3 @@ class Utils {
 
 
 }
-
-///OLD HOUR WIDGET
-/**Card(
-    color: hour.worth > 0 ? theme.cardColor : theme.scaffoldBackgroundColor,
-    borderOnForeground: hour.worth == 0,
-    elevation: hour.worth > 0 ? 1 : 0,
-    child: Container(
-    decoration: BoxDecoration(
-    border: hour.worth > 0
-    ? null
-    : Border.all(color: theme.primaryColorDark),
-    borderRadius: BorderRadius.all(Radius.circular(4))),
-    child: Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-    const SizedBox(
-    height: 4,
-    ),
-    SizedBox(
-    width: 50,
-    child: Text(
-    '${TimeUtils.parseTimeHours(hour.time)}',
-    style: TextStyle(
-    color: theme.textTheme.bodyText2.color
-    .withOpacity(hour.worth > 0 ? 1 : .5)),
-    )),
-    const SizedBox(
-    height: 42,
-    ),
-    Expanded(
-    child: (hour.worth > 0)
-    ? LinearProgressIndicator(
-    minHeight: 4,
-    valueColor: AlwaysStoppedAnimation<Color>(
-    Theme.of(context).accentColor),
-    backgroundColor: Theme.of(context).primaryColorDark,
-    value: (hour.worth / 5),
-    )
-    : _emptyWorthCard(theme),
-    ),
-    const SizedBox(
-    height: 4,
-    ),
-    // Text("${hour.date}/${hour.month}/${hour.year}"),
-    // const SizedBox(height: 4,),
-    ],
-    ),
-    ),
-    ),
-    ),**/

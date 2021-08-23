@@ -9,6 +9,8 @@ class AverageDataModel{
 
   List<Activity> others=[];
 
+  Map<int, Map<String, int>> dayActivities;
+
   @override
   String toString() {
     return averages.toString();
