@@ -354,7 +354,7 @@ class Utils {
     AverageDataModel av = AverageDataModel();
     if (av.averages == null) av.averages = [];
     final tempActivityMap = {};
-    final dayActivityMap = <int,Map<String,int>>{};
+    final dayActivityMap = <int,Map<int,int>>{};
     ///Looping through every day data.
     hours.entries.forEach((element) {
       double total = 0.0;
@@ -363,13 +363,17 @@ class Utils {
         total += e['worth'];
         tempActivityMap[e['activity']] =
             (tempActivityMap[e['activity']] ?? 0) + 1;
+
         if(dayActivityMap[e['activity']]==null){
           dayActivityMap[e['activity']]={};
         }
-        dayActivityMap[e['activity']][element.key] =
-            (1 + (dayActivityMap[e['activity']][element.key] ?? 0));
+        final ymd = element.key.split('-');
+        final dt = DateTime(int.parse(ymd[0]),int.parse(ymd[1])+1,int.parse(ymd[2]));
+        print("DATETIME DT =========>  $dt");
+        var key=dt.weekday;
+        dayActivityMap[e['activity']][key] =
+            (1 + (dayActivityMap[e['activity']][key] ?? 0));
       });
-
       double sales = total / element.value.length;
       final keys = element.key.split('-');
       DateTime dt = DateTime(
@@ -406,9 +410,12 @@ class Utils {
           icon: FaIcon(FontAwesomeIcons.list),
           timeSpent: temp.sublist(ACTIVITIES_TO_SHOW).fold(0,
               (previousValue, element) => previousValue + element.timeSpent)));
-      av.dayActivities  = dayActivityMap;
     }
     consoleLog(av,log:true);
+
+
+    av.dayActivities  = dayActivityMap.map((key, value) => MapEntry(key,SplayTreeMap<int, int>.from(value,
+            (a, b) => a.compareTo(b)).map((key, value) => MapEntry(key, value))));
 
     return av;
   }

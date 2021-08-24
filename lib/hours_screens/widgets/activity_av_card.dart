@@ -29,7 +29,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
               children: [
                 for(var i in [widget.av.dayActivities[a.id]].single.entries)
                 ListTile(
-                  title: Text(Utils.shortDays[DateTime.pa]),
+                  title: Text(Utils.shortDays[i.key]),
                   trailing: Text("${i.value} hrs"),
                   subtitle: Divider(),
                 )
