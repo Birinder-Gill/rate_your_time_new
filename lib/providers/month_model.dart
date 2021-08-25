@@ -35,7 +35,7 @@ class MonthModel extends AverageModel with ChangeNotifier {
 
   void _loadHours(DateTime from, DateTime to) {
     this.dateLabel = "${Constants.months[date.month-1]} ${date.year}";
-    getHours(from, to).then((value) {
+    getHours(from, to,week: false).then((value) {
       notifyListeners();
     });
   }

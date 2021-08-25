@@ -9,7 +9,7 @@ class AverageDataModel{
 
   List<Activity> others=[];
 
-  Map<int, Map<int, int>> dayActivities;
+  Map<int, Map<int, int>> weekDayActivities;
 
   @override
   String toString() {

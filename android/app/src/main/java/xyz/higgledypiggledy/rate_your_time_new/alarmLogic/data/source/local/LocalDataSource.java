@@ -147,8 +147,8 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public void getRunningApps(Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             UsageTracker.getRunningApps(context,d1,m1,y1,d2,m2,y2,callback);
-        }
+//        }
     }
 }

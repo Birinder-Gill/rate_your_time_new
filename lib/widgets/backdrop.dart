@@ -317,13 +317,11 @@ class _BackdropState extends State<Backdrop>
             excluding: !_frontLayerVisible,
             child: AnimatedBuilder(
               animation: PageStatus.of(context).cartController,
-              builder: (context, child) => AnimatedBuilder(
+              builder: (context, child) => child,
+              child: AnimatedBuilder(
                 animation: PageStatus.of(context).menuController,
-                builder: (context, child) => _FrontLayer(
-                  onTap: null,
-    // menuPageIsVisible(context)
-    //                   ? _toggleBackdropLayerVisibility
-    //                   : null,
+                builder: (context, child) => child,
+                child: _FrontLayer(
                   child: widget.frontLayer,
                 ),
               ),
@@ -400,9 +398,11 @@ class _BackdropState extends State<Backdrop>
                 ),
       ],
     );
-    return AnimatedBuilder(
+    return
+      AnimatedBuilder(
       animation: PageStatus.of(context).cartController,
-      builder: (context, child) => ExcludeSemantics(
+      builder: (context, child) =>
+          ExcludeSemantics(
         excluding: cartPageIsVisible(context),
         child: Scaffold(
           drawer: Drawer(child: SettingsScreen()),

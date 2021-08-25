@@ -124,7 +124,7 @@ class _MonthViewStats extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ActivityAverageCard(model.av),
+          child: ActivityAverageCard(model.av,isWeek: false,),
         ),
       ],
     );

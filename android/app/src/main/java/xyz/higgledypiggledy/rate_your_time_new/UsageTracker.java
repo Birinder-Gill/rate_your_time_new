@@ -29,7 +29,7 @@ import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.DataSource
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 
 public class UsageTracker {
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public static void getRunningApps(final Context context, int d1, int m1, int y1, int d2, int m2, int y2, DataSource.LoadProgressCallback callback) {
         ArrayList<HashMap<String, Object>> result = new ArrayList<>();
         AppExecutors.getInstance().diskIO().execute(new Runnable() {

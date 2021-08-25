@@ -2,26 +2,57 @@ import 'package:flutter/material.dart';
 
 class RatingStars extends StatefulWidget {
   final double size;
+  final int total;
+  final double rating;
+  final bool readOnly;
 
-  const RatingStars({Key key, this.size}) : super(key: key);
+  const RatingStars(
+      {Key key,
+      this.size = 50,
+      this.total = 5,
+      this.rating = 0,
+      this.readOnly = true})
+      : super(key: key);
 
   @override
   _RatingStarsState createState() => _RatingStarsState();
 }
 
 class _RatingStarsState extends State<RatingStars> {
-  final color = Colors.orange;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.star_rate,color: color,size: widget.size,),
-        Icon(Icons.star_rate,color: color,size: widget.size,),
-        Icon(Icons.star_half,color: color,size: widget.size,),
-        Icon(Icons.star_border,color: color,size: widget.size,),
-        Icon(Icons.star_border,color: color,size: widget.size,),
+        for (var i = 0; i < widget.total; i++)
+          _SingleRatingStar(
+              size: widget.size,
+              readOnly: widget.readOnly,
+              rating: widget.rating - i)
       ],
+    );
+  }
+}
+
+class _SingleRatingStar extends StatelessWidget {
+  final color = Colors.orange;
+  final double size;
+  final double rating;
+  final bool readOnly;
+
+  const _SingleRatingStar({Key key, this.size, this.rating, this.readOnly})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      rating <= 0
+          ? Icons.star_border
+          : rating < 1
+              ? Icons.star_half
+              : Icons.star_rate,
+      color: color,
+      size: size,
     );
   }
 }

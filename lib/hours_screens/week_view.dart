@@ -100,6 +100,7 @@ class _WeekViewStats extends StatelessWidget {
         Center(
             child: RatingStars(
           size: 50,
+              rating: model.rating,
         )),
         OutlinedButton.icon(
             onPressed: () {
