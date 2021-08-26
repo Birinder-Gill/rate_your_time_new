@@ -12,7 +12,7 @@ class AppUsageCard extends StatelessWidget {
 
   final void Function() onRetry;
 
-  AppUsageCard(this.appUsage, this.accessGranted, this.onRetry);
+  AppUsageCard(this.appUsage, this.accessGranted, {@required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

@@ -13,11 +13,11 @@ class AppUsageModel with ChangeNotifier {
   bool error = false;
   bool loading = false;
 
-  getApps() async {
+  getApps({DateTime begin,DateTime end}) async {
     try {
-      final today = DateUtils.dateOnly(DateTime.now());
-      final yesterday = today.subtract(Duration(days: 1));
-      var model = await ApiHelper.trackUsageData(yesterday,today);
+      final to = DateUtils.dateOnly(begin??DateTime.now());
+      final from = end??to.subtract(Duration(days: 1));
+      var model = await ApiHelper.trackUsageData(from,to);
       distinctApps.addAll(model.highApps);
       distinctApps.addAll(model.otherApps);
     } catch (e,trace) {

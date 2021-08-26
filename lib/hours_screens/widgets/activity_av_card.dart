@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rate_your_time_new/models/activity_model.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -51,7 +52,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                 subtitle: Text('${a.timeSpent}${_hrs(a.timeSpent)}'),
                 leading: a.icon,
                 onTap:  (){
-                  showDayActivitiesList(widget.av.weekDayActivities[a.id].entries);
+                  showDayActivitiesList(widget.av.weekDayActivities[a.id].entries,a);
                 },
               )
               else
@@ -84,9 +85,9 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
   }
 
 String _hrs(value)=>"${value>1? ' hrs':' hr'}";
-  void showDayActivitiesList(Iterable<MapEntry<int, int>> entries) {
+  void showDayActivitiesList(Iterable<MapEntry<int, int>> entries, Activity a) {
     pushTo( context, Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text("Time spent on $a in ${hoursModel.frontLabel}"),),
       body: ListView(
           children: [
             for(var i in entries)

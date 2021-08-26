@@ -14,6 +14,10 @@ import 'package:rate_your_time_new/widgets/pie_chart.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AppsUsageScreen extends StatefulWidget {
+  final DateTime from;
+  final DateTime to;
+
+  const AppsUsageScreen({Key key, this.from, this.to}) : super(key: key);
   @override
   _AppsUsageScreenState createState() => _AppsUsageScreenState();
 }

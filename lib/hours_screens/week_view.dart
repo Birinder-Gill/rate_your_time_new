@@ -52,7 +52,7 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
                 _WeekViewStats(model, widget.firstDay),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: AppUsageCard(model.appUsage, model.accessGranted, () {
+                  child: AppUsageCard(model.appUsage, model.accessGranted, onRetry:() {
                     model.refresh(hours: false);
                   }),
                 ),

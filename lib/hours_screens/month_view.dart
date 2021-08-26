@@ -17,10 +17,10 @@ class MonthViewWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MonthModel,MonthModel>(
-      selector: (c,model)=>model,
-      shouldRebuild: (p,c)=>!DateUtils.isSameDay(p.date,c.date),
-      builder:(_,model,__){
+    return Selector<MonthModel, MonthModel>(
+      selector: (c, model) => model,
+      shouldRebuild: (p, c) => !DateUtils.isSameDay(p.date, c.date),
+      builder: (_, model, __) {
         model.changeDate(Provider.of<HoursModel>(context, listen: false).date);
         return MonthViewScreen(firstDay);
       },
@@ -48,7 +48,8 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
               _MonthViewStats(model, widget.firstDay),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: AppUsageCard(model.appUsage,model.accessGranted,(){
+                child: AppUsageCard(model.appUsage, model.accessGranted,
+                    onRetry: () {
                   model.refresh(hours: false);
                 }),
               ),
@@ -92,14 +93,27 @@ class _MonthViewStats extends StatelessWidget {
                   width: width / 5,
                   height: 86,
                   child: InkWell(
-                    onTap: (){
-                      final hm= Provider.of<HoursModel>(context,listen: false);
+                    onTap: () {
+                      final hm =
+                          Provider.of<HoursModel>(context, listen: false);
                       hm.changeViewToggle(0);
                       hm.refresh(i.date);
                     },
                     child: Container(
-                      color:
-                          Colors.blue.withOpacity(i.worth > 0 ? i.worth / 5 : 0),
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                Colors.blue.withOpacity(i.worth > 0 ? i.worth / 5 : 0),
+                                if(((DateUtils.isSameDay(i.date, DateTime.now()))))
+                                    Colors.white
+                                else
+                                  Colors.blue.withOpacity(i.worth > 0 ? i.worth / 5 : 0),
+                                if(((DateUtils.isSameDay(i.date, DateTime.now()))))
+                                  Colors.white
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter)),
+
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -124,7 +138,10 @@ class _MonthViewStats extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ActivityAverageCard(model.av,isWeek: false,),
+          child: ActivityAverageCard(
+            model.av,
+            isWeek: false,
+          ),
         ),
       ],
     );

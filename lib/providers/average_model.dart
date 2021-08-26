@@ -55,9 +55,11 @@ class AverageModel {
     this.appUsage = (cache.getAppsData(to, from));
     if(this.appUsage==null) {
       this.accessGranted = await Utils.isUsageAccessGranted();
-      this.appUsage = (await ApiHelper.trackUsageData(from, to));
-      if(this.appUsage.highApps.isNotEmpty)
-      cache.addAppDataCache(to, from, this.appUsage);
+      if(this.accessGranted){
+        this.appUsage = (await ApiHelper.trackUsageData(from, to));
+        if(this.appUsage.highApps.isNotEmpty)
+          cache.addAppDataCache(to, from, this.appUsage);
+      }
     }
     _appsLoading=false;
   }
