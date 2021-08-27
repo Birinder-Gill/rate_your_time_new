@@ -10,9 +10,7 @@ class GroupedBarChart extends StatelessWidget {
   final bool animate;
   final void Function(int index) onBarSelected;
 
-  GroupedBarChart(this.seriesList, {this.animate, this.onBarSelected}){
-
-  }
+  GroupedBarChart(this.seriesList, {this.animate, this.onBarSelected});
 
   factory GroupedBarChart.withHoursData(
       List<SingleDayAverage> av, void Function(int index) onBarSelected) {

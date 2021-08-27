@@ -16,8 +16,11 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 class AppsUsageScreen extends StatefulWidget {
   final DateTime from;
   final DateTime to;
+  final List<UsageStat> distinctApps;
 
-  const AppsUsageScreen({Key key, this.from, this.to}) : super(key: key);
+  const AppsUsageScreen({Key key, this.from, this.to, this.distinctApps})
+      : super(key: key);
+
   @override
   _AppsUsageScreenState createState() => _AppsUsageScreenState();
 }
@@ -40,14 +43,21 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   get granted => (_granted != null && (_granted));
 
+  String get dateLabel => '${(widget.from??DateTime.now())}';
+
   getApps() async {
     setState(() {
       loading = true;
     });
     try {
+      if (widget.distinctApps == null) {
         final model = AppUsageModel();
-        await model.getApps();
+        await model.getApps(begin:widget.from,end:widget.to);
         distinctApps = model.distinctApps;
+      } else
+        setState(() {
+          distinctApps = widget.distinctApps;
+        });
     } catch (e) {
       error = true;
     }
@@ -57,7 +67,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   }
 
   openSettings() {
-  Utils.openUsageSettingsScreen();
+    Utils.openUsageSettingsScreen();
   }
 
   @override
@@ -70,9 +80,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   Future<void> isAccessGranted() async {
     _granted = await Utils.isUsageAccessGranted();
-    if (_granted)
+    if (_granted) {
       getApps();
-    else {
+    } else {
       setState(() {});
     }
   }
@@ -82,6 +92,8 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     final theme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text(dateLabel),
         actions: [
           TextButton(
               onPressed: loading ? null : getApps,
@@ -175,7 +187,6 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                     ),
     );
   }
-
 
   gotoSettingsView() {
     return Center(

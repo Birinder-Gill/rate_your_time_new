@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
+import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/app_usage_card.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
@@ -54,7 +55,12 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: AppUsageCard(model.appUsage, model.accessGranted, onRetry:() {
                     model.refresh(hours: false);
-                  }),
+                  },openDetails: (list)async{
+                    pushTo(context, AppsUsageScreen(
+                      from: await TimeUtils.getWeekStart(model.date),
+                      to: await TimeUtils.getWeekEnd(model.date),
+                    ));
+                  },),
                 ),
                 SizedBox(
                   height: 24,

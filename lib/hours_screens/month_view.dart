@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/activity_av_card.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/app_usage_card.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
@@ -51,7 +52,12 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
                 child: AppUsageCard(model.appUsage, model.accessGranted,
                     onRetry: () {
                   model.refresh(hours: false);
-                }),
+                },openDetails: (list)async{
+                  pushTo(context, AppsUsageScreen(
+                    from:await TimeUtils.getMonthStart(model.date),
+                    to: await TimeUtils.getMonthEnd(model.date),
+                  ));
+                  },),
               ),
             ],
           );

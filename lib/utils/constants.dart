@@ -305,6 +305,7 @@ class TimeUtils {
 
 
   static Future<DateTime> getMonthStart(DateTime to) async {
+    //TODO: Maybe we could remove initial dae check and make it synchronous;
     final from = DateTime.utc(to.year, to.month, 1);
     final installDate = await SharedPrefs.checkInstallDate();
     consoleLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/app_usage_tracker/detailed_report.dart';
+import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
+import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -12,7 +14,9 @@ class AppUsageCard extends StatelessWidget {
 
   final void Function() onRetry;
 
-  AppUsageCard(this.appUsage, this.accessGranted, {@required this.onRetry});
+  final void Function(List<UsageStat> stats) openDetails;
+
+  AppUsageCard(this.appUsage, this.accessGranted, {@required this.onRetry,this.openDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +55,7 @@ class AppUsageCard extends StatelessWidget {
             title: Text("${appUsage.otherApps.length} other apps"),
             trailing: OutlinedButton.icon(
               onPressed: () {
-                pushTo(context, DetailedReport(appUsage));
+                openDetails([...appUsage.highApps,...appUsage.otherApps],);
               },
               icon: Text("Detailed report"),
               label: Icon(Icons.arrow_right),
