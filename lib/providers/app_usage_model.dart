@@ -15,9 +15,8 @@ class AppUsageModel with ChangeNotifier {
 
   getApps({DateTime begin,DateTime end}) async {
     try {
-      final to = DateUtils.dateOnly(begin??DateTime.now());
-      final from = end??to.subtract(Duration(days: 1));
-      var model = await ApiHelper.trackUsageData(from,to);
+      if(begin==null||end == null)return;
+      var model = await ApiHelper.trackUsageData(begin,end);
       distinctApps.addAll(model.highApps);
       distinctApps.addAll(model.otherApps);
     } catch (e,trace) {

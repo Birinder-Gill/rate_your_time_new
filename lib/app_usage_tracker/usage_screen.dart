@@ -38,12 +38,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   var error = false;
 
+  DateTime to, from;
+
   double get sum => sumOf<UsageStat>(
       distinctApps.sublist(0, 4), (e) => e.totalTimeInForeground);
 
   get granted => (_granted != null && (_granted));
-
-  String get dateLabel => '${(widget.from??DateTime.now())}';
 
   getApps() async {
     setState(() {
@@ -52,7 +52,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     try {
       if (widget.distinctApps == null) {
         final model = AppUsageModel();
-        await model.getApps(begin:widget.from,end:widget.to);
+        await model.getApps(begin: from, end: to);
         distinctApps = model.distinctApps;
       } else
         setState(() {
@@ -72,6 +72,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   @override
   void initState() {
+
+     to = DateUtils.dateOnly(widget.to??DateTime.now());
+     from = widget.from??to.subtract(Duration(days: 1));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       isAccessGranted();
     });
@@ -93,7 +96,6 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(dateLabel),
         actions: [
           TextButton(
               onPressed: loading ? null : getApps,
@@ -109,6 +111,31 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                   : Scrollbar(
                       child: ListView(
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
+                              elevation: 0,
+                              child: Container(
+                                // height: 100,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        OutlinedButton.icon(onPressed:pickFromDate,
+                                        label: Text("${_label(from)} - ${_label(to)}",style: Theme.of(context).textTheme.headline5,), icon: Icon(Icons.edit),),
+                                        ElevatedButton(
+                                            onPressed: () {},
+                                            child: Text("Get stats"))
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                           Text(
                             "Time spent on mobile",
                             textAlign: TextAlign.center,
@@ -206,6 +233,22 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   }
 
   _errorView() => Center(child: Text("An error occured"));
+
+  String _label(DateTime date)=>date==null?"-/-":MaterialLocalizations.of(context).formatShortMonthDay(date);
+  void pickFromDate() {
+    showDateRangePicker(
+            context: context,
+            initialDateRange: DateTimeRange(start: from, end: to),
+            firstDate: DateTime(2018),
+            lastDate: DateTime.now())
+        .then((value) {
+      if (value != null) {
+        from = value.start;
+        to = value.end;
+      }
+    });
+  }
+
 }
 
 class TestDeco extends Decoration {
