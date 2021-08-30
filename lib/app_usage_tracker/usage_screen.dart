@@ -40,6 +40,8 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   DateTime to, from;
 
+  bool datesChanged = false;
+
   double get sum => sumOf<UsageStat>(
       distinctApps.sublist(0, 4), (e) => e.totalTimeInForeground);
 
@@ -61,6 +63,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     } catch (e) {
       error = true;
     }
+    datesChanged=false;
     setState(() {
       loading = false;
     });
@@ -124,11 +127,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
+
                                         OutlinedButton.icon(onPressed:pickFromDate,
                                         label: Text("${_label(from)} - ${_label(to)}",style: Theme.of(context).textTheme.headline5,), icon: Icon(Icons.edit),),
-                                        ElevatedButton(
-                                            onPressed: () {},
-                                            child: Text("Get stats"))
+                                        datesChanged?ElevatedButton(
+                                            onPressed:getApps,
+                                            child: Text("Get stats")):IconButton(icon: Icon(Icons.refresh), onPressed: getApps)
                                       ],
                                     ),
                                   ],
@@ -243,8 +247,14 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
             lastDate: DateTime.now())
         .then((value) {
       if (value != null) {
-        from = value.start;
-        to = value.end;
+        if(value.start!=from||value.end!=to) {
+          datesChanged = true;
+          from = value.start;
+          to = value.end;
+          setState(() {
+
+          });
+        }
       }
     });
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:charts_flutter/flutter.dart';
 
 /// Bar chart example
@@ -9,6 +11,8 @@ class GroupedBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
   final void Function(int index) onBarSelected;
+
+  final List<bool> tapped = [false];
 
   GroupedBarChart(this.seriesList, {this.animate, this.onBarSelected});
 
@@ -22,7 +26,7 @@ class GroupedBarChart extends StatelessWidget {
   }
 
   static charts.Color get veryVeryLightBlue =>
-      charts.Color.fromHex(code: '#d3eafb').lighter.lighter;
+      charts.ColorUtil.fromDartColor(Colors.blue);
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +35,32 @@ class GroupedBarChart extends StatelessWidget {
       animate: animate,
       barGroupingType: charts.BarGroupingType.stacked,
       selectionModels: [
-        SelectionModelConfig(changedListener: (SelectionModel model) {
-          if (model.hasDatumSelection && onBarSelected != null)
-            onBarSelected(model.selectedDatum[0].index);
+        SelectionModelConfig(updatedListener: (SelectionModel model) {
+          if (model.hasDatumSelection && onBarSelected != null) {
+            if (!tapped[0]) {
+              tapped[0] = true;
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              Duration d = Duration(milliseconds: 300);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  'Double tap to open details',
+                ),
+                duration: d,
+                backgroundColor: Colors.black87,
+                behavior: SnackBarBehavior.floating,
+                elevation: 4,
+                shape: const BeveledRectangleBorder(
+                  borderRadius: BorderRadiusDirectional.all(Radius.circular(4)),
+                ),
+              ));
+              Timer(d, () {
+                tapped[0] = false;
+              });
+            } else {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              onBarSelected(model.selectedDatum[0].index);
+            }
+          }
         })
       ],
     );
@@ -42,28 +69,25 @@ class GroupedBarChart extends StatelessWidget {
   /// Create series list with multiple series
   static List<charts.Series<SingleDayAverage, String>> _createSampleData(
       List<SingleDayAverage> av) {
-    print("<><><><><><>><><><><><><><><><><><<${veryVeryLightBlue.hexString}");
+    final now = DateTime.now();
     List<SingleDayAverage> charter = av.map((element) {
-      if (!DateUtils.isSameDay(element.date, DateTime.now()))
+      if (!DateUtils.isSameDay(element.date, now))
         return element.copyWith(worth: 0.0);
-      return element;
+      return element.copyWith(worth: element.pendingSales);
     }).toList();
     return [
       new charts.Series<SingleDayAverage, String>(
-        id: 'tv',
-        domainFn: (SingleDayAverage sales, _) =>
-            Utils.shortDays[sales.date.weekday],
-        measureFn: (SingleDayAverage sales, _) =>
-            sales.worth > 0 ? sales.worth : 0,
-        data: charter,
-        // colorFn: (d, i) => charts.Color.white,
-        // areaColorFn: (d, i) => charts.Color.black,
-        fillColorFn: (d, i) => veryVeryLightBlue,
-        patternColorFn: (d, i) => charts.Color.white,
-        // fillPatternFn: (d,i) => charts.FillPatternType.forwardHatch,
-        // seriesColor: charts.Color.black,
-        // dashPatternFn: (t,i)=>[1,2,3,4]
-      ),
+          id: 'tv',
+          domainFn: (SingleDayAverage sales, _) =>
+              Utils.shortDays[sales.date.weekday],
+          measureFn: (SingleDayAverage sales, _) =>
+              sales.worth > 0 ? sales.worth : 0,
+          data: charter,
+          fillColorFn: (d, i) => veryVeryLightBlue,
+          patternColorFn: (d, i) => charts.Color.white,
+          fillPatternFn: (d, i) => DateUtils.isSameDay(d.date, now)
+              ? FillPatternType.forwardHatch
+              : FillPatternType.solid),
       new charts.Series<SingleDayAverage, String>(
         id: 'mobile',
         domainFn: (SingleDayAverage sales, _) =>
@@ -81,10 +105,21 @@ class SingleDayAverage {
   final DateTime date;
   final double worth;
 
-  SingleDayAverage(this.date, this.worth);
+  final double pendingSales;
 
-  SingleDayAverage copyWith({DateTime date, double worth}) =>
-      SingleDayAverage(date ?? this.date, worth ?? this.worth);
+  final int filledRegion;
+
+  SingleDayAverage(this.date, this.worth,
+      {this.pendingSales = 0.0, this.filledRegion = 0});
+
+  SingleDayAverage copyWith(
+          {DateTime date,
+          double worth,
+          double pendingSales,
+          int filledHours}) =>
+      SingleDayAverage(date ?? this.date, worth ?? this.worth,
+          pendingSales: pendingSales ?? this.pendingSales,
+          filledRegion: filledHours ?? this.filledRegion);
 
   @override
   String toString() {

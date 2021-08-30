@@ -104,7 +104,7 @@ class DayViewScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                           true?RatingStars(size: 50,): LinearProgressIndicator(
+                           false?RatingStars(size: 50,): LinearProgressIndicator(
                                 minHeight: 16,
                                 backgroundColor: Colors.white,
                                 value: (average),

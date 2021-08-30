@@ -376,7 +376,8 @@ class Utils {
         weekDayActivityMap[e['activity']][key] =
             (1 + (weekDayActivityMap[e['activity']][key] ?? 0));
       });
-      double sales = total / element.value.length;
+      double filledSales = total / Utils.wokeHours();
+
       final keys = element.key.split('-');
       DateTime dt = DateTime(
         int.parse(keys[0]),
@@ -388,8 +389,11 @@ class Utils {
         int.parse(keys[2]),
       );
       consoleLog(dt);
-      if(!sales.isNaN)
-      av.averages.add(SingleDayAverage(dt, sales));
+      if(!filledSales.isNaN) {
+        double pendingSales = ((total/element.value.length) - filledSales);
+        av.averages
+            .add(SingleDayAverage(dt, filledSales, pendingSales: pendingSales,filledRegion:((element.value.length/Utils.wokeHours())*5).toInt()));
+      }
     });
 
     consoleLog("${tempActivityMap.map((key, value) => MapEntry("${activities[key]}",value))}");
@@ -473,6 +477,9 @@ class Utils {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     channel.invokeMethod(Constants.openNotificationSettings);
   }
+
+  ///The number of hours between wake up and sleep time.
+  static int wokeHours() =>22-7;
 
 
 }

@@ -49,15 +49,21 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
               _MonthViewStats(model, widget.firstDay),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: AppUsageCard(model.appUsage, model.accessGranted,
-                    onRetry: () {
-                  model.refresh(hours: false);
-                },openDetails: (list)async{
-                  pushTo(context, AppsUsageScreen(
-                    from:await TimeUtils.getMonthStart(model.date),
-                    to: await TimeUtils.getMonthEnd(model.date),
-                  ));
-                  },),
+                child: AppUsageCard(
+                  model.appUsage,
+                  model.accessGranted,
+                  onRetry: () {
+                    model.refresh(hours: false);
+                  },
+                  openDetails: (list) async {
+                    pushTo(
+                        context,
+                        AppsUsageScreen(
+                          from: await TimeUtils.getMonthStart(model.date),
+                          to: await TimeUtils.getMonthEnd(model.date),
+                        ));
+                  },
+                ),
               ),
             ],
           );
@@ -99,7 +105,7 @@ class _MonthViewStats extends StatelessWidget {
                   width: width / 5,
                   height: 86,
                   child: InkWell(
-                    onTap: () {
+                    onLongPress: () {
                       final hm =
                           Provider.of<HoursModel>(context, listen: false);
                       hm.changeViewToggle(0);
@@ -109,17 +115,20 @@ class _MonthViewStats extends StatelessWidget {
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
                               colors: [
-                                Colors.blue.withOpacity(i.worth > 0 ? i.worth / 5 : 0),
-                                if(((DateUtils.isSameDay(i.date, DateTime.now()))))
-                                    Colors.white
-                                else
-                                  Colors.blue.withOpacity(i.worth > 0 ? i.worth / 5 : 0),
-                                if(((DateUtils.isSameDay(i.date, DateTime.now()))))
-                                  Colors.white
-                              ],
+                            for (var p = 0; p < i.filledRegion; p++)
+                              Colors.blue
+                                  .withOpacity((i.worth + i.pendingSales) / 5),
+                            for (var p = i.filledRegion; p < 5; p++)
+                              Colors.white,
+
+                            // if(((DateUtils.isSameDay(i.date, DateTime.now()))))
+                            //     Colors.white
+                            // else
+                            // if(((DateUtils.isSameDay(i.date, DateTime.now()))))
+                            //   Colors.white
+                          ],
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter)),
-
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -130,7 +139,10 @@ class _MonthViewStats extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Text(i.worth > 0 ? "${(i.worth * 20).toInt()}%" : ".",
+                          Text(
+                              (i.worth + i.pendingSales) > 0
+                                  ? "${((i.worth + i.pendingSales) * 20).toInt()}%"
+                                  : ".",
                               textAlign: TextAlign.center,
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Text("")
