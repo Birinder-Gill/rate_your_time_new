@@ -31,17 +31,14 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: Constants.datePickerHeight,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          buildHeader(),
-          Expanded(
-            child: buildPager(),
-          )
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        buildHeader(),
+        Expanded(
+          child: buildPager(),
+        )
+      ],
     );
   }
 

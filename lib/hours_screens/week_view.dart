@@ -59,6 +59,7 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
                     pushTo(context, AppsUsageScreen(
                       from: await TimeUtils.getWeekStart(model.date),
                       to: await TimeUtils.getWeekEnd(model.date),
+                      distinctApps: list,
                     ));
                   },),
                 ),

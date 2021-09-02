@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
-    model.animController.dispose();
+    // model.animController.dispose();
     model.expandingController.dispose();
     _tabIndex.dispose();
     _expandingTabIndex.dispose();
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen>
           backLayer: DatePickerWidget(
             firstDate: launchDate ?? DateTime(1900),
           ),
-          frontTitle: Text(model.frontLabel),
+          frontTitle: Text(model.frontLabel(MaterialLocalizations.of(context))),
           backTitle: Text("Select date"),
           controller: model.animController),
     );

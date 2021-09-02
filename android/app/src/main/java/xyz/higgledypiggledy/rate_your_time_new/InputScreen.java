@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +25,7 @@ public class InputScreen extends Activity implements View.OnClickListener{
     private int i;
     public static String exitAction = "com.exit.input";
     private BroadcastReceiver receiver;
-
+    private static final String TAG = "InputScreen";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,7 @@ public class InputScreen extends Activity implements View.OnClickListener{
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
         buttonAdd.setEnabled(false);
-        buttonAdd.setOnClickListener(new MyClickListener(i,noteInput.getText().toString()));
+        buttonAdd.setOnClickListener(this);
         button5.setOnClickListener(this);
 
         //CLICKING ANYWHERE IN THE BACKGROUND FINISHES THE ACTIVITY
@@ -85,32 +86,24 @@ public class InputScreen extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        final Button b= (Button)view;
-        this.i = Integer.parseInt(b.getText().toString());
-        buttonAdd.setEnabled(true);
+        if(view.getId() == R.id.button_add){
+            addToDb(Calendar.getInstance().get(Calendar.HOUR_OF_DAY),noteInput.getText().toString());
+        }else {
+            final Button b = (Button) view;
+            this.i = Integer.parseInt(b.getText().toString());
+            buttonAdd.setEnabled(true);
+        }
+
+    }
+    void addToDb(int title,String notes) {
+        Log.d(TAG, "addToDb() called with: title = [" + title + "] extras = ["+ i+ "] and notes = ["+notes+"]");
+        Intent i1 = new Intent(getApplicationContext(), ClickReciever.class);
+        i1.putExtra(AlarmNotificationService.CLICK_EXTRAS, i);
+        i1.putExtra(AlarmNotificationService.CLICK_TITLE, title);
+        i1.putExtra(AlarmNotificationService.CLICK_NOTES, notes);
+        i1.setAction("");
+        sendBroadcast(i1);
+        exitActivity();
     }
 
-    private class MyClickListener implements View.OnClickListener {
-        private final int i;
-        private final String notes;
-
-        public MyClickListener(int i,String notes) {
-            this.i=i;
-            this.notes = notes;
-        }
-        void addToDb(int title) {
-            Intent i1 = new Intent(getApplicationContext(), ClickReciever.class);
-            i1.putExtra(AlarmNotificationService.CLICK_EXTRAS, i);
-            i1.putExtra(AlarmNotificationService.CLICK_TITLE, title);
-            i1.putExtra(AlarmNotificationService.CLICK_NOTES, notes);
-            i1.setAction("");
-            sendBroadcast(i1);
-            exitActivity();
-        }
-
-        @Override
-        public void onClick(View view) {
-                addToDb(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));//Ideally this should be the hour when notification was shown not clicked.
-        }
-    }
 }

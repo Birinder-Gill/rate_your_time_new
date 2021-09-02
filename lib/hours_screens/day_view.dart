@@ -24,10 +24,23 @@ class DayViewWrapper extends StatelessWidget {
   }
 }
 
-class DayViewScreen extends StatelessWidget {
+class DayViewScreen extends StatefulWidget{
   final bool firstDay;
 
   DayViewScreen(this.firstDay);
+
+  @override
+  _DayViewScreenState createState() => _DayViewScreenState();
+}
+
+class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("State = $state");
+    if (state == AppLifecycleState.resumed) {
+      Provider.of<HoursModel>(context).refresh();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +145,7 @@ class DayViewScreen extends StatelessWidget {
       ));
 
   Widget _emptyView(BuildContext context) {
-    if (this.firstDay) return _firstTimeEmptyView(context);
+    if (this.widget.firstDay) return _firstTimeEmptyView(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,

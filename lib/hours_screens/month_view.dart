@@ -61,6 +61,7 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
                         AppsUsageScreen(
                           from: await TimeUtils.getMonthStart(model.date),
                           to: await TimeUtils.getMonthEnd(model.date),
+                          distinctApps: list,
                         ));
                   },
                 ),

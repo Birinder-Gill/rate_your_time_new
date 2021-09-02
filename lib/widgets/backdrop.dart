@@ -297,10 +297,9 @@ class _BackdropState extends State<Backdrop>
   }
 
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
-    const layerTitleHeight = 48;
     final layerSize =
         Size(constraints.biggest.width,Constants.datePickerHeight);
-    final layerTop = layerSize.height - layerTitleHeight;
+    final layerTop = layerSize.height;
 
     _layerAnimation = _getLayerAnimation(layerSize, layerTop);
 

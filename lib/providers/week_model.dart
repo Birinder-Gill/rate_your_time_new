@@ -9,7 +9,7 @@ class WeekModel extends AverageModel with ChangeNotifier {
     this.date = date;
     _loadData();
   }
-  String dateLabel = "";
+  // String dateLabel = "";
 
   _loadData({bool hours = true,bool apps=true}) async {
     consoleLog("LOAD DATA IN WEEK MODEL DATE = $date");
@@ -30,8 +30,8 @@ class WeekModel extends AverageModel with ChangeNotifier {
   }
 
   void _loadHours(DateTime from, DateTime to) {
-    this.dateLabel = "${from.day}/${from.month}-${to.day}/${to.month}${to.year}";
-    this.dateLabel = "${Constants.months[date.month-1]} ${date.year}";
+    // this.dateLabel = "${from.day}/${from.month}-${to.day}/${to.month}${to.year}";
+    // this.dateLabel = "${Constants.months[date.month-1]} ${date.year}";
     getHours(from, to).then((value) {
       notifyListeners();
     });

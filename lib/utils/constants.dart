@@ -161,7 +161,7 @@ class Constants {
 
   static const String saveSettings = 'saveSettings';
 
-  static const double datePickerHeight =450;
+  static const double datePickerHeight =420;
 
   static final months = [
   'Jan',

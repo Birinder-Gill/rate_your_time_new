@@ -34,7 +34,7 @@ class AverageModel {
             Utils.parseAveragesData, {'data':hourData,'week':week});
         cache.addAverageCache(to, from, this.av);
       }
-      isEmpty = av.averages.isEmpty;
+      isEmpty = av.averages.isEmpty|| (av.averages.fold(0, (previousValue, element) => previousValue+element.worth)==0);
 
       if(!isEmpty){
         rating=av.averages.fold<double>(0.0, (previousValue, element) => previousValue+element.worth)/5;
