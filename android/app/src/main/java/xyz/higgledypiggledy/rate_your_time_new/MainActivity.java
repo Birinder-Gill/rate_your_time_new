@@ -195,6 +195,11 @@ public class MainActivity extends FlutterActivity {
                     updateHour(call.argument("id"), call.argument("activity"), call.argument("note"), result);
                     return;
                 }
+                case "openAppSettings": {
+                    openAppSettingsPage();
+                    return;
+                }
+
 
 
             }
@@ -244,6 +249,14 @@ public class MainActivity extends FlutterActivity {
                     getContext(), id);
     }
 
+
+    void openAppSettingsPage(){
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+    }
 
     void openNotificationSettings(){
         Intent intent = new Intent();

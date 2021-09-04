@@ -52,7 +52,9 @@ class _FrontLayer extends StatelessWidget {
                   opacity: model.animController.value,
                   child: ToggleButtons(
                       selectedColor: Theme.of(context).accentColor,
-                      onPressed: model.animController.value == 1?model.changeViewToggle:null,
+                      onPressed: model.animController.value == 1
+                          ? model.changeViewToggle
+                          : null,
                       children: [
                         Icon(Icons.calendar_view_day),
                         Icon(Icons.view_week),
@@ -298,7 +300,7 @@ class _BackdropState extends State<Backdrop>
 
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
     final layerSize =
-        Size(constraints.biggest.width,Constants.datePickerHeight);
+        Size(constraints.biggest.width, Constants.datePickerHeight);
     final layerTop = layerSize.height;
 
     _layerAnimation = _getLayerAnimation(layerSize, layerTop);
@@ -354,57 +356,48 @@ class _BackdropState extends State<Backdrop>
         backTitle: widget.backTitle,
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.settings),
-          // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
-          onPressed: () {
-            Utils.openUsageSettingsScreen();
-          },
-        ),
+        // IconButton(
+        //   icon: const Icon(Icons.settings),
+        //   // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
+        //   onPressed: () {
+        //     Utils.openUsageSettingsScreen();
+        //   },
+        // ),
         // if (false)
-        IconButton(
-          icon: const Icon(Icons.alarm),
-          // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
-          onPressed: () {
-            pushTo(context, AlarmsScreen());
-          },
-        ),
-          _showGuide
-              ? FeatureDiscoveryController(
-                  IconButton(
-                    icon: FeatureDiscovery(
-                        description: 'Test desc',
-                        title: "Test title",
-                        showOverlay: true,
-                        onDismiss: () {
-                          _showGuide = false;
-                          // setState(() {
-                          //
-                          // });
-                          // _toggleBackdropLayerVisibility();
-                        },
-                        child: Icon(Icons.menu)),
-                    // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
-                    onPressed: _toggleBackdropLayerVisibility,
-                  ),
-                )
-              : IconButton(
-                  icon: AnimatedIcon(
-                      icon: AnimatedIcons.add_event,
-                      progress: _controller),
+        _showGuide
+            ? FeatureDiscoveryController(
+                IconButton(
+                  icon: FeatureDiscovery(
+                      description: 'Test desc',
+                      title: "Test title",
+                      showOverlay: true,
+                      onDismiss: () {
+                        _showGuide = false;
+                        // setState(() {
+                        //
+                        // });
+                        // _toggleBackdropLayerVisibility();
+                      },
+                      child: Icon(Icons.menu)),
                   // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
                   onPressed: _toggleBackdropLayerVisibility,
                 ),
+              )
+            : IconButton(
+                icon: AnimatedIcon(
+                    icon: AnimatedIcons.add_event, progress: _controller),
+                // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
+                onPressed: _toggleBackdropLayerVisibility,
+              ),
       ],
     );
-    return
-      AnimatedBuilder(
+    return AnimatedBuilder(
       animation: PageStatus.of(context).cartController,
-      builder: (context, child) =>
-          ExcludeSemantics(
+      builder: (context, child) => ExcludeSemantics(
         excluding: cartPageIsVisible(context),
         child: Scaffold(
-          drawer: Drawer(child: SettingsScreen()),
+          drawer: Drawer(
+              child: SettingsScreen()),
           appBar: appBar,
           body: LayoutBuilder(
             builder: _buildStack,

@@ -156,6 +156,8 @@ class Constants {
   static const String getMonthData = 'getMonthData';
   static const String openNotificationSettings = 'openNotificationSettings';
   static const String openSettings = 'openSettings';
+  static const String openAppSettings = 'openAppSettings';
+
 
   static const String CHANNEL_NAME = 'name';
 
@@ -252,7 +254,6 @@ class TimeUtils {
       mins = i.toDouble();
       label = "ms";
     }
-
     return "${mins.toStringAsFixed(0)} $label";
   }
 
@@ -472,6 +473,13 @@ class Utils {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     channel.invokeMethod(Constants.openSettings);
   }
+
+  static void openAppSettingsScreen() {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    channel.invokeMethod(Constants.openAppSettings);
+  }
+
+
 
   static void openNotificationSettings() {
     final channel = MethodChannel(Constants.CHANNEL_NAME);

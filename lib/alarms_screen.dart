@@ -58,12 +58,14 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
             ListTile(
               title: Text('${i['time']}'),
               subtitle: Text('${i['repeat']}'),
-              trailing: i['enabled']==1?Icon(
-                Icons.alarm_on,
-                color: Colors.green,
-              ):Icon(
-                Icons.alarm_off,
-              ),
+              trailing: i['enabled'] == 1
+                  ? Icon(
+                      Icons.alarm_on,
+                      color: Colors.green,
+                    )
+                  : Icon(
+                      Icons.alarm_off,
+                    ),
             )
         ],
       ),

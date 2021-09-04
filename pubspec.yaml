@@ -36,6 +36,8 @@ dependencies:
   charts_flutter: ^0.10.0
   syncfusion_flutter_datepicker: ^19.2.49
 
+  sleek_circular_slider: ^2.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
