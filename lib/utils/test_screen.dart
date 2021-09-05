@@ -311,11 +311,11 @@ class _SleepPageState extends State<SleepPage> {
   }
 
   String _formatTime(int time) {
-    return '$time:00';
+    return '${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay(hour: time, minute: 0))}';
   }
 
   String _formatIntervalTime(int init, int end) {
-    var hours = end-init;
-    return '${hours}h';
+    final hours = end > init ? end - init : 24 - init + end;
+    return '${hours}hr${hours>1?'s':''}';
   }
 }

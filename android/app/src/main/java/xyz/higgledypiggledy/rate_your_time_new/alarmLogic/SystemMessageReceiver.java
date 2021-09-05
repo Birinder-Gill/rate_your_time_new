@@ -77,7 +77,7 @@ public class SystemMessageReceiver extends BroadcastReceiver {
   private void scheduleAll(Context c) {
     clearSnooze(c);
     for (Alarm a : enabledAlarms(c.getContentResolver())) {
-      Log.i(TAG, "Scheduling alarm " + a.id);
+      Log.i(TAG, "Boot complete... Scheduling alarm " + a.id);
       AlarmNotificationService.scheduleAlarmTrigger(c, a.id, a.tsUTC);
     }
   }

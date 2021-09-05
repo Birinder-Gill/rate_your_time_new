@@ -30,6 +30,8 @@ class CircularSliderPaint extends StatefulWidget {
   final double sliderStrokeWidth;
   final bool shouldCountLaps;
 
+  final Color textColor;
+
   CircularSliderPaint({
     @required this.mode,
     @required this.divisions,
@@ -48,6 +50,7 @@ class CircularSliderPaint extends StatefulWidget {
     @required this.showHandlerOutter,
     @required this.sliderStrokeWidth,
     @required this.shouldCountLaps,
+    @required this.textColor,
   });
 
   @override
@@ -127,6 +130,7 @@ class _CircularSliderState extends State<CircularSliderPaint> {
           primarySectors: widget.primarySectors,
           secondarySectors: widget.secondarySectors,
           sliderStrokeWidth: widget.sliderStrokeWidth,
+          textColor: widget.textColor,
         ),
         foregroundPainter: _painter,
         child: Padding(

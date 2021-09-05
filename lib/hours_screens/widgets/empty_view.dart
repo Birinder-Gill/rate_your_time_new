@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class EmptyView extends StatelessWidget {
@@ -55,7 +57,7 @@ class EmptyView extends StatelessWidget {
         ),
 
         ElevatedButton.icon(
-          onPressed: () {},
+          onPressed:Provider.of<HoursModel>(context,listen: false).toggleBackdrop,
           icon: Icon(Icons.date_range),
           label: Text("Choose another date"),
           style: ButtonStyle(),

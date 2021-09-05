@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/about_screen.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/select_time_screen.dart';
+import 'package:rate_your_time_new/splash_screen.dart';
 import 'package:rate_your_time_new/themes/select_theme_widget.dart';
 import 'package:rate_your_time_new/troubleshooting_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:rate_your_time_new/utils/shared_prefs.dart';
 
 import 'alarms_screen.dart';
 
@@ -88,6 +90,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               pushTo(context, TroubleShootingScreen());
             },
             title: Text("TroubleShoot"),
+          ),
+          ListTile(
+            onTap: () async{
+              await SharedPrefs.clear();
+              pushTo(context, SplashScreen(),clear: true);
+            },
+            title: Text("Clear data and restart"),
           ),
           ListTile(
             onTap: () {

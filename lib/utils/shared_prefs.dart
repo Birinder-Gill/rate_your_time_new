@@ -22,12 +22,18 @@ class SharedPrefs {
 
   ///GETS INTEGER USING KEY FROM SHARED PREFS
   ///DEFAULTS TO 0
-  static Future<int> getInt(String key) async {
+  static Future<int> getInt(String key,{int defaultValue = 0}) async {
     consoleLog("IN get int $key");
     String result =
         await _channel().invokeMethod(Constants.getString, {'key': '$key'});
-    return int.tryParse(result) ?? 0;
+    return int.tryParse(result) ?? defaultValue;
   }
+  static Future clear()async {
+    return
+    await _channel().invokeMethod(Constants.clearPrefs);
+  }
+
+
 
   static Future<void> setInt(String key, int value) async {
     consoleLog("IN Set int $key:$value");
@@ -67,4 +73,6 @@ class SharedPrefs {
     }
     return DateUtils.dateOnly(DateTime.fromMillisecondsSinceEpoch(installTime));
   }
+
+
 }

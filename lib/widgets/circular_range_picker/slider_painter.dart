@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'circular_slider_paint.dart' show CircularSliderMode;
 import 'utils.dart';
@@ -48,19 +49,21 @@ class SliderPainter extends CustomPainter {
 
     Paint handler =
         _getHandlerPaint(color: handlerColor, style: PaintingStyle.fill);
-    Paint handlerOutter = _getHandlerPaint(color: handlerColor, width: 2.0);
+    // Paint handlerOutter = _getHandlerPaint(color: handlerColor, width: 2.0);
 
     // draw handlers
     if (mode == CircularSliderMode.doubleHandler) {
       initHandler = radiansToCoordinates(center, -pi / 2 + startAngle, radius);
-      canvas.drawCircle(initHandler, 8.0, handler);
-      canvas.drawCircle(initHandler, handlerOutterRadius, handlerOutter);
+      canvas.drawCircle(initHandler, handlerOutterRadius, handler..color = Colors.deepOrange.shade800);
+        _drawSunny(canvas,initHandler,Icons.wb_sunny_sharp,Colors.amber);
     }
 
     endHandler = radiansToCoordinates(center, -pi / 2 + endAngle, radius);
-    canvas.drawCircle(endHandler, 8.0, handler);
+    canvas.drawCircle(endHandler,handlerOutterRadius, handler..color=Colors.deepPurple);
     if (showHandlerOutter) {
-      canvas.drawCircle(endHandler, handlerOutterRadius, handlerOutter);
+      _drawSunny(canvas,endHandler,Icons.nights_stay_sharp,Colors.lightBlueAccent);
+
+      // canvas.drawCircle(endHandler, handlerOutterRadius, handlerOutter);
     }
   }
 
@@ -105,5 +108,20 @@ class SliderPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
+  }
+
+  void _drawSunny(Canvas canvas, Offset offset, IconData icon, Color color) {
+    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl,textAlign: TextAlign.center);
+    textPainter.text = TextSpan(
+      text: String.fromCharCode(icon.codePoint),
+      style: TextStyle(
+        color: color,
+        fontSize: (handlerOutterRadius*2)-4,
+        fontFamily: icon.fontFamily,
+        package: icon.fontPackage,
+      ),
+    );
+    textPainter.layout();
+    textPainter.paint(canvas,offset.translate(-textPainter.width/2, -textPainter.height/2));
   }
 }

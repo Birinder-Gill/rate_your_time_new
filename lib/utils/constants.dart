@@ -157,7 +157,7 @@ class Constants {
   static const String openNotificationSettings = 'openNotificationSettings';
   static const String openSettings = 'openSettings';
   static const String openAppSettings = 'openAppSettings';
-
+  static const String clearPrefs = 'clearPrefs';
 
   static const String CHANNEL_NAME = 'name';
 
@@ -180,7 +180,6 @@ class Constants {
   "Dec"
   ];
 
-
 }
 
 double letterSpacingOrNone(double letterSpacing) => letterSpacing;
@@ -192,19 +191,19 @@ Widget adButton() => OutlinedButton.icon(
     icon: Icon(Icons.font_download),
     label: Text("Watch an Ad"));
 
-void pushTo(BuildContext context, Widget screen,
+Future<T> pushTo<T>(BuildContext context, Widget screen,
     {bool replace = false, bool clear = false, bool dialog=false}) {
   if (clear) {
-    Navigator.pushAndRemoveUntil(
+   return Navigator.pushAndRemoveUntil<T>(
         context, CupertinoPageRoute(builder: (c) => screen,fullscreenDialog: dialog), (route) => false,);
-    return;
+
   }
   if (replace) {
-    Navigator.pushReplacement(
+    return Navigator.pushReplacement(
         context, CupertinoPageRoute(builder: (c) => screen,fullscreenDialog: dialog),);
-    return;
+
   }
-  Navigator.push(context, CupertinoPageRoute(builder: (c) => screen,fullscreenDialog: dialog));
+  return Navigator.push<T>(context, CupertinoPageRoute(builder: (c) => screen,fullscreenDialog: dialog));
 }
 
 void dialog(context, Widget screen) =>
@@ -393,7 +392,7 @@ class Utils {
       if(!filledSales.isNaN) {
         double pendingSales = ((total/element.value.length) - filledSales);
         av.averages
-            .add(SingleDayAverage(dt, filledSales, pendingSales: pendingSales,filledRegion:((element.value.length/Utils.wokeHours())*5).toInt()));
+            .add(SingleDayAverage(dt, filledSales, pendingSales: pendingSales.isNaN?0:pendingSales,filledRegion:((element.value.length/Utils.wokeHours())*5).toInt()));
       }
     });
 

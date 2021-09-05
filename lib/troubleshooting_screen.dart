@@ -23,7 +23,7 @@ class _TroubleShootingScreenState extends State<TroubleShootingScreen> {
       body:ListView(
         children: [
           ExpansionPanelList(
-            elevation: 0,
+            elevation: 1,
               expansionCallback: (i,b){
                 print("$i,$b");
                 setState(() {

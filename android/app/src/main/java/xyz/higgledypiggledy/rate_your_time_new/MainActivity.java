@@ -71,7 +71,7 @@ public class MainActivity extends FlutterActivity {
     }
 
     public String getStringVal(String key) {
-        return getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(key, "0");
+        return getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(key, "-/-");
     }
 
     public void setStringVal(String key, String value, final MethodChannel.Result result) {
@@ -93,14 +93,29 @@ public class MainActivity extends FlutterActivity {
     boolean test = true;
 
     public void createAlarms(int wake, int sleep) {
-        for (int i = wake + 1; i <= sleep; i++) {
+        int i = wake + 1;
+        while (i <= sleep) {
             final Calendar c = Calendar.getInstance();
             final int secondsPastMidnight = 5 +
                     i * 3600 +
                     ((test ? (c.get(Calendar.MINUTE) + 1) : 0) * 60);//TODO:SET MINUTES TO ZERO
             AlarmNotificationService.newAlarm(
                     getApplicationContext(), secondsPastMidnight);
+            if (i < 24) {
+                i++;
+            } else {
+                i = 0;
+            }
+
         }
+//        for (int i = wake + 1; i <= sleep; i++) {
+//            final Calendar c = Calendar.getInstance();
+//            final int secondsPastMidnight = 5 +
+//                    i * 3600 +
+//                    ((test ? (c.get(Calendar.MINUTE) + 1) : 0) * 60);//TODO:SET MINUTES TO ZERO
+//            AlarmNotificationService.newAlarm(
+//                    getApplicationContext(), secondsPastMidnight);
+//        }
     }
 
     @Override
@@ -115,7 +130,7 @@ public class MainActivity extends FlutterActivity {
                     return;
                 }
                 case "getRangeHours": {
-                    Log.i(TAG, "configureFlutterEngine: "+call.arguments());
+                    Log.i(TAG, "configureFlutterEngine: " + call.arguments());
 //                    boolean testFlag = call.argument("test")!=null&& ((int)call.argument("test")) == 1;
                     Injection.provideRepository(getApplicationContext()).getRangeDataFor(call.argument("d1"), call.argument("m1"), call.argument("y1"), call.argument("d2"), call.argument("m2"), call.argument("y2"), result::success);
                     return;
@@ -199,11 +214,19 @@ public class MainActivity extends FlutterActivity {
                     openAppSettingsPage();
                     return;
                 }
+                case "clearPrefs": {
+                    clearSharedPrefs();
+                    return;
+                }
 
 
 
             }
         });
+    }
+
+    private void clearSharedPrefs() {
+        getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().apply();
     }
 
     private void updateHour(int id, int activity, String note, MethodChannel.Result result) {
@@ -250,7 +273,7 @@ public class MainActivity extends FlutterActivity {
     }
 
 
-    void openAppSettingsPage(){
+    void openAppSettingsPage() {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
@@ -258,12 +281,12 @@ public class MainActivity extends FlutterActivity {
         startActivity(intent);
     }
 
-    void openNotificationSettings(){
+    void openNotificationSettings() {
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
             intent.putExtra("app_package", getPackageName());
             intent.putExtra("app_uid", getApplicationInfo().uid);

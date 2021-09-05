@@ -67,6 +67,8 @@ class DoubleCircularSlider extends StatefulWidget {
   /// otherwise, everytime the user completes a full lap, the selection restarts from 0
   final bool shouldCountLaps;
 
+  final Color textColor;
+
   DoubleCircularSlider(
     this.divisions,
     this.init,
@@ -84,7 +86,7 @@ class DoubleCircularSlider extends StatefulWidget {
     this.handlerOutterRadius,
     this.showHandlerOutter,
     this.sliderStrokeWidth,
-    this.shouldCountLaps,
+    this.shouldCountLaps, this.textColor,
   })  : assert(init >= 0 && init <= divisions,
             'init has to be > 0 and < divisions value'),
         assert(end >= 0 && end <= divisions,
@@ -140,9 +142,10 @@ class _DoubleCircularSliderState extends State<DoubleCircularSlider> {
               widget.selectionColor ?? Color.fromRGBO(255, 255, 255, 0.3),
           handlerColor: widget.handlerColor ?? Colors.white,
           handlerOutterRadius: widget.handlerOutterRadius ?? 12.0,
-          showRoundedCapInSelection: false,
+          showRoundedCapInSelection: true,
           showHandlerOutter: widget.showHandlerOutter ?? true,
           shouldCountLaps: widget.shouldCountLaps ?? false,
+          textColor: widget.textColor,
         ));
   }
 }

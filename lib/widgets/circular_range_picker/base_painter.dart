@@ -16,8 +16,11 @@ class BasePainter extends CustomPainter {
   Offset center;
   double radius;
 
+  final Color textColor;
+
   BasePainter({
     @required this.baseColor,
+    @required this.textColor,
     @required this.selectionColor,
     @required this.primarySectors,
     @required this.secondarySectors,
@@ -26,7 +29,7 @@ class BasePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint base = _getPaint(color: baseColor);
+    // Paint base = _getPaint(color: baseColor);
 
     center = Offset(size.width / 2, size.height / 2);
     radius = min(size.width / 2, size.height / 2) - sliderStrokeWidth - (sliderStrokeWidth*3.5);
@@ -34,7 +37,7 @@ class BasePainter extends CustomPainter {
 
     assert(radius > 0);
 
-    canvas.drawCircle(center, radius, base);
+    // canvas.drawCircle(center, radius, base);
 
     if (primarySectors > 0) {
       _paintSectors(primarySectors, 8.0, selectionColor, canvas);
@@ -43,7 +46,7 @@ class BasePainter extends CustomPainter {
     if (secondarySectors > 0) {
       _paintSectors(secondarySectors, 6.0, baseColor, canvas);
     }
-    _paintTime(4, 6.0, baseColor, canvas);
+    _paintTime(4, 6.0, textColor, canvas);
   }
 
   void _paintSectors(
@@ -61,10 +64,12 @@ class BasePainter extends CustomPainter {
       int sectors, double radiusPadding, Color color, Canvas canvas) {
     var initSectors =
         getSectionsCoordinatesInCircle(center, radius+(sliderStrokeWidth*3.5), sectors);
-
+    Paint paint = _getPaint(color: color, width: 2.0);
+    canvas.drawPoints(ui.PointMode.points, [center], paint);
     _paintText(
       canvas,
       initSectors,
+      color
     );
   }
 
@@ -77,17 +82,14 @@ class BasePainter extends CustomPainter {
     }
   }
 
-  void _paintText(Canvas canvas, List<Offset> inits) {
+  void _paintText(Canvas canvas, List<Offset> inits, Color color) {
     assert(inits.length > 0);
     final times = ['12','18','00','06'];
     for (final i in times) {
       consoleLog('$i ${inits[times.indexOf(i)]}');
-      canvas.drawParagraph(
-          (ui.ParagraphBuilder(
-                  ui.ParagraphStyle(fontSize: 16, textAlign: TextAlign.center))
-                ..addText(i)..pushStyle(ui.TextStyle(color: Colors.white)))
-              .build()..layout(ui.ParagraphConstraints(width: 36)),
-          inits[times.indexOf(i)].translate(-16, -8));
+      TextPainter(text: TextSpan(style: TextStyle(color: color,fontWeight: FontWeight.bold), text: i), textAlign: TextAlign.left, textDirection: TextDirection.ltr,)
+      ..layout(minWidth: 36)
+      ..paint(canvas,inits[times.indexOf(i)].translate(-8, -6));
     }
   }
 

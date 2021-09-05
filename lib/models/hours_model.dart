@@ -69,18 +69,31 @@ class HoursModel with ChangeNotifier {
 
   Future<List<DateTime>> _setLabel() async {
     if (toggle == 1) {
-      return [date, await TimeUtils.getWeekEnd(date)];
+      return [
+        await TimeUtils.getWeekStart(date),
+        await TimeUtils.getWeekEnd(date)
+      ];
     } else
       return [date];
   }
 
   String frontLabel(MaterialLocalizations localizations) {
-    if(dates == null||dates.isEmpty) return '-/-';
-    switch(toggle){
-      case 0: return localizations.formatShortDate(dates[0]);
-      case 1: return "${localizations.formatShortMonthDay(dates[0])}-${localizations.formatShortMonthDay(dates[1])}";
-      default: return localizations.formatMonthYear(date);
+    if (dates == null || dates.isEmpty) return '-/-';
+    switch (toggle) {
+      case 0:
+        return localizations.formatShortDate(dates[0]);
+      case 1:
+        return "${localizations.formatShortMonthDay(dates[0])}-${localizations.formatShortMonthDay(dates[1])}";
+      default:
+        return localizations.formatMonthYear(date);
     }
+  }
+
+  void toggleBackdrop() {
+    if (animController.isCompleted)
+      animController.reverse();
+    else
+      animController.forward();
   }
 }
 
