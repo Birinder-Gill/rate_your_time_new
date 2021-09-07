@@ -142,6 +142,9 @@ void nextTick(void Function() run) {
 }
 
 class Constants {
+
+  static const String appName = "Rate your time.";
+
   static const String getDayData = "getDayData";
   static const String addAlarms = "addAlarms";
   static const String getAlarms = "getAlarms";

@@ -86,13 +86,14 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
 
 String _hrs(value)=>"${value>1? ' hrs':' hr'}";
   void showDayActivitiesList(Iterable<MapEntry<int, int>> entries, Activity a) {
+    final label = hoursModel.frontLabel(MaterialLocalizations.of(context));
     pushTo( context, Scaffold(
-      appBar: AppBar(title: Text("Time spent on $a in ${hoursModel.frontLabel}"),),
+      appBar: AppBar(title: Text("Time spent on $a in $label"),),
       body: ListView(
           children: [
             for(var i in entries)
               ListTile(
-                title: Text(i.key.toString()+"-${hoursModel.frontLabel}"),
+                title: Text(i.key.toString()+"-$label"),
                 trailing: Text("${i.value} ${i.value>1? 'hrs':'hr'}"),
                 subtitle: Divider(),
               )

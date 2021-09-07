@@ -16,20 +16,22 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: Colors.red,
+    return SafeArea(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(
+            height: 8,
+          ),
           Text(
             "${widget.model.title}",
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headline4,
             textAlign: TextAlign.center,
           ),
           SizedBox(
-            height: 56,
+            height: 24,
           ),
-          false?FaIcon(FontAwesomeIcons.solidCalendarAlt,color: Colors.red,size: 200,):Image.network(
+        Image.network(
             "${widget.model.imagePath}",
             // ,
             fit: BoxFit.cover,
@@ -37,15 +39,12 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
             width: _size,
           ),
           SizedBox(
-            height: 56,
+            height: 24,
           ),
           Text(
               "${widget.model.desc}",
-              // ,
-              textAlign: TextAlign.center),
-          SizedBox(
-            height: 56,
-          ),
+                style: Theme.of(context).textTheme.headline6,
+              textAlign: TextAlign.start),
         ],
       ),
     );

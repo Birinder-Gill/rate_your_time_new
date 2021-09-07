@@ -10,6 +10,7 @@ import 'package:rate_your_time_new/themes/select_theme_widget.dart';
 import 'package:rate_your_time_new/troubleshooting_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
+import 'package:rate_your_time_new/welcome_info_screen.dart';
 
 import 'alarms_screen.dart';
 
@@ -91,6 +92,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
             title: Text("TroubleShoot"),
           ),
+          ListTile(
+            onTap: () {
+              pushTo(context, WelcomeInfoScreen());
+            },
+            title: Text("Welcome"),
+          ),
+
           ListTile(
             onTap: () async{
               await SharedPrefs.clear();
