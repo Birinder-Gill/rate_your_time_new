@@ -26,7 +26,7 @@ class _WelcomeInfoScreenState extends State<WelcomeInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         height: 72,

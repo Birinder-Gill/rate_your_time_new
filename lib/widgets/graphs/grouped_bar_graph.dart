@@ -79,7 +79,7 @@ class GroupedBarChart extends StatelessWidget {
       new charts.Series<SingleDayAverage, String>(
           id: 'tv',
           domainFn: (SingleDayAverage sales, _) =>
-              Utils.shortDays[sales.date.weekday],
+          sales.label ?? Utils.shortDays[sales.date.weekday],
           measureFn: (SingleDayAverage sales, _) =>
               sales.worth > 0 ? sales.worth : 0,
           data: charter,
@@ -91,7 +91,7 @@ class GroupedBarChart extends StatelessWidget {
       new charts.Series<SingleDayAverage, String>(
         id: 'mobile',
         domainFn: (SingleDayAverage sales, _) =>
-            Utils.shortDays[sales.date.weekday],
+            sales.label ?? Utils.shortDays[sales.date.weekday],
         measureFn: (SingleDayAverage sales, _) =>
             sales.worth > 0 ? sales.worth : 0,
         data: av,
@@ -109,17 +109,21 @@ class SingleDayAverage {
 
   final int filledRegion;
 
+  final String label;
+
   SingleDayAverage(this.date, this.worth,
-      {this.pendingSales = 0.0, this.filledRegion = 0});
+      {this.pendingSales = 0.0, this.filledRegion = 0, this.label});
 
   SingleDayAverage copyWith(
           {DateTime date,
           double worth,
           double pendingSales,
-          int filledHours}) =>
+          int filledHours,
+          String label}) =>
       SingleDayAverage(date ?? this.date, worth ?? this.worth,
           pendingSales: pendingSales ?? this.pendingSales,
-          filledRegion: filledHours ?? this.filledRegion);
+          filledRegion: filledHours ?? this.filledRegion,
+          label: label ?? this.label);
 
   @override
   String toString() {

@@ -18,6 +18,8 @@ class AppUsageCard extends StatelessWidget {
 
   AppUsageCard(this.appUsage, this.accessGranted, {@required this.onRetry,this.openDetails});
 
+  num get sum => appUsage.highApps.fold(0, (previousValue, element) => previousValue+element.totalTimeInForeground)+appUsage.otherApps.fold(0, (previousValue, element) => previousValue+element.totalTimeInForeground);
+
   @override
   Widget build(BuildContext context) {
     if (!accessGranted) {
@@ -31,10 +33,17 @@ class AppUsageCard extends StatelessWidget {
         "\n If you're looking for app usage of single day, maybe go to App usage screen",
         textAlign: TextAlign.center,
       ));
+    final theme=Theme.of(context).textTheme;
     return Card(
       child: Column(
         children: [
-          Text('Time spent on mobile this week: '),
+          Text('Total screen time this week: '),
+          Text(
+            TimeUtils.convertMillsToTime(sum),
+            textAlign: TextAlign.center,
+            style: theme.headline4,
+          ),
+          Text('Most used apps',style: theme.headline6,),
           for (final i in appUsage.highApps)
             ListTile(
               horizontalTitleGap: 0,

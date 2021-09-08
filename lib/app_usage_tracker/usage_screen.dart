@@ -43,7 +43,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   bool datesChanged = false;
 
   double get sum => sumOf<UsageStat>(
-      distinctApps.sublist(0, 4), (e) => e.totalTimeInForeground);
+      distinctApps, (e) => e.totalTimeInForeground);
 
   get granted => (_granted != null && (_granted));
 
