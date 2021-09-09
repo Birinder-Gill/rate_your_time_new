@@ -59,6 +59,17 @@ class ApiHelper{
     return await compute<List, AverageAppUsageModel>(Utils.parseStatsData, list);
   }
 
+  static Future loadGoal(DateTime date) async{
+    final body = {
+      "date": date.day,
+      'month': date.month-1,
+      'year': date.year
+    };
+    consoleLog("Calling load goal with body $body");
+    final goal = await _invokeMethod(Constants.loadGoal, body);
+    return goal;
+  }
+
 
 
 }

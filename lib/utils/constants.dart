@@ -161,6 +161,7 @@ class Constants {
   static const String openSettings = 'openSettings';
   static const String openAppSettings = 'openAppSettings';
   static const String clearPrefs = 'clearPrefs';
+  static const String loadGoal = 'loadGoal';
 
   static const String CHANNEL_NAME = 'name';
 

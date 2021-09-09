@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Goal;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Hour;
 
 
@@ -21,4 +22,15 @@ public interface ProgressDao{
 
     @Query("UPDATE entries SET activity=:activity, note=:note WHERE id=:id")
     void updateHour(int id,int activity,String note);
+    
+    @Query("SELECT * FROM goals WHERE date = :day AND month = :month AND year = :year")
+    List<Goal> getGoalFor(int day, int month, int year);
+
+    @Insert
+    void addGoal(Goal goal);
+
+    @Query("UPDATE goals SET ratingTarget=:ratingTarget, isAccomplished=:isAccomplished, goal=:goal WHERE id=:id")
+    void updateGoal(int id,int ratingTarget,int isAccomplished, String goal);
+    
+    
 }

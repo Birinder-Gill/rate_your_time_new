@@ -6,10 +6,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Goal;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Hour;
 
 
-@Database(entities = Hour.class, version = 1,exportSchema = false)
+@Database(entities = {Hour.class, Goal.class}, version = 1,exportSchema = false)
 public abstract class ProgressDatabase extends RoomDatabase {
 
     private static ProgressDatabase INSTANCE;
