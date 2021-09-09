@@ -5,9 +5,12 @@ import 'package:rate_your_time_new/utils/api_helper.dart';
 class GoalProvider with ChangeNotifier {
   Goal goal;
 
+  bool loaded=false;
+
   loadGoal(DateTime date) async {
     final json = await ApiHelper.loadGoal(date);
     this.goal = Goal.fromMap(json);
+    loaded=true;
     notifyListeners();
   }
 }
@@ -24,7 +27,7 @@ class Goal {
   });
 
   int id;
-  int ratingTarget;
+  double ratingTarget;
   int date;
   int month;
   int year;

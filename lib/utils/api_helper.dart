@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
+import 'package:rate_your_time_new/goal/goal_provider.dart';
 import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
@@ -66,8 +67,16 @@ class ApiHelper{
       'year': date.year
     };
     consoleLog("Calling load goal with body $body");
-    final goal = await _invokeMethod(Constants.loadGoal, body);
-    return goal;
+    final goal = Goal(
+      id: 0,
+      ratingTarget: 3.5,
+      date: 12,
+      month: 6,
+      year: 2000,
+      isAccomplished: 1,
+      goal: "Get average rating to ten."
+    );// await _invokeMethod(Constants.loadGoal, body);
+    return goal.toMap();
   }
 
 

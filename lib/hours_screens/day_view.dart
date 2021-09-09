@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
+import 'package:rate_your_time_new/goal/goal_widget.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/day_model.dart';
@@ -61,6 +62,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                           HourWidget(i, updateHour: (id, activityId, note) {
                             model.updateHour(id, activityId, note);
                           }),
+                        GoalWidgetWrapper(),
                       ],
                     ),
                   ),
