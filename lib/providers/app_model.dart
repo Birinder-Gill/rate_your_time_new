@@ -22,16 +22,6 @@ class AppModel with ChangeNotifier {
 
   List<MyTheme> themes = [
     MyTheme(
-        primaryColor: Color(0xff26363e),
-        primaryLightColor: Color(0xff37474f),
-        primaryDarkColor: Color(0xff102027),
-        secondaryColor: Color(0xffd84315),
-        secondaryLightColor: Color(0xffff7543),
-        secondaryDarkColor: Color(0xff9f0000),
-        primaryTextColor: Color(0xffFFFFFF),
-        secondaryTextColor: Color(0xff000000),
-        isDark: true),
-    MyTheme(
         primaryColor: shrinePink100,
         primaryLightColor: shrineSurfaceWhite,
         primaryDarkColor: shrinePink400,
@@ -41,6 +31,16 @@ class AppModel with ChangeNotifier {
         secondaryTextColor: Colors.white,
         primaryTextColor: shrineBrown900,
         isDark: false),
+    MyTheme(
+        primaryColor: Color(0xff26363e),
+        primaryLightColor: Color(0xff37474f),
+        primaryDarkColor: Color(0xff102027),
+        secondaryColor: Color(0xffd84315),
+        secondaryLightColor: Color(0xffff7543),
+        secondaryDarkColor: Color(0xff9f0000),
+        primaryTextColor: Color(0xffFFFFFF),
+        secondaryTextColor: Color(0xff000000),
+        isDark: true),
     MyTheme(
         primaryColor: Color(0xffffde03),
         primaryLightColor: Color(0xfffff9c4),

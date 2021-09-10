@@ -3,11 +3,10 @@ import 'package:rate_your_time_new/utils/constants.dart';
 const models = <OnBoardingModel>[
   const OnBoardingModel(
       'Welcome to ${Constants.appName}',
-      '${Constants.appName} helps you to keep you focused on your long term goals.(Change this line)\n\n'
-      // by evaluating how you are spending your time.
-          'How can you focus on a few important things when so many things require your attention?\n\n'
-      'We can do it in three steps that take less than 10 minutes over an entire workday.',
-
+      // TODO://
+      'A flana flana trick to keep you focused and improve your productivity.\n\n'
+      // '${Constants.appName} helps you to keep you focused on your long term goals.(Change this line)\n\n'
+      'Examine how you spend your day by breaking it down and evaluating every hour.\n\n',
       'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
 
   const OnBoardingModel(
@@ -22,20 +21,21 @@ const models = <OnBoardingModel>[
   const OnBoardingModel(
       'Refocus every hour',
 
-      '${Constants.appName} gives you a reminder notification every hour.\n\n'
+      '${Constants.appName} gives you a notification every hour asking you to rate that hour.\n\n'
       'When it rings, rate your last hour based on if you think you spent it productively.\n\n'
-      'Now deliberately recommit to how you are going to use the next hour.\n\n Manage your day hour by hour.',
+      'Your hourly ratings are presented to you as beautifully presented daily, weekly and monthly stats.',
+
+      // 'Now deliberately recommit to how you are going to use the next hour.\n\n Manage your day hour by hour.',
 
       'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
 
   const OnBoardingModel(
       'Review every day',
 
-      'At the end of the day, review your day.\n\n'
+      'At the end of the day, review your ratings.\n\n'
       'Where did you focus? Where did you get distracted?\n\n'
       'Which hours were the most productive.\n\n'
       'What did you learn that will help you be more productive tomorrow?',
-
       'https://www.freeiconspng.com/uploads/calendar-image-png-3.png')
 
 ];

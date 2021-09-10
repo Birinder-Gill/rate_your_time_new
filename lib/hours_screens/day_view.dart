@@ -62,7 +62,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                           HourWidget(i, updateHour: (id, activityId, note) {
                             model.updateHour(id, activityId, note);
                           }),
-                        GoalWidgetWrapper(),
+                        // GoalWidgetWrapper(),
                       ],
                     ),
                   ),
