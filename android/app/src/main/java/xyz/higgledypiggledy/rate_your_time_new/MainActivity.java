@@ -94,7 +94,7 @@ public class MainActivity extends FlutterActivity {
 
     public void createAlarms(int wake, int sleep) {
         int i = wake + 1;
-        while (i <= sleep) {
+        while (i != sleep) {
             final Calendar c = Calendar.getInstance();
             final int secondsPastMidnight = 5 +
                     i * 3600 +

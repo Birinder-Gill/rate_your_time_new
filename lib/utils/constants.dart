@@ -450,6 +450,7 @@ class Utils {
       result.otherApps = [];
     }
     return result;
+    ///DO NOT DELETE
     // var distinctApps = <UsageStat>[];
     // apps.forEach((element) {
     //   int index =

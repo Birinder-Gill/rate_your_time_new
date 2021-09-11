@@ -33,6 +33,10 @@ class GroupedBarChart extends StatelessWidget {
     return new charts.BarChart(
       seriesList,
       animate: animate,
+      barRendererDecorator: charts.BarLabelDecorator<String>(
+        insideLabelStyleSpec: TextStyleSpec(color: charts.Color.transparent),
+        outsideLabelStyleSpec: TextStyleSpec(fontSize: 8,fontWeight: '900',),
+      ),
       barGroupingType: charts.BarGroupingType.stacked,
       selectionModels: [
         SelectionModelConfig(updatedListener: (SelectionModel model) {
@@ -80,6 +84,7 @@ class GroupedBarChart extends StatelessWidget {
           id: 'tv',
           domainFn: (SingleDayAverage sales, _) =>
           sales.label ?? Utils.shortDays[sales.date.weekday],
+          labelAccessorFn: (t,i)=>av[i].worth>0?"${av[i].worth}\nhrs":'',
           measureFn: (SingleDayAverage sales, _) =>
               sales.worth > 0 ? sales.worth : 0,
           data: charter,
@@ -90,6 +95,7 @@ class GroupedBarChart extends StatelessWidget {
               : FillPatternType.solid),
       new charts.Series<SingleDayAverage, String>(
         id: 'mobile',
+        labelAccessorFn: (t,i)=>'',
         domainFn: (SingleDayAverage sales, _) =>
             sales.label ?? Utils.shortDays[sales.date.weekday],
         measureFn: (SingleDayAverage sales, _) =>
