@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen>
   final RestorableDouble _tabIndex = RestorableDouble(1);
   
 
-  bool firstDay = false;
+  // bool firstDay = false;
 
   DateTime launchDate;
 
@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> _checkFirstDay() async {
     launchDate = await SharedPrefs.checkInstallDate();
 
-    this.firstDay = DateUtils.isSameDay(launchDate, DateTime.now());
+    // this.firstDay = DateUtils.isSameDay(launchDate, DateTime.now());
     nextTick(() {
       setState(() {});
     });
@@ -127,11 +127,11 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _getFrontLayer(int toggle) {
     switch (toggle) {
       case 0:
-        return DayViewWrapper(this.firstDay);
+        return DayViewWrapper(/*this.firstDay*/);
       case 1:
-        return WeekViewWrapper(this.firstDay);
+        return WeekViewWrapper(/*this.firstDay*/);
       default:
-        return MonthViewWrapper(this.firstDay);
+        return MonthViewWrapper(/*this.firstDay*/);
     }
   }
 }

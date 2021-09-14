@@ -16,8 +16,8 @@ public class Injection {
         }
 //        Log.d(TAG, "provideRepository() called with: context = [" + context + "], test = [" + test + "]");
 
-      MockDataSource source = MockDataSource.getInstance();
-//        LocalDataSource source = LocalDataSource.getInstance(ProgressDatabase.getInstance(context).dao(), AppExecutors.getInstance());
+//      MockDataSource source = MockDataSource.getInstance();
+        LocalDataSource source = LocalDataSource.getInstance(ProgressDatabase.getInstance(context).dao(), AppExecutors.getInstance());
         return DataRepository.getInstance(source);
 }
 }

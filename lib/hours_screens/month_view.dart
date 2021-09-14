@@ -12,9 +12,9 @@ import 'package:rate_your_time_new/providers/month_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class MonthViewWrapper extends StatelessWidget {
-  final bool firstDay;
+  // final bool firstDay;
 
-  MonthViewWrapper(this.firstDay);
+  MonthViewWrapper(/*this.firstDay*/);
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +23,16 @@ class MonthViewWrapper extends StatelessWidget {
       shouldRebuild: (p, c) => !DateUtils.isSameDay(p.date, c.date),
       builder: (_, model, __) {
         model.changeDate(Provider.of<HoursModel>(context, listen: false).date);
-        return MonthViewScreen(firstDay);
+        return MonthViewScreen();
       },
     );
   }
 }
 
 class MonthViewScreen extends StatefulWidget {
-  final bool firstDay;
+  // final bool firstDay;
 
-  MonthViewScreen(this.firstDay);
+  MonthViewScreen(/*this.firstDay*/);
 
   @override
   _MonthViewScreenState createState() => _MonthViewScreenState();

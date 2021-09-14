@@ -84,7 +84,7 @@ class GroupedBarChart extends StatelessWidget {
           id: 'tv',
           domainFn: (SingleDayAverage sales, _) =>
           sales.label ?? Utils.shortDays[sales.date.weekday],
-          labelAccessorFn: (t,i)=>av[i].worth>0?"${av[i].worth}\nhrs":'',
+          labelAccessorFn: (t,i)=>av[i].worth>0?"${av[i].worth.toInt()}h":'',
           measureFn: (SingleDayAverage sales, _) =>
               sales.worth > 0 ? sales.worth : 0,
           data: charter,

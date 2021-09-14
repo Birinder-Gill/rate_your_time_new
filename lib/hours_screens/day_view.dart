@@ -12,24 +12,24 @@ import 'package:rate_your_time_new/widgets/hour_widget.dart';
 import 'package:rate_your_time_new/widgets/ratings_widget.dart';
 
 class DayViewWrapper extends StatelessWidget {
-  final bool firstDay;
+  // final bool firstDay;
 
-  DayViewWrapper(this.firstDay);
+  DayViewWrapper(/*this.firstDay*/);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value:
           DayModel(date: Provider.of<HoursModel>(context, listen: false).date),
-      child: DayViewScreen(firstDay),
+      child: DayViewScreen(),
     );
   }
 }
 
 class DayViewScreen extends StatefulWidget{
-  final bool firstDay;
+  // final bool firstDay;
 
-  DayViewScreen(this.firstDay);
+  DayViewScreen(/*this.firstDay*/);
 
   @override
   _DayViewScreenState createState() => _DayViewScreenState();

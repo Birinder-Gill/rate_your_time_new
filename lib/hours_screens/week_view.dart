@@ -15,9 +15,9 @@ import 'package:rate_your_time_new/widgets/self_analysis.dart';
 import 'widgets/activity_av_card.dart';
 
 class WeekViewWrapper extends StatelessWidget {
-  final bool firstDay;
+  // final bool firstDay;
 
-  WeekViewWrapper(this.firstDay);
+  WeekViewWrapper(/*this.firstDay*/);
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +26,16 @@ class WeekViewWrapper extends StatelessWidget {
       shouldRebuild: (p, c) => !DateUtils.isSameDay(p.date, c.date),
       builder: (_, model, __) {
         model.changeDate(Provider.of<HoursModel>(context, listen: false).date);
-        return WeekViewScreen(firstDay);
+        return WeekViewScreen();
       },
     );
   }
 }
 
 class WeekViewScreen extends StatefulWidget {
-  final bool firstDay;
+  // final bool firstDay;
 
-  WeekViewScreen(this.firstDay);
+  WeekViewScreen(/*this.firstDay*/);
 
   @override
   _WeekViewScreenState createState() => _WeekViewScreenState();
