@@ -4,9 +4,8 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class EmptyView extends StatelessWidget {
-  final bool firstDay;
 
-  const EmptyView({Key key, this.firstDay}) : super(key: key);
+  const EmptyView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +16,12 @@ class EmptyView extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Text(
           "Tell here about what will be shown on this screen.",
-
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5,
         ),
       ));
   Widget _emptyView(BuildContext context) {
+    bool firstDay = Provider.of<AppModel>(context).isEmpty;
     if (firstDay) return _firstTimeEmptyView(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,7 +56,7 @@ class EmptyView extends StatelessWidget {
         ),
 
         ElevatedButton.icon(
-          onPressed:Provider.of<HoursModel>(context,listen: false).toggleBackdrop,
+          onPressed:Provider.of<AppModel>(context,listen: false).toggleBackdrop,
           icon: Icon(Icons.date_range),
           label: Text("Choose another date"),
           style: ButtonStyle(),

@@ -5,6 +5,7 @@ import 'package:rate_your_time_new/themes/shrine_theme.dart';
 import 'package:rate_your_time_new/themes/theme_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rate_your_time_new/themes/theme_model.dart';
+import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
@@ -13,10 +14,11 @@ const defaultLetterSpacing = 0.03;
 const mediumLetterSpacing = 0.04;
 const largeLetterSpacing = 1.0;
 
-class AppModel with ChangeNotifier {
+class ThemeModel with ChangeNotifier {
   ThemeData selectedTheme;
 
-  AppModel() {
+
+  ThemeModel() {
     selectedTheme = _defaultTheme;
   }
 
@@ -182,4 +184,5 @@ MyTheme(
           bodyColor: theme.primaryTextColor,
         ));
   }
+
 }

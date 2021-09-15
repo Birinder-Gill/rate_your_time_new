@@ -79,6 +79,10 @@ class ApiHelper{
     return goal.toMap();
   }
 
+  static Future<bool> isTableEmpty() async{
+    return await _invokeMethod<bool>(Constants.isTableEmpty);
+  }
+
 
 
 }

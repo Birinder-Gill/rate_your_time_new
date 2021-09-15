@@ -11,7 +11,7 @@ class SelectThemeWidget extends StatefulWidget {
 class _SelectThemeWidgetState extends State<SelectThemeWidget> {
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<AppModel>(context);
+    final model = Provider.of<ThemeModel>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Select theme"),

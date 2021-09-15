@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/home_screen.dart';
+import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/app_model.dart';
 import 'package:rate_your_time_new/select_time_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -31,6 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkCurrentState() async {
     await checkTheme();
+    await _loadAppModelVariables();
     if(await SharedPrefs.getBool(SharedPrefs.tutorialSeen)){
       int wakeUpTime = await SharedPrefs.getInt(SharedPrefs.wakeUpHour);
       int sleepTime = await SharedPrefs.getInt(SharedPrefs.sleepHour);
@@ -47,8 +49,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   checkTheme() async {
-    final model=Provider.of<AppModel>(context,listen: false);
+    final model=Provider.of<ThemeModel>(context,listen: false);
     var index = await SharedPrefs.getInt(SharedPrefs.themeIndex);
     model.setTheme(index);
+  }
+
+  Future _loadAppModelVariables() async{
+    final model = Provider.of<AppModel>(context,listen: false);
+    await model.checkIfHoursTableEmpty();
   }
 }

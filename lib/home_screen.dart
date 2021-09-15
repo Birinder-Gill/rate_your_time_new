@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin, RestorationMixin {
-  HoursModel model;
+  AppModel model;
 
   final RestorableDouble _expandingTabIndex = RestorableDouble(0);
   final RestorableDouble _tabIndex = RestorableDouble(1);
@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    model = Provider.of<HoursModel>(context,listen: false);
+    model = Provider.of<AppModel>(context,listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       model.calculateDatePickerHeight();
       _checkFirstDay();
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    model = Provider.of<HoursModel>(context);
+    model = Provider.of<AppModel>(context);
     return backdrop();
   }
 

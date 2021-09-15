@@ -219,10 +219,18 @@ public class MainActivity extends FlutterActivity {
                     return;
                 }
 
+                case "isTableEmpty": {
+                    isTableEmpty(result);
+                    return;
+                }
 
 
             }
         });
+    }
+
+    private void isTableEmpty(MethodChannel.Result result) {
+        Injection.provideRepository(getApplicationContext()).isTableEmpty(result::success);
     }
 
     private void clearSharedPrefs() {

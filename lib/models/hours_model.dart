@@ -6,12 +6,13 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class HoursModel with ChangeNotifier {
+class AppModel with ChangeNotifier {
   AnimationController animController;
+  var isEmpty= false;
 
   // Animation Controller for expanding/collapsing the cart menu.
   AnimationController expandingController;
@@ -94,6 +95,11 @@ class HoursModel with ChangeNotifier {
       animController.reverse();
     else
       animController.forward();
+  }
+
+
+  checkIfHoursTableEmpty()async {
+    isEmpty =await ApiHelper.isTableEmpty();
   }
 }
 

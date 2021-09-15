@@ -20,7 +20,7 @@ class DayViewWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value:
-          DayModel(date: Provider.of<HoursModel>(context, listen: false).date),
+          DayModel(date: Provider.of<AppModel>(context, listen: false).date),
       child: DayViewScreen(),
     );
   }
@@ -40,7 +40,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print("State = $state");
     if (state == AppLifecycleState.resumed) {
-      Provider.of<HoursModel>(context).refresh();
+      Provider.of<AppModel>(context).refresh();
     }
   }
 
@@ -57,7 +57,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                     child: Column(
                       children: [
                         if ((model.hours?.length ?? 0) == 0)
-                          EmptyView(firstDay: widget.firstDay,),
+                          EmptyView(),
                         for (var i in model.hours)
                           HourWidget(i, updateHour: (id, activityId, note) {
                             model.updateHour(id, activityId, note);

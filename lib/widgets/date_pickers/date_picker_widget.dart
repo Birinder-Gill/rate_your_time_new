@@ -14,7 +14,7 @@ class DatePickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final model = Provider.of<HoursModel>(context);
+    final model = Provider.of<AppModel>(context);
     return Container(
       height: MediaQuery.of(context).size.height,
       color: theme.primaryColor,
@@ -58,7 +58,7 @@ class DatePickerWidget extends StatelessWidget {
 }
 
 class SingleDatePicker extends StatelessWidget {
-  final HoursModel model;
+  final AppModel model;
   final DateTime firstDate;
 
   const SingleDatePicker({Key key, this.model, this.firstDate})

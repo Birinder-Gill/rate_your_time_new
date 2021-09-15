@@ -5,7 +5,7 @@ import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class WeekRangePicker extends StatelessWidget {
-  final HoursModel model;
+  final AppModel model;
 
   final DateTime firstDate;
 

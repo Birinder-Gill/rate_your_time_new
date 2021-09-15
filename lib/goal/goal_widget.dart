@@ -12,7 +12,7 @@ class GoalWidgetWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GoalProvider>.value(
-        value: goalProvider..loadGoal(Provider.of<HoursModel>(context).date),
+        value: goalProvider..loadGoal(Provider.of<AppModel>(context).date),
         child: GoalWidget());
   }
 }

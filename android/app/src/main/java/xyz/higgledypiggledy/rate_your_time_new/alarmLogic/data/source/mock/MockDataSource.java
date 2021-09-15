@@ -110,6 +110,11 @@ public class MockDataSource implements DataSource {
         });
         }
 
+    @Override
+    public void isTableEmpty(CheckFirstTimeCallback callback) {
+        callback.checkFirstTime(true);
+    }
+
 
     private static final String TAG = "MockDataSource";
 

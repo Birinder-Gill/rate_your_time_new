@@ -24,6 +24,10 @@ public interface DataSource
         void onRangeProgressLoaded(HashMap<String,ArrayList<HashMap<String,Object>>> map);
     }
 
+    interface CheckFirstTimeCallback{
+        void checkFirstTime(boolean isTableEmpty);
+    }
+
     void getDataFor(int day, int month, int year, LoadProgressCallback callback);
     void getRangeDataFor(int day1, int month1, int year1, int day2, int month2, int year2, RangeProgressCallback callback);
     
@@ -36,6 +40,8 @@ public interface DataSource
     void updateHour(int id, int activity, String note, MethodChannel.Result result);
 
     void getRunningApps(final Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback);
+
+    void isTableEmpty(CheckFirstTimeCallback callback);
 
 
 

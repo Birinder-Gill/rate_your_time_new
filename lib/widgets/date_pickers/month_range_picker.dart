@@ -3,7 +3,7 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class MonthRangePicker extends StatefulWidget {
-  final HoursModel model;
+  final AppModel model;
   final DateTime firstDate;
 
   const MonthRangePicker({Key key, this.model, this.firstDate})

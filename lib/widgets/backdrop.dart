@@ -42,7 +42,7 @@ class _FrontLayer extends StatelessWidget {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: Consumer<HoursModel>(builder: (_, model, __) {
+          child: Consumer<AppModel>(builder: (_, model, __) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

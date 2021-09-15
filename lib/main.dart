@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/app_model.dart';
 import 'package:rate_your_time_new/providers/month_model.dart';
 import 'package:rate_your_time_new/providers/week_model.dart';
 import 'package:rate_your_time_new/splash_screen.dart';
 import 'package:rate_your_time_new/utils/test_screen.dart';
-import 'package:rate_your_time_new/widgets/date_pickers/week_range_picker.dart';
+
+import 'models/hours_model.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final hoursModel=HoursModel();
+  final hoursModel=AppModel();
 
-  final _appModel=AppModel();
+  final _appModel=ThemeModel();
   final monthModel = MonthModel();
   final weekModel = WeekModel();
 
@@ -24,14 +24,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<HoursModel>.value(value: hoursModel),
+        ChangeNotifierProvider<AppModel>.value(value: hoursModel),
         ChangeNotifierProvider<WeekModel>(create: (BuildContext context)=>weekModel,),
         ChangeNotifierProvider<MonthModel>(create: (BuildContext context)=>monthModel,),
       ],
-      child: ChangeNotifierProvider<AppModel>(
+      child: ChangeNotifierProvider<ThemeModel>(
 
         create: (BuildContext context) =>_appModel,
-        child: Consumer<AppModel>(
+        child: Consumer<ThemeModel>(
           builder: (_,model,__)=>MaterialApp(
             debugShowCheckedModeBanner: false,
             theme:model.selectedTheme,

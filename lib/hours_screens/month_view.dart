@@ -22,7 +22,7 @@ class MonthViewWrapper extends StatelessWidget {
       selector: (c, model) => model,
       shouldRebuild: (p, c) => !DateUtils.isSameDay(p.date, c.date),
       builder: (_, model, __) {
-        model.changeDate(Provider.of<HoursModel>(context, listen: false).date);
+        model.changeDate(Provider.of<AppModel>(context, listen: false).date);
         return MonthViewScreen();
       },
     );
@@ -46,7 +46,7 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
         builder: (BuildContext context, model, Widget child) {
           return ListView(
             children: [
-              _MonthViewStats(model, widget.firstDay),
+              _MonthViewStats(model),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AppUsageCard(
@@ -77,9 +77,9 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
 class _MonthViewStats extends StatelessWidget {
   final MonthModel model;
 
-  final bool firstDay;
+  // final bool firstDay;
 
-  _MonthViewStats(this.model, this.firstDay);
+  _MonthViewStats(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,6 @@ class _MonthViewStats extends StatelessWidget {
     if (!model.loaded) return simpleLoader();
     if (model.isEmpty) {
       return EmptyView(
-        firstDay: firstDay,
       );
     }
     return Column(
@@ -108,7 +107,7 @@ class _MonthViewStats extends StatelessWidget {
                   child: InkWell(
                     onLongPress: () {
                       final hm =
-                          Provider.of<HoursModel>(context, listen: false);
+                          Provider.of<AppModel>(context, listen: false);
                       hm.changeViewToggle(0);
                       hm.refresh(i.date);
                     },

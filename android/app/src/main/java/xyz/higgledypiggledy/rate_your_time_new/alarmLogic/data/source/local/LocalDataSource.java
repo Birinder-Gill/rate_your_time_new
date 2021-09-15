@@ -151,4 +151,13 @@ public class LocalDataSource implements DataSource {
             UsageTracker.getRunningApps(context,d1,m1,y1,d2,m2,y2,callback);
 //        }
     }
+
+    @Override
+    public void isTableEmpty(CheckFirstTimeCallback callback) {
+        executors.diskIO().execute(() -> {
+            Hour hour = dao.checkTableEmpty();
+            boolean isEmpty = hour==null;
+            executors.mainThread().execute(() -> callback.checkFirstTime(isEmpty));
+        });
+    }
 }

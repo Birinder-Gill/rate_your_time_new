@@ -20,11 +20,11 @@ class ActivityAverageCard extends StatefulWidget {
 
 class _ActivityAverageCardState extends State<ActivityAverageCard> {
   bool expanded = false;
-  HoursModel hoursModel;
+  AppModel hoursModel;
 
   @override
   Widget build(BuildContext context) {
-    if (hoursModel == null) hoursModel = Provider.of<HoursModel>(context);
+    if (hoursModel == null) hoursModel = Provider.of<AppModel>(context);
     return Card(
       child: Column(
         children: [
