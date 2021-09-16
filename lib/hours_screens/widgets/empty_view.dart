@@ -11,18 +11,7 @@ class EmptyView extends StatelessWidget {
   Widget build(BuildContext context) {
     return _emptyView(context);
   }
-  Widget _firstTimeEmptyView(BuildContext context) => Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          "Tell here about what will be shown on this screen.",
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline5,
-        ),
-      ));
   Widget _emptyView(BuildContext context) {
-    bool firstDay = Provider.of<AppModel>(context).isEmpty;
-    if (firstDay) return _firstTimeEmptyView(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -51,6 +40,7 @@ class EmptyView extends StatelessWidget {
             ),
           ),
         ),
+
         SizedBox(
           height: MediaQuery.of(context).size.height / 12,
         ),

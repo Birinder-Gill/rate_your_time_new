@@ -14,7 +14,7 @@ class AverageModel {
   bool isEmpty = false;
   AverageAppUsageModel appUsage;
 
-  DataCache cache = DataCache();
+  static DataCache cache = DataCache();
 
   bool accessGranted=true;
 
@@ -62,5 +62,9 @@ class AverageModel {
       }
     }
     _appsLoading=false;
+  }
+
+  static void clearCache() {
+    cache.clear();
   }
 }

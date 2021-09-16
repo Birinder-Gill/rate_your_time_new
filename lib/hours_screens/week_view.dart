@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/app_usage_card.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
+import 'package:rate_your_time_new/hours_screens/widgets/empty_week_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/week_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -86,8 +87,7 @@ class _WeekViewStats extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!model.loaded) return simpleLoader();
     if (model.isEmpty) {
-      return EmptyView(
-      );
+      return EmptyWeekView();
     }
     return Column(
       children: [

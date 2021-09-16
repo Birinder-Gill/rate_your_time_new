@@ -59,4 +59,10 @@ class DataCache {
       return null;
   }
 
+  void clear({bool clearAppData = false}) {
+    _cachedAverages.clear();
+    if(clearAppData)
+      _cachedAppData.clear();
+  }
+
 }

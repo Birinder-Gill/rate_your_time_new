@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
+import 'package:rate_your_time_new/providers/average_model.dart';
 import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
@@ -47,6 +48,7 @@ class DayModel with ChangeNotifier {
     await channel.invokeMethod(Constants.updateHour, body);
     hours.singleWhere((element) => element.id == id).update(
         activity: activity, note: note);
+    AverageModel.clearCache();
     notifyListeners();
   }
   void setData(hoursJson) {

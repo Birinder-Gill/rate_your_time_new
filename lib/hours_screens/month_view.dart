@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/activity_av_card.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/app_usage_card.dart';
+import 'package:rate_your_time_new/hours_screens/widgets/empty_month_view.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/month_model.dart';
@@ -86,8 +87,7 @@ class _MonthViewStats extends StatelessWidget {
     final width = MediaQuery.of(context).size.width - 16;
     if (!model.loaded) return simpleLoader();
     if (model.isEmpty) {
-      return EmptyView(
-      );
+      return EmptyMonthView();
     }
     return Column(
       children: [
