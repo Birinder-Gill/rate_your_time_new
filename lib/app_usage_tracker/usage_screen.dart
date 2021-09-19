@@ -47,12 +47,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   get granted => (_granted != null && (_granted));
 
-  getApps() async {
+  getApps({bool forceReload = true}) async {
     setState(() {
       loading = true;
     });
     try {
-      if (widget.distinctApps == null) {
+      if (widget.distinctApps == null || forceReload) {
         final model = AppUsageModel();
         await model.getApps(begin: from, end: to);
         distinctApps = model.distinctApps;
@@ -87,7 +87,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   Future<void> isAccessGranted() async {
     _granted = await Utils.isUsageAccessGranted();
     if (_granted) {
-      getApps();
+      getApps(forceReload: false);
     } else {
       setState(() {});
     }
@@ -100,9 +100,6 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
       appBar: AppBar(
         centerTitle: true,
         actions: [
-          TextButton(
-              onPressed: loading ? null : getApps,
-              child: loading ? simpleLoader() : Text("Get apps"))
         ],
       ),
       body: !granted

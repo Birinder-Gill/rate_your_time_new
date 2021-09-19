@@ -164,7 +164,7 @@ class Constants {
   static const String loadGoal = 'loadGoal';
   static const String isTableEmpty = 'isTableEmpty';
 
-  static const String CHANNEL_NAME = 'name';
+  static const String CHANNEL_NAME = 'channel_name';
 
   static const String saveSettings = 'saveSettings';
 

@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -36,6 +37,15 @@ class AppModel with ChangeNotifier {
   bool get loading => _loading;
   DateTime date = DateTime.now();
   int toggle = 0;
+
+
+  registerMethodChannel(){
+    final channel = const MethodChannel(Constants.CHANNEL_NAME);
+    channel.setMethodCallHandler((call)async{
+      consoleLog('${call.method}');
+    });
+  }
+
 
   changeViewToggle(int e) async {
     if (toggle == e) return;

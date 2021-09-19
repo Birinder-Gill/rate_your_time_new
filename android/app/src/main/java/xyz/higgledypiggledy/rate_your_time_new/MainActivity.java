@@ -30,11 +30,14 @@ import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.TimeUtil;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.Injection;
 
+import static io.flutter.embedding.engine.systemchannels.SettingsChannel.CHANNEL_NAME;
+
 public class MainActivity extends FlutterActivity {
 
     private static final String TAG = "MainActivity";
     public static final int LAST_HOUR = 22;
     private static final String SHARED_PREFERENCES_NAME = "rateYourTimePrefs";
+    private static final String METHOD_CHANNEL_NAME = "channel_name";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,7 +124,7 @@ public class MainActivity extends FlutterActivity {
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
-        MethodChannel channel = new MethodChannel(flutterEngine.getDartExecutor(), "name");
+        MethodChannel channel = new MethodChannel(flutterEngine.getDartExecutor(), METHOD_CHANNEL_NAME);
         channel.setMethodCallHandler((call, result) -> {
             switch (call.method) {
                 case "getDayData": {

@@ -2,15 +2,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:ffi';
 import 'dart:math';
 
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meta/meta.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/alarms_screen.dart';
+import 'package:rate_your_time_new/feature_discovery/delegate.dart';
 import 'package:rate_your_time_new/feature_discovery/feature_discovery.dart';
+import 'package:rate_your_time_new/hours_screens/widgets/toggle.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/settings_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -50,17 +54,44 @@ class _FrontLayer extends StatelessWidget {
                 //   IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
                 Opacity(
                   opacity: model.animController.value,
-                  child: ToggleButtons(
+                  child: true?ToggleButtons(
                       selectedColor: Theme.of(context).accentColor,
                       onPressed: model.animController.value == 1
                           ? model.changeViewToggle
                           : null,
                       children: [
-                        Icon(Icons.calendar_view_day),
-                        Icon(Icons.view_week),
-                        Icon(Icons.date_range)
+                        SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: FDelegate(
+                              title: 'Day view',
+                              description:
+                              'Day view shows your hourly rating for the selected day',
+                              featureId: 'calendar_view_day',
+                              child: Icon(Icons.calendar_view_day)),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: FDelegate(
+                              title: 'Week View',
+                              description:
+                              'Week view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected week.',
+                              featureId: 'view_week',
+                              child: Icon(Icons.view_week)),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: FDelegate(
+                              title: 'Month View',
+                              description:
+                              'Month view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected month.',
+                              featureId: 'date_range',
+                              child: Icon(Icons.date_range)),
+                        ),
                       ],
-                      isSelected: model.selections),
+                      isSelected: model.selections):ViewToggle(),
                 ),
                 // if (model.toggle != 0)
                 //   IconButton(icon: Icon(Icons.chevron_right), onPressed: () {}),
@@ -214,12 +245,16 @@ class _BackdropState extends State<Backdrop>
   AnimationController _controller;
   Animation<RelativeRect> _layerAnimation;
 
-  bool _showGuide = true;
-
   @override
   void initState() {
     super.initState();
     _controller = widget.controller;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Timer(Duration(seconds: 1), (){
+        _showFeatureOverlays();
+
+      });
+    });
   }
 
   bool get _frontLayerVisible {
@@ -335,18 +370,20 @@ class _BackdropState extends State<Backdrop>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final appBar = AppBar(
-      // leading: IconButton(icon: Icon(Icons.menu,color: Colors.transparent,), onPressed: null),
+      leading: Builder(
+          builder: (BuildContext c) => FDelegate(
+                featureId: 'menu',
+                color: Theme.of(context).primaryColor,
+                title: 'Menu',
+                description: 'Open Settings using this button.',
+                child: IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: Scaffold.of(c).openDrawer),
+              )),
       automaticallyImplyLeading: true,
       brightness: Brightness.dark,
-      // backgroundColor: theme.primaryColor,
       elevation: 0,
-      // leading: IconButton(
-      //     icon: Icon(Icons.settings),
-      //     onPressed: () {
-      //       pushTo(context, SettingsScreen());
-      //     }),
       titleSpacing: 0,
       centerTitle: true,
       title: _BackdropTitle(
@@ -356,39 +393,20 @@ class _BackdropState extends State<Backdrop>
         backTitle: widget.backTitle,
       ),
       actions: [
-        // IconButton(
-        //   icon: const Icon(Icons.settings),
-        //   // tooltip: GalleryLocalizations.of(context).shrineTooltipSearch,
-        //   onPressed: () {
-        //     Utils.openUsageSettingsScreen();
-        //   },
-        // ),
-        // if (false)
-        _showGuide
-            ? FeatureDiscoveryController(
-                IconButton(
-                  icon: FeatureDiscovery(
-                      description: 'Test desc',
-                      title: "Test title",
-                      showOverlay: true,
-                      onDismiss: () {
-                        _showGuide = false;
-                        // setState(() {
-                        //
-                        // });
-                        // _toggleBackdropLayerVisibility();
-                      },
-                      child: Icon(Icons.menu)),
-                  // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
-                  onPressed: _toggleBackdropLayerVisibility,
-                ),
-              )
-            : IconButton(
-                icon: AnimatedIcon(
-                    icon: AnimatedIcons.add_event, progress: _controller),
-                // tooltip: GalleryLocalizations.of(context).shrineTooltipSettings,
-                onPressed: _toggleBackdropLayerVisibility,
-              ),
+        IconButton(icon: FaIcon(FontAwesomeIcons.chalkboardTeacher), onPressed: (){
+          _showFeatureOverlays();
+        }),
+        FDelegate(
+          featureId: 'add_event',
+          description: "Click here to change date",
+          title: 'Change date',
+          color: Theme.of(context).primaryColor,
+          child: IconButton(
+            icon: AnimatedIcon(
+                icon: AnimatedIcons.add_event, progress: _controller),
+            onPressed: _toggleBackdropLayerVisibility,
+          ),
+        ),
       ],
     );
     return AnimatedBuilder(
@@ -396,8 +414,7 @@ class _BackdropState extends State<Backdrop>
       builder: (context, child) => ExcludeSemantics(
         excluding: cartPageIsVisible(context),
         child: Scaffold(
-          drawer: Drawer(
-              child: SettingsScreen()),
+          drawer: Drawer(child: SettingsScreen()),
           appBar: appBar,
           body: LayoutBuilder(
             builder: _buildStack,
@@ -405,6 +422,16 @@ class _BackdropState extends State<Backdrop>
         ),
       ),
     );
+  }
+
+  void _showFeatureOverlays() {
+    FeatureDiscovery.discoverFeatures(context, <String>[
+      'menu',
+      'calendar_view_day',
+      'view_week',
+      'date_range',
+      'add_event'
+    ]);
   }
 }
 

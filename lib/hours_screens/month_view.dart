@@ -115,6 +115,7 @@ class _MonthViewStats extends StatelessWidget {
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
                               colors: [
+                                if(i.filledRegion>0)
                             for (var p = 0; p <= i.filledRegion; p++)
                               Colors.blue
                                   .withOpacity((i.worth + i.pendingSales) / 5),

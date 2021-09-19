@@ -25,6 +25,8 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
   @override
   Widget build(BuildContext context) {
     if (hoursModel == null) hoursModel = Provider.of<AppModel>(context);
+    if(widget.av.activities.isEmpty)
+      return SizedBox.shrink();
     return Card(
       child: Column(
         children: [

@@ -1,5 +1,7 @@
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rate_your_time_new/feature_discovery/feature_discovery.dart';
 import 'package:rate_your_time_new/providers/app_model.dart';
 import 'package:rate_your_time_new/providers/month_model.dart';
 import 'package:rate_your_time_new/providers/week_model.dart';
@@ -32,12 +34,16 @@ class MyApp extends StatelessWidget {
 
         create: (BuildContext context) =>_appModel,
         child: Consumer<ThemeModel>(
-          builder: (_,model,__)=>MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme:model.selectedTheme,
-            home:false?
-            TestScreen([]):SplashScreen(),
-          ),
+          builder: (_,model,__)=>
+            FeatureDiscovery(
+              recordStepsInSharedPreferences: false,
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme:model.selectedTheme,
+                home:false?
+                TestScreen([]):SplashScreen(),
+              ),
+            ),
         ),
       ),
     );

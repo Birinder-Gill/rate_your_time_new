@@ -57,5 +57,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Future _loadAppModelVariables() async{
     final model = Provider.of<AppModel>(context,listen: false);
     await model.checkIfHoursTableEmpty();
+    await model.registerMethodChannel();
   }
 }
