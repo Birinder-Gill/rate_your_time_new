@@ -13,12 +13,17 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AppModel with ChangeNotifier {
   AnimationController animController;
-  var isEmpty= false;
+  var isEmpty = false;
 
   // Animation Controller for expanding/collapsing the cart menu.
   AnimationController expandingController;
 
   bool loaded = false;
+
+  AppModel() {
+    final now = DateTime.now();
+    selections = [true, if (now.weekday > 1) false, if (now.day > 1) false];
+  }
 
   bool _loading = false;
 
@@ -26,7 +31,7 @@ class AppModel with ChangeNotifier {
 
   double patePickerHeight = 0.0;
 
-  final selections = [true, false, false];
+  List<bool> selections;
 
   final DateRangePickerController controller = DateRangePickerController();
 
@@ -38,30 +43,19 @@ class AppModel with ChangeNotifier {
   DateTime date = DateTime.now();
   int toggle = 0;
 
-
-  registerMethodChannel(){
+  registerMethodChannel() {
     final channel = const MethodChannel(Constants.CHANNEL_NAME);
-    channel.setMethodCallHandler((call)async{
+    channel.setMethodCallHandler((call) async {
       consoleLog('${call.method}');
     });
   }
 
-
   changeViewToggle(int e) async {
     if (toggle == e) return;
-    selections[toggle] = false;
     toggle = e;
-    selections[toggle] = true;
+    _manageTodayCases();
     dates = await _setLabel();
     notifyListeners();
-  }
-
-  void calculateDatePickerHeight() {
-    // final RenderBox renderBoxRed = (datePickerKey.currentContext
-    //     .findRenderObject());
-    // final size = (renderBoxRed.size);
-    // patePickerHeight = size.height;
-    // notifyListeners();
   }
 
   void refresh([DateTime date]) async {
@@ -70,6 +64,7 @@ class AppModel with ChangeNotifier {
     } else {
       this.date = date;
     }
+    _manageTodayCases();
     loaded = false;
     dates = await _setLabel();
     notifyListeners();
@@ -107,9 +102,20 @@ class AppModel with ChangeNotifier {
       animController.forward();
   }
 
+  checkIfHoursTableEmpty() async {
+    isEmpty = await ApiHelper.isTableEmpty();
+  }
 
-  checkIfHoursTableEmpty()async {
-    isEmpty =await ApiHelper.isTableEmpty();
+  void _manageTodayCases() {
+    final now = DateTime.now();
+    if(DateUtils.isSameDay(this.date, now)){
+      if (toggle == 1 && this.date.weekday == 1) {
+        toggle = 0;
+      }
+      if (toggle == 2 && this.date.day == 1) {
+        toggle = 0;
+      }
+    }
   }
 }
 

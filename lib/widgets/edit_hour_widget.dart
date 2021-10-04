@@ -29,6 +29,17 @@ class _EditHourWidgetState extends State<EditHourWidget> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Row(
+            children: [
+              for(final i in [1,2,3,4,5])
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: _ratingBtn(i),
+                  ),
+                )
+            ],
+          ),
           Wrap(
             children: List<Widget>.from(activities.values.map((e) => Padding(
               padding: const EdgeInsets.all(8.0),
@@ -86,4 +97,6 @@ class _EditHourWidgetState extends State<EditHourWidget> {
       ),
     );
   }
+
+  Widget _ratingBtn(int i) =>OutlinedButton(onPressed: (){}, child: Text("$i"));
 }

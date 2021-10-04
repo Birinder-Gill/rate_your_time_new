@@ -113,12 +113,16 @@ class SingleDayAverage {
 
   final double pendingSales;
 
-  final int filledRegion;
+  // final int filledRegion;
 
   final String label;
 
   SingleDayAverage(this.date, this.worth,
-      {this.pendingSales = 0.0, this.filledRegion = 0, this.label});
+      {this.pendingSales = 0.0,
+        // this.filledRegion = 0,
+        this.label});
+
+  double get whiteBlocks => (pendingSales/(worth+pendingSales))*5;
 
   SingleDayAverage copyWith(
           {DateTime date,
@@ -128,11 +132,11 @@ class SingleDayAverage {
           String label}) =>
       SingleDayAverage(date ?? this.date, worth ?? this.worth,
           pendingSales: pendingSales ?? this.pendingSales,
-          filledRegion: filledHours ?? this.filledRegion,
+          // filledRegion: filledHours ?? this.filledRegion,
           label: label ?? this.label);
 
   @override
   String toString() {
-    return "$date ---> $worth";
+    return "${DefaultMaterialLocalizations().formatShortDate(date)}\nWorth ---> $worth\nPending sales -> $pendingSales\nLabel $label";
   }
 }

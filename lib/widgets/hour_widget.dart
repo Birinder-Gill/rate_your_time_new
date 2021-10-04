@@ -28,18 +28,20 @@ class HourWidget extends StatelessWidget {
     5: Icons.emoji_emotions_rounded
   };
 
+  ThemeData theme;
+
   HourWidget(this.hour, {this.updateHour});
 
   get elevation => 1.0;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    theme = Theme.of(context);
     final double emojiSize = 14;
     return Row(
       children: [
         Container(
-          height: 90,
+          height: 100,
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Material(
             elevation: elevation,
@@ -62,77 +64,58 @@ class HourWidget extends StatelessWidget {
           ),
         ),
         Expanded(
-          // child: Dismissible(
-          //    background: Container(color: Colors.red,),
-          //   secondaryBackground: Container(color: Colors.green,),
-
-          // key: ValueKey(hour.id),
           child: Container(
-            height: 90,
+            height: 100,
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             decoration: const BoxDecoration(
                 border: const Border(
               left: const BorderSide(),
             )),
-            child: Material(
-              elevation: elevation,
-              child: Stack(
-                children: [
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16.0, horizontal: 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          hour.worth == 0
-                              ? _emptyWorthCard(theme)
-                              : LinearProgressIndicator(
-                                  minHeight: 16,
-                                  backgroundColor: Colors.white,
-                                  value: (hour.worth / 5),
-                                  valueColor: AlwaysStoppedAnimation(
-                                      Theme.of(context).accentColor)),
-                          Text(
-                            " ${hour.note ?? ''}",
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context)
-                                .textTheme
-                                .caption
-                                .copyWith(color: Colors.grey, fontSize: 12),
-                          )
-                        ],
-                      )),
-                  if (hour.worth > 0)
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: hour.activity != 0
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 18.0, top: 4),
-                              child: activities[hour.activity].icon)
-                          : InkWell(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 18.0, top: 4),
-                                child: Icon(
-                                  Icons.add,
-                                  size: 16,
-                                ),
+            child: GestureDetector(
+              onTap: () {
+                dialog(context, EditHourWidget(hour, updateHour: updateHour));
+              },
+              child: Material(
+
+                elevation: elevation,
+                child: Stack(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Expanded(child: _worthWidget(hour)),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                    child: _activityIcon(context, hour),
+                                  ),
+                                ],
                               ),
-                              onTap: () {
-                                dialog(
-                                    context,
-                                    EditHourWidget(hour,updateHour:updateHour));
-                              },
                             ),
-                    ),
-                ],
+                            Expanded(
+                              child: Text(
+                                " ${hour.note ?? ''}",
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    .copyWith(color: Colors.grey, fontSize: 12),
+                              ),
+                            )
+                          ],
+                        )),
+                  ],
+                ),
               ),
             ),
           ),
-          // ),
         ),
       ],
     );
@@ -157,4 +140,21 @@ class HourWidget extends StatelessWidget {
   Widget y(double i) => SizedBox(
         height: i,
       );
+
+  Widget _worthWidget(Hour hour) => hour.worth == 0
+      ? _emptyWorthCard(theme)
+      : LinearProgressIndicator(
+          minHeight: 32,
+          backgroundColor: Colors.white,
+          value: (hour.worth / 5),
+          valueColor: AlwaysStoppedAnimation(theme.accentColor));
+
+  Widget _activityIcon(BuildContext context, Hour hour) =>
+        hour.activity != 0
+            ? activities[hour.activity].icon
+            : Icon(
+                Icons.add,
+                size: 16,
+              );
+
 }

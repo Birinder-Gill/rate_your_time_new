@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     model = Provider.of<AppModel>(context,listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      model.calculateDatePickerHeight();
       _checkFirstDay();
     });
     model.animController = AnimationController(

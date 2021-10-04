@@ -398,7 +398,8 @@ class Utils {
       if(!filledSales.isNaN) {
         double pendingSales = ((total/element.value.length) - filledSales);
         av.averages
-            .add(SingleDayAverage(dt, filledSales, pendingSales: pendingSales.isNaN?0:pendingSales,filledRegion:((element.value.length/Utils.wokeHours())*5).toInt()));
+            .add(SingleDayAverage(dt, filledSales, pendingSales: pendingSales.isNaN?0:pendingSales));
+        // filledRegion:((element.value.length/Utils.wokeHours())*5).toInt()
       }
     });
 

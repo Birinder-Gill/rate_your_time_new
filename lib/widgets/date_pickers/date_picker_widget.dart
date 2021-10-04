@@ -28,11 +28,15 @@ class DatePickerWidget extends StatelessWidget {
         child: Column(
           children: [
             Container(
-                height: Constants.datePickerHeight,
-                child: model.toggle == 1
-                    ? WeekRangePicker(model: model,firstDate:firstDate,)
-                    : model.toggle==0?SingleDatePicker(model: model,firstDate: firstDate):
-                     MonthRangePicker(model: model,firstDate: firstDate),
+              height: Constants.datePickerHeight,
+              child: model.toggle == 0
+                  ? SingleDatePicker(model: model, firstDate: firstDate)
+                  : model.toggle == 1
+                      ? WeekRangePicker(
+                          model: model,
+                          firstDate: firstDate,
+                        )
+                      : MonthRangePicker(model: model, firstDate: firstDate),
             ),
             Expanded(
               child: Container(),

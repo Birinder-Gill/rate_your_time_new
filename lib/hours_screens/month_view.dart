@@ -106,6 +106,11 @@ class _MonthViewStats extends StatelessWidget {
                   height: 86,
                   child: InkWell(
                     onLongPress: () {
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (c) => AlertDialog(
+                      //           content: Text('$i'),
+                      //         ));
                       final hm =
                           Provider.of<AppModel>(context, listen: false);
                       hm.changeViewToggle(0);
@@ -115,18 +120,14 @@ class _MonthViewStats extends StatelessWidget {
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
                               colors: [
-                                if(i.filledRegion>0)
-                            for (var p = 0; p <= i.filledRegion; p++)
-                              Colors.blue
-                                  .withOpacity((i.worth + i.pendingSales) / 5),
-                            for (var p = i.filledRegion; p < 5; p++)
-                              Colors.white,
-
-                            // if(((DateUtils.isSameDay(i.date, DateTime.now()))))
-                            //     Colors.white
-                            // else
-                            // if(((DateUtils.isSameDay(i.date, DateTime.now()))))
-                            //   Colors.white
+                            Colors.blue
+                                .withOpacity((i.worth + i.pendingSales) / 5),
+                            if(!DateUtils.isSameDay(i.date, DateTime.now()))
+                            Colors.blue
+                                .withOpacity((i.worth + i.pendingSales) / 5)
+                                else
+                              for(double w=0;w< i.whiteBlocks;w++)
+                                Colors.white,
                           ],
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter)),

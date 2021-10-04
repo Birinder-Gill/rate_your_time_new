@@ -35,6 +35,8 @@ class _FrontLayer extends StatelessWidget {
   final VoidCallback onTap;
   final Widget child;
 
+  DateTime get now => DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     // An area at the top of the product page.
@@ -54,7 +56,7 @@ class _FrontLayer extends StatelessWidget {
                 //   IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
                 Opacity(
                   opacity: model.animController.value,
-                  child: true?ToggleButtons(
+                  child: false?ToggleButtons(
                       selectedColor: Theme.of(context).accentColor,
                       onPressed: model.animController.value == 1
                           ? model.changeViewToggle
@@ -70,7 +72,7 @@ class _FrontLayer extends StatelessWidget {
                               featureId: 'calendar_view_day',
                               child: Icon(Icons.calendar_view_day)),
                         ),
-                        SizedBox(
+                       if(now.weekday>1) SizedBox(
                           height: 50,
                           width: 50,
                           child: FDelegate(
@@ -80,7 +82,7 @@ class _FrontLayer extends StatelessWidget {
                               featureId: 'view_week',
                               child: Icon(Icons.view_week)),
                         ),
-                        SizedBox(
+                        if(now.day>1)SizedBox(
                           height: 50,
                           width: 50,
                           child: FDelegate(
@@ -252,7 +254,6 @@ class _BackdropState extends State<Backdrop>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Timer(Duration(seconds: 1), (){
         _showFeatureOverlays();
-
       });
     });
   }
