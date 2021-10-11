@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/data/activities.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
@@ -55,7 +56,7 @@ class _EditHourWidgetState extends State<EditHourWidget> {
                   width: 100,
                   child: Column(
                     children: [
-                      e.icon,
+                      FaIcon(e.icon),
                       Text(
                         e.name,
                         textAlign: TextAlign.center,

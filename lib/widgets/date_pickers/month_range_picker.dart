@@ -27,7 +27,7 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
           .of(context)
           .accentColor;
 
-  get primary => Colors.orange;
+  get primary => Theme.of(context).primaryColor;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +51,10 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
   }
 
   buildHeader() {
+    var theme = Theme
+        .of(context);
     return Material(
-      color: Theme
-          .of(context)
-          .primaryColor,
+      color: Theme.of(context).appBarTheme.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -65,10 +65,9 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('$displayedYear', style: Theme
-                    .of(context)
+                Text('$displayedYear', style: theme
                     .textTheme
-                    .headline6,),
+                    .headline6.copyWith(color: theme.accentColor),),
                 Row(
                   children: <Widget>[
                     IconButton(
@@ -142,6 +141,10 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
                                   ? accentColor
                                   : null,
                             ),
+                            side: MaterialStateProperty.resolveWith((states) => BorderSide(
+                              color: accentColor,
+                              width: .2,
+                            )),
                             textStyle: MaterialStateProperty.resolveWith((
                                 states) =>
                                 TextStyle(
@@ -155,22 +158,22 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
                                             .now()
                                             .year
                                         ? accentColor
-                                        : null)),
+                                        : primary)),
                           ),
                           child: Text(
                               Constants.months[date.month - 1],
                               style: TextStyle(
                                   color: date.month == selectedDate.month &&
                                       date.year == selectedDate.year
-                                      ? Colors.white
+                                      ?primary
                                       : date.month == DateTime
                                       .now()
                                       .month &&
                                       date.year == DateTime
                                           .now()
                                           .year
-                                      ? primary
-                                      : null)
+                                      ? accentColor
+                                      : primary)
                           ),
                         ),
                       ),

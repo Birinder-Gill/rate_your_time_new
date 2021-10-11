@@ -89,6 +89,7 @@ class _MonthViewStats extends StatelessWidget {
     if (model.isEmpty) {
       return EmptyMonthView();
     }
+    final primaryDark = Theme.of(context).primaryColorDark;
     return Column(
       children: [
         Padding(
@@ -101,6 +102,7 @@ class _MonthViewStats extends StatelessWidget {
             children: [
               for (final i in model.av.averages)
                 Container(
+
                   padding: EdgeInsets.all(1),
                   width: width / 5,
                   height: 86,
@@ -120,14 +122,14 @@ class _MonthViewStats extends StatelessWidget {
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
                               colors: [
-                            Colors.blue
+                            primaryDark
                                 .withOpacity((i.worth + i.pendingSales) / 5),
                             if(!DateUtils.isSameDay(i.date, DateTime.now()))
-                            Colors.blue
+                            primaryDark
                                 .withOpacity((i.worth + i.pendingSales) / 5)
                                 else
                               for(double w=0;w< i.whiteBlocks;w++)
-                                Colors.white,
+                                Theme.of(context).primaryColorLight,
                           ],
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter)),

@@ -23,6 +23,216 @@ class ThemeModel with ChangeNotifier {
   }
 
   List<MyTheme> themes = [
+    // MyTheme(
+    //     cardsOnScaffold: shrineBrown900,
+    //     scaffoldBackground: shrineSurfaceWhite,
+    //     primaryDarkColor: shrinePink400,
+    //     onPrimaryDark: shrineBrown900,
+    //     onCards: shrineBrown600,
+    //     primaryColor: shrineErrorRed,
+    //     textOnLight: Colors.white,
+    //     textOnDark: shrineBrown900,
+    //     isDark: false),
+MyTheme(
+        scaffoldBackground: Color(0xffe5e5e5),
+        cardsOnScaffold: Color(0xffffffff),
+        primaryDarkColor: Color(0xff14213d),
+        onPrimaryDark: Color(0xfffca311),
+        onCards: Color(0xff14213d),
+        accentColor: Colors.red,
+        textOnLight: Color(0xff14213d),
+        textOnDark: Color(0xffffffff),
+        isDark: true),
+  ];
+
+  ThemeData get _defaultTheme => _buildFromMyTheme(themes[0]);
+
+  setTheme(int index) {
+    this.selectedTheme = _buildFromMyTheme(themes[index]);
+    SharedPrefs.setInt(SharedPrefs.themeIndex, index);
+    notifyListeners();
+  }
+
+  IconThemeData _customIconTheme(IconThemeData original, MyTheme theme) {
+    return original.copyWith(color: theme.primaryDarkColor);
+  }
+
+  ThemeData _buildFromMyTheme(MyTheme theme) {
+    final base = theme.isDark ? ThemeData.dark() : ThemeData.light();
+    return base.copyWith(
+      colorScheme: theme.colorScheme,
+      accentColor: theme.accentColor,
+      primaryColor: theme.cardsOnScaffold,
+      primaryColorDark: theme.primaryDarkColor,
+      primaryColorLight: theme.scaffoldBackground,
+      buttonColor: theme.primaryDarkColor,
+      unselectedWidgetColor: theme.primaryDarkColor,
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+          iconTheme:IconThemeData(
+              color: theme.onPrimaryDark
+          ),
+        backgroundColor: theme.primaryDarkColor,
+          titleTextStyle: TextStyle(color: theme.cardsOnScaffold),
+          brightness: Brightness.dark
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith(
+                  (states) => theme.cardsOnScaffold),
+          foregroundColor:MaterialStateProperty.resolveWith(
+                  (states) => theme.accentColor) )),
+      textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.resolveWith(
+                  (states) => theme.primaryDarkColor))),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.resolveWith(
+                    (states) => RoundedRectangleBorder(
+                      side: BorderSide(color: theme.primaryDarkColor)
+                    )),
+              foregroundColor: MaterialStateProperty.resolveWith(
+                  (states) => theme.primaryDarkColor))),
+      scaffoldBackgroundColor: theme.scaffoldBackground,
+      cardColor: theme.cardsOnScaffold,
+
+      dialogBackgroundColor: theme.cardsOnScaffold,
+      errorColor: theme.accentColor,
+
+      buttonTheme: ButtonThemeData(
+         textTheme: ButtonTextTheme.normal,
+      ),
+      highlightColor: theme.onCards,
+      primaryIconTheme: _customIconTheme(base.iconTheme, theme),
+      textSelectionTheme: TextSelectionThemeData(
+        selectionHandleColor: theme.primaryDarkColor,
+        cursorColor: theme.primaryDarkColor,
+        selectionColor: theme.primaryDarkColor.withOpacity(.2)
+      ),
+      applyElevationOverlayColor: true,
+      inputDecorationTheme: InputDecorationTheme(
+        labelStyle: TextStyle(color: theme.primaryDarkColor),
+        enabledBorder: _cutCornerBorder(theme),
+        border: _cutCornerBorder(theme),
+        focusedBorder: _cutCornerBorder(theme,width: 1),
+        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      ),
+      textTheme: _buildTextTheme(base.textTheme, theme),
+      primaryTextTheme: _buildTextTheme(base.primaryTextTheme, theme),
+      accentTextTheme: _buildTextTheme(base.accentTextTheme, theme),
+      iconTheme: _customIconTheme(base.iconTheme, theme),
+    );
+  }
+
+  TextTheme _buildTextTheme(TextTheme base, MyTheme theme) {
+    return GoogleFonts.kanitTextTheme(base
+        .copyWith(
+          headline5: base.headline5.copyWith(
+            fontWeight: FontWeight.w500,
+            letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
+          ),
+          headline6: base.headline6.copyWith(
+            fontSize: 18,
+            letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
+          ),
+          caption: base.caption.copyWith(
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
+          ),
+          bodyText1: base.bodyText1.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
+          ),
+          bodyText2: base.bodyText2.copyWith(
+            letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
+          ),
+          subtitle1: base.subtitle1.copyWith(
+            letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
+          ),
+          headline4: base.headline4.copyWith(
+            letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
+          ),
+          button: base.button.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+            letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
+          ),
+        )
+        .apply(
+          displayColor: theme.textOnLight,
+          bodyColor: theme.textOnLight,
+        ));
+  }
+
+  _cutCornerBorder(MyTheme theme,{Color color,double width}) =>CutCornersBorder(
+    borderSide: BorderSide(color: color??theme.primaryDarkColor, width: width??0.5),
+  );
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:rate_your_time_new/themes/dark_theme.dart';
+import 'package:rate_your_time_new/themes/shrine_theme.dart';
+import 'package:rate_your_time_new/themes/theme_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rate_your_time_new/themes/theme_model.dart';
+import 'package:rate_your_time_new/utils/api_helper.dart';
+import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:flutter/material.dart';
+import 'package:rate_your_time_new/utils/shared_prefs.dart';
+
+const defaultLetterSpacing = 0.03;
+const mediumLetterSpacing = 0.04;
+const largeLetterSpacing = 1.0;
+
+class ThemeModel with ChangeNotifier {
+  ThemeData selectedTheme;
+
+
+  ThemeModel() {
+    selectedTheme = _defaultTheme;
+  }
+
+  List<MyTheme> themes = [
     MyTheme(
         primaryColor: shrinePink100,
         primaryLightColor: shrineSurfaceWhite,
@@ -117,9 +327,7 @@ MyTheme(
         dayPeriodColor: theme.primaryColor,
         dialBackgroundColor: theme.primaryDarkColor,
         dialHandColor: theme.secondaryColor,
-        dialTextColor: theme.primaryTextColor,
-
-        ),
+        dialTextColor: theme.primaryTextColor,),
       buttonTheme: ButtonThemeData(
         colorScheme: theme.colorScheme,
         textTheme: ButtonTextTheme.normal,
@@ -186,3 +394,4 @@ MyTheme(
   }
 
 }
+*/

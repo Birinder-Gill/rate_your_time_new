@@ -8,42 +8,42 @@ import 'package:flutter/material.dart';
 
 class MyTheme {
   MyTheme({
-    @required this.primaryColor,
-    @required this.primaryLightColor,
+    @required this.cardsOnScaffold,
+    @required this.scaffoldBackground,
     @required this.primaryDarkColor,
-    @required this.secondaryColor,
-    @required this.secondaryLightColor,
-    @required this.secondaryDarkColor,
-    @required this.secondaryTextColor,
-    @required this.primaryTextColor,
+    @required this.onPrimaryDark,
+    @required this.onCards,
+    @required this.accentColor,
+    @required this.textOnDark,
+    @required this.textOnLight,
     @required this.isDark,
   });
 
-  Color primaryColor;
-  Color primaryLightColor;
+  Color cardsOnScaffold;
+  Color scaffoldBackground;
   Color primaryDarkColor;
-  Color secondaryColor;
-  Color secondaryLightColor;
-  Color secondaryDarkColor;
-  Color secondaryTextColor;
-  Color primaryTextColor;
+  Color onPrimaryDark;
+  Color onCards;
+  Color accentColor;
+  Color textOnDark;
+  Color textOnLight;
   bool isDark;
 
   factory MyTheme.fromJson(String str) => MyTheme.fromMap(json.decode(str));
 
   get colorScheme =>  ColorScheme(
-    primary: primaryLightColor,
-    primaryVariant: primaryColor,
-    secondary: secondaryColor,
-    secondaryVariant: secondaryDarkColor,
-    surface: primaryTextColor,
-    background: primaryColor,
-    error: secondaryDarkColor,
-    onPrimary: primaryTextColor,
-    onSecondary: secondaryTextColor,
-    onSurface: secondaryDarkColor,
-    onBackground: secondaryColor,
-    onError: primaryTextColor,
+    primary: scaffoldBackground,
+    primaryVariant: primaryDarkColor,
+    secondary: onPrimaryDark,
+    secondaryVariant: accentColor,
+    surface: cardsOnScaffold,
+    background: scaffoldBackground,
+    error: Colors.red,
+    onPrimary: textOnLight,
+    onSecondary: textOnDark,
+    onSurface: primaryDarkColor,
+    onBackground: accentColor,
+    onError: Colors.white,
     brightness: isDark?Brightness.dark:Brightness.light,
   );
 
@@ -54,27 +54,27 @@ class MyTheme {
       return Color(int.parse(source.toString().replaceAll("#", '0xff')));
     };
     return MyTheme(
-    primaryColor: json["primaryColor"] == null ? null : _parseColor(json["primaryColor"]),
-    primaryLightColor: json["primaryLightColor"] == null ? null : _parseColor(json["primaryLightColor"]),
+    cardsOnScaffold: json["primaryColor"] == null ? null : _parseColor(json["primaryColor"]),
+    scaffoldBackground: json["primaryLightColor"] == null ? null : _parseColor(json["primaryLightColor"]),
     primaryDarkColor: json["primaryDarkColor"] == null ? null : _parseColor(json["primaryDarkColor"]),
-    secondaryColor: json["secondaryColor"] == null ? null : _parseColor(json["secondaryColor"]),
-    secondaryLightColor: json["secondaryLightColor"] == null ? null : _parseColor(json["secondaryLightColor"]),
-    secondaryDarkColor: json["secondaryDarkColor"] == null ? null : _parseColor(json["secondaryDarkColor"]),
-    secondaryTextColor: json["secondaryTextColor"] == null ? null : _parseColor(json["secondaryTextColor"]),
-    primaryTextColor: json["primaryTextColor"] == null ? null : _parseColor(json["primaryTextColor"]),
+    onPrimaryDark: json["secondaryColor"] == null ? null : _parseColor(json["secondaryColor"]),
+    onCards: json["secondaryLightColor"] == null ? null : _parseColor(json["secondaryLightColor"]),
+    accentColor: json["secondaryDarkColor"] == null ? null : _parseColor(json["secondaryDarkColor"]),
+    textOnDark: json["secondaryTextColor"] == null ? null : _parseColor(json["secondaryTextColor"]),
+    textOnLight: json["primaryTextColor"] == null ? null : _parseColor(json["primaryTextColor"]),
     isDark: json["isDark"] == null ? null : json["isDark"],
   );
   }
 
   Map<String, dynamic> toMap() => {
-    "primaryColor": primaryColor == null ? null : primaryColor,
-    "primaryLightColor": primaryLightColor == null ? null : primaryLightColor,
+    "primaryColor": cardsOnScaffold == null ? null : cardsOnScaffold,
+    "primaryLightColor": scaffoldBackground == null ? null : scaffoldBackground,
     "primaryDarkColor": primaryDarkColor == null ? null : primaryDarkColor,
-    "secondaryColor": secondaryColor == null ? null : secondaryColor,
-    "secondaryLightColor": secondaryLightColor == null ? null : secondaryLightColor,
-    "secondaryDarkColor": secondaryDarkColor == null ? null : secondaryDarkColor,
-    "secondaryTextColor": secondaryTextColor == null ? null : secondaryTextColor,
-    "primaryTextColor": primaryTextColor == null ? null : primaryTextColor,
+    "secondaryColor": onPrimaryDark == null ? null : onPrimaryDark,
+    "secondaryLightColor": onCards == null ? null : onCards,
+    "secondaryDarkColor": accentColor == null ? null : accentColor,
+    "secondaryTextColor": textOnDark == null ? null : textOnDark,
+    "primaryTextColor": textOnLight == null ? null : textOnLight,
     "isDark": isDark == null ? null : isDark,
   };
 

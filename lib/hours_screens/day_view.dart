@@ -78,19 +78,15 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
           Container(
             height: 90,
             // padding: const EdgeInsets.symmetric(vertical:4.0),
-            child: Material(
-              color: Theme.of(context).primaryColor,
-              elevation: 4,
-              child: SizedBox(
-                width: 60,
-                child: Center(
-                  child: Text(
-                    'Average',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.bodyText2.color),
-                  ),
+            child: SizedBox(
+              width: 60,
+              child: Center(
+                child: Text(
+                  'Average',
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.bodyText2.color),
                 ),
               ),
             ),
@@ -108,28 +104,24 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                   border: const Border(
                 left: const BorderSide(),
               )),
-              child: Material(
-                color: Theme.of(context).primaryColor,
-                elevation: 4,
-                child: Stack(
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                           false?RatingStars(size: 50,): LinearProgressIndicator(
-                                minHeight: 16,
-                                backgroundColor: Colors.white,
-                                value: (average),
-                                valueColor: AlwaysStoppedAnimation(
-                                    Theme.of(context).accentColor)),
-                          ],
-                        )),
-                  ],
-                ),
+              child: Stack(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                         false?RatingStars(size: 50,): LinearProgressIndicator(
+                              minHeight: 16,
+                              backgroundColor: Colors.white,
+                              value: (average),
+                              valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).accentColor)),
+                        ],
+                      )),
+                ],
               ),
             ),
             // ),

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:charts_flutter/flutter.dart';
 
 /// Bar chart example
 import 'package:flutter/material.dart';
@@ -25,8 +24,8 @@ class GroupedBarChart extends StatelessWidget {
     );
   }
 
-  static charts.Color get veryVeryLightBlue =>
-      charts.ColorUtil.fromDartColor(Colors.blue);
+  // static charts.Color get veryVeryLightBlue =>
+  //     charts.ColorUtil.fromDartColor(Colors.blue);
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +33,12 @@ class GroupedBarChart extends StatelessWidget {
       seriesList,
       animate: animate,
       barRendererDecorator: charts.BarLabelDecorator<String>(
-        insideLabelStyleSpec: TextStyleSpec(color: charts.Color.transparent),
-        outsideLabelStyleSpec: TextStyleSpec(fontSize: 8,fontWeight: '900',),
+        insideLabelStyleSpec: charts.TextStyleSpec(color: charts.Color.transparent),
+        outsideLabelStyleSpec: charts.TextStyleSpec(fontSize: 8,fontWeight: '900',),
       ),
       barGroupingType: charts.BarGroupingType.stacked,
       selectionModels: [
-        SelectionModelConfig(updatedListener: (SelectionModel model) {
+        charts.SelectionModelConfig(updatedListener: (charts.SelectionModel model) {
           if (model.hasDatumSelection && onBarSelected != null) {
             if (!tapped[0]) {
               tapped[0] = true;
@@ -88,14 +87,15 @@ class GroupedBarChart extends StatelessWidget {
           measureFn: (SingleDayAverage sales, _) =>
               sales.worth > 0 ? sales.worth : 0,
           data: charter,
-          fillColorFn: (d, i) => veryVeryLightBlue,
-          patternColorFn: (d, i) => charts.Color.white,
+          fillColorFn: (d, i) => charts.ColorUtil.fromDartColor(Color(0xff14213d)),
+          patternColorFn: (d, i) => charts.ColorUtil.fromDartColor(Color(0xff14213d)),
           fillPatternFn: (d, i) => DateUtils.isSameDay(d.date, now)
-              ? FillPatternType.forwardHatch
-              : FillPatternType.solid),
+              ? charts.FillPatternType.forwardHatch
+              : charts.FillPatternType.solid),
       new charts.Series<SingleDayAverage, String>(
         id: 'mobile',
         labelAccessorFn: (t,i)=>'',
+        fillColorFn: (d, i) => charts.ColorUtil.fromDartColor(Color(0xff14213d)),
         domainFn: (SingleDayAverage sales, _) =>
             sales.label ?? Utils.shortDays[sales.date.weekday],
         measureFn: (SingleDayAverage sales, _) =>

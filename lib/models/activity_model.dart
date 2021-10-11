@@ -8,14 +8,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Activity {
-  final Widget icon;
+  final IconData icon;
 
   final int timeSpent;
 
   const Activity(
       {this.id,
       this.name,
-      this.icon = const FaIcon(FontAwesomeIcons.goodreads),
+      this.icon = FontAwesomeIcons.goodreads,
       this.timeSpent = 0});
 
   Activity copyWith({

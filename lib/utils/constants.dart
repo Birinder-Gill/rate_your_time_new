@@ -421,7 +421,7 @@ class Utils {
       av.activities.add(Activity(
           id: 16,
           name: "Others",
-          icon: FaIcon(FontAwesomeIcons.list),
+          icon: FontAwesomeIcons.list,
           timeSpent: temp.sublist(ACTIVITIES_TO_SHOW).fold(0,
               (previousValue, element) => previousValue + element.timeSpent)));
     }

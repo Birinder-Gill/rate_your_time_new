@@ -19,7 +19,7 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
   final _wC = TextEditingController();
   final _sC = TextEditingController();
 
-  Color get baseColor => Theme.of(context).primaryColor;
+  Color get baseColor => Theme.of(context).primaryColorDark;
 
   int _wakeUpDefault = 7;
   int _sleepDefault = 22;
@@ -58,12 +58,12 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
       children: [
         FaIcon(
           ic,
-          color: theme.accentColor,
+          color: theme.primaryColorDark,
         ),
         Text(pre, style: TextStyle(color: baseColor)),
         Text(
           '${_formatTime(time)}',
-          style: TextStyle(color: theme.accentColor, fontSize: 24),
+          style: TextStyle(color: theme.primaryColorDark, fontSize: 24),
         )
       ],
     );
@@ -96,7 +96,6 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
   Widget build(BuildContext context) {
     theme = Theme.of(context);
     return Scaffold(
-      // backgroundColor: Colors.black,
       appBar: AppBar(elevation: 0,backgroundColor: theme.scaffoldBackgroundColor,),
       floatingActionButton: _sC.text.isNotEmpty
           ? FloatingActionButton.extended(
@@ -130,7 +129,6 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
                   textColor: theme.accentColor,
                   baseColor: baseColor.withOpacity(.5),
                   selectionColor: baseColor,
-                  handlerColor: Colors.deepPurple,
                   handlerOutterRadius: 12.0,
                   onSelectionChange: _updateLabels,
                   sliderStrokeWidth: 10.0,
@@ -143,13 +141,11 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
                         Text('Hours awake',
                             style: Theme.of(context)
                                 .textTheme
-                                .caption
-                                .copyWith(color: theme.accentColor)),
+                                .caption),
                         Text('${_formatIntervalTime(wakeUpTime, sleepTime)}',
                             style: Theme.of(context)
                                 .textTheme
-                                .headline4
-                                .copyWith(color: theme.accentColor)),
+                                .headline4),
                       ],
                     )),
                   ),
@@ -162,17 +158,7 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
                       _formatBedTime(
                           'SLEEP AT', sleepTime, FontAwesomeIcons.cloudMoon),
                     ]),
-                TextButton.icon(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) => baseColor),
-                      foregroundColor: MaterialStateProperty.resolveWith(
-                          (states) => theme.accentColor),
-                      shape: MaterialStateProperty.resolveWith(
-                        (states) => RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                        ),
-                      )),
+                ElevatedButton.icon(
                   icon: Text('  N E X T'),
                   onPressed: _savePrefs,
                   label: Icon(Icons.navigate_next),

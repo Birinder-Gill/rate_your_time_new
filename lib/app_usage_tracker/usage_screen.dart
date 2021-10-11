@@ -42,10 +42,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   bool datesChanged = false;
 
-  double get sum => sumOf<UsageStat>(
-      distinctApps, (e) => e.totalTimeInForeground);
+  double get sum =>
+      sumOf<UsageStat>(distinctApps, (e) => e.totalTimeInForeground);
 
   get granted => (_granted != null && (_granted));
+
+  Color get primaryDark => Theme.of(context).primaryColorDark;
 
   getApps({bool forceReload = true}) async {
     setState(() {
@@ -63,7 +65,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     } catch (e) {
       error = true;
     }
-    datesChanged=false;
+    datesChanged = false;
     setState(() {
       loading = false;
     });
@@ -75,9 +77,8 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   @override
   void initState() {
-
-     to = DateUtils.dateOnly(widget.to??DateTime.now());
-     from = widget.from??to.subtract(Duration(days: 1));
+    to = DateUtils.dateOnly(widget.to ?? DateTime.now());
+    from = widget.from ?? to.subtract(Duration(days: 1));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       isAccessGranted();
     });
@@ -99,8 +100,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        actions: [
-        ],
+        actions: [],
       ),
       body: !granted
           ? gotoSettingsView()
@@ -113,27 +113,42 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Material(
-                              elevation: 0,
-                              child: Container(
-                                // height: 100,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-
-                                        OutlinedButton.icon(onPressed:pickFromDate,
-                                        label: Text("${_label(from)} - ${_label(to)}",style: Theme.of(context).textTheme.headline5,), icon: Icon(Icons.edit),),
-                                        datesChanged?ElevatedButton(
-                                            onPressed:getApps,
-                                            child: Text("Get stats")):IconButton(icon: Icon(Icons.refresh), onPressed: getApps)
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                            child: Container(
+                              // height: 100,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      OutlinedButton.icon(
+                                        onPressed: pickFromDate,
+                                        label: Text(
+                                          "${_label(from)} - ${_label(to)}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ),
+                                        icon: Icon(Icons.edit),
+                                      ),
+                                      datesChanged
+                                          ? ElevatedButton(
+                                              onPressed: getApps,
+                                              child: Text("Get stats"))
+                                          : FloatingActionButton(
+                                              child: Icon(
+                                                Icons.refresh,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                              onPressed: getApps,
+                                              mini: true,
+                                              backgroundColor: primaryDark,
+                                            )
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -191,9 +206,10 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                         child: LinearProgressIndicator(
                                           value: i.totalTimeInForeground / sum,
                                           minHeight: 14,
-                                          valueColor:
-                                              AlwaysStoppedAnimation(i.color),
-                                          backgroundColor: Colors.grey,
+                                          valueColor: AlwaysStoppedAnimation(
+                                              primaryDark),
+                                          backgroundColor:
+                                              Theme.of(context).primaryColor,
                                         ),
                                       ),
                                     ),
@@ -235,27 +251,39 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   _errorView() => Center(child: Text("An error occured"));
 
-  String _label(DateTime date)=>date==null?"-/-":MaterialLocalizations.of(context).formatShortMonthDay(date);
+  String _label(DateTime date) => date == null
+      ? "-/-"
+      : MaterialLocalizations.of(context).formatShortMonthDay(date);
+
   void pickFromDate() {
+    final theme = Theme.of(context);
+    final c = Theme.of(context).colorScheme;
     showDateRangePicker(
+            builder: (context, child) => Theme(
+                data: theme.copyWith(
+                    colorScheme:c.copyWith(
+                      onSurface: c.secondaryVariant,
+                      primary: c.primaryVariant,
+                      brightness: Brightness.light,
+                      onPrimary: c.onSecondary,
+                      onSecondary: c.onPrimary
+                    )),
+                child: child),
             context: context,
             initialDateRange: DateTimeRange(start: from, end: to),
             firstDate: DateTime(2018),
             lastDate: DateTime.now())
         .then((value) {
       if (value != null) {
-        if(value.start!=from||value.end!=to) {
+        if (value.start != from || value.end != to) {
           datesChanged = true;
           from = value.start;
           to = value.end;
-          setState(() {
-
-          });
+          setState(() {});
         }
       }
     });
   }
-
 }
 
 class TestDeco extends Decoration {

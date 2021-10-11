@@ -17,32 +17,23 @@ class DatePickerWidget extends StatelessWidget {
     final model = Provider.of<AppModel>(context);
     return Container(
       height: MediaQuery.of(context).size.height,
-      color: theme.primaryColor,
-      child: Theme(
-        data: theme.copyWith(
-            colorScheme: theme.colorScheme.copyWith(
-          onPrimary: theme.accentColor,
-          primary: theme.primaryColorDark,
-          onSurface: theme.colorScheme.onPrimary,
-        )),
-        child: Column(
-          children: [
-            Container(
-              height: Constants.datePickerHeight,
-              child: model.toggle == 0
-                  ? SingleDatePicker(model: model, firstDate: firstDate)
-                  : model.toggle == 1
-                      ? WeekRangePicker(
-                          model: model,
-                          firstDate: firstDate,
-                        )
-                      : MonthRangePicker(model: model, firstDate: firstDate),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          Container(
+            height: Constants.datePickerHeight,
+            child: model.toggle == 0
+                ? SingleDatePicker(model: model, firstDate: firstDate)
+                : model.toggle == 1
+                    ? WeekRangePicker(
+                        model: model,
+                        firstDate: firstDate,
+                      )
+                    : MonthRangePicker(model: model, firstDate: firstDate),
+          ),
+          Expanded(
+            child: SizedBox(),
+          ),
+        ],
       ),
     );
   }

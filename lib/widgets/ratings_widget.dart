@@ -35,7 +35,6 @@ class _RatingStarsState extends State<RatingStars> {
 }
 
 class _SingleRatingStar extends StatelessWidget {
-  final color = Colors.orange;
   final double size;
   final double rating;
   final bool readOnly;
@@ -51,7 +50,7 @@ class _SingleRatingStar extends StatelessWidget {
           : rating < 1
               ? Icons.star_half
               : Icons.star_rate,
-      color: color,
+      color: Theme.of(context).accentColor,
       size: size,
     );
   }

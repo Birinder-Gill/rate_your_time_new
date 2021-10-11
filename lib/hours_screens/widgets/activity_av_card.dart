@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/models/activity_model.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
@@ -27,6 +28,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
     if (hoursModel == null) hoursModel = Provider.of<AppModel>(context);
     if(widget.av.activities.isEmpty)
       return SizedBox.shrink();
+    final theme = Theme.of(context);
     return Card(
       child: Column(
         children: [
@@ -35,8 +37,8 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
             if (a.id != 16)
               if (widget.isWeek)
                 ExpansionTile(
-                  // horizontalTitleGap: 0,
-                  title: Text("$a"),
+
+                  title: Text("$a",style: theme.textTheme.subtitle1,),
                   initiallyExpanded: false,
                   children: [
                     SizedBox(
@@ -52,22 +54,16 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                                   label: Utils.shortDays[index + 1])),
                           (e) {}),
                     ),
-                    // for (var i in widget.av.weekDayActivities[a.id].entries)
-                    //   ListTile(
-                    //     title: Text(Utils.shortDays[i.key]),
-                    //     trailing: Text("${i.value}${_hrs(i.value)}"),
-                    //     subtitle: Divider(),
-                    //   )
                   ],
-                  subtitle: Text('${a.timeSpent}${_hrs(a.timeSpent)}'),
-                  leading: a.icon,
+                  subtitle: Text('${a.timeSpent}${_hrs(a.timeSpent)}',style: theme.textTheme.subtitle2,),
+                  leading: FaIcon(a.icon,color: Theme.of(context).primaryColorDark,),
                 )
               else
                 ListTile(
                   title: Text("$a"),
                   trailing: Icon(Icons.arrow_right),
                   subtitle: Text('${a.timeSpent}${_hrs(a.timeSpent)}'),
-                  leading: a.icon,
+                  leading: FaIcon(a.icon),
                   onTap: () {
                     showDayActivitiesList(
                         widget.av.weekDayActivities[a.id].entries, a);
@@ -90,14 +86,14 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                     label: Icon(
                         expanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
                     icon: Text("${widget.av.others.length} activities")),
-                leading: a.icon,
+                leading: FaIcon(a.icon),
                 children: [
                   for (final a in widget.av.others)
                     ListTile(
                       horizontalTitleGap: 0,
                       title: Text("$a"),
                       subtitle: Text('${a.timeSpent}${_hrs(a.timeSpent)}'),
-                      leading: a.icon,
+                      leading: FaIcon(a.icon),
                     ),
                 ],
               )

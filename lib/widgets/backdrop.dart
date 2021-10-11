@@ -252,6 +252,7 @@ class _BackdropState extends State<Backdrop>
     super.initState();
     _controller = widget.controller;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
       Timer(Duration(seconds: 1), (){
         _showFeatureOverlays();
       });
@@ -346,7 +347,11 @@ class _BackdropState extends State<Backdrop>
       children: [
         ExcludeSemantics(
           excluding: _frontLayerVisible,
-          child: widget.backLayer,
+          child: Theme(
+              data: Theme.of(context).copyWith(
+                accentColor: Theme.of(context).colorScheme.secondary
+              ),
+              child: widget.backLayer),
         ),
         PositionedTransition(
           rect: _layerAnimation,
@@ -371,7 +376,7 @@ class _BackdropState extends State<Backdrop>
 
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
+     final appBar = AppBar(
       leading: Builder(
           builder: (BuildContext c) => FDelegate(
                 featureId: 'menu',
@@ -394,7 +399,7 @@ class _BackdropState extends State<Backdrop>
         backTitle: widget.backTitle,
       ),
       actions: [
-        IconButton(icon: FaIcon(FontAwesomeIcons.chalkboardTeacher), onPressed: (){
+        IconButton(icon: FaIcon(FontAwesomeIcons.chalkboardTeacher,size: 16,), onPressed: (){
           _showFeatureOverlays();
         }),
         FDelegate(
@@ -415,6 +420,7 @@ class _BackdropState extends State<Backdrop>
       builder: (context, child) => ExcludeSemantics(
         excluding: cartPageIsVisible(context),
         child: Scaffold(
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           drawer: Drawer(child: SettingsScreen()),
           appBar: appBar,
           body: LayoutBuilder(

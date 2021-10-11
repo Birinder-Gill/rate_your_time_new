@@ -27,6 +27,7 @@ class FDelegate extends StatelessWidget {
     return DescribedFeatureOverlay(
         barrierDismissible: false,
         targetColor: color,
+
         onBackgroundTap: () async{
           await FeatureDiscovery.completeCurrentStep(context);
           return false;
@@ -39,6 +40,7 @@ class FDelegate extends StatelessWidget {
           style: TextStyle(fontSize: 20.0),
         ),
         enablePulsingAnimation: true,
+
         description: Text('$description'),
         featureId: '$featureId',
         tapTarget: IgnorePointer(child: child),

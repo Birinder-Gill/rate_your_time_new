@@ -34,16 +34,22 @@ class MyApp extends StatelessWidget {
 
         create: (BuildContext context) =>_appModel,
         child: Consumer<ThemeModel>(
-          builder: (_,model,__)=>
-            FeatureDiscovery(
-              recordStepsInSharedPreferences: false,
-              child: MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme:model.selectedTheme,
-                home:false?
-                TestScreen([]):SplashScreen(),
+          builder: (_,model,__){
+            model.setTheme(0);
+            return FeatureDiscovery(
+              recordStepsInSharedPreferences: true,
+              child: ListTileTheme(
+                textColor: model.selectedTheme.primaryColorDark,
+                iconColor: model.selectedTheme.primaryColorDark,
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  theme:model.selectedTheme,
+                  home:false?
+                  TestScreen([]):SplashScreen(),
+                ),
               ),
-            ),
+            );
+          },
         ),
       ),
     );

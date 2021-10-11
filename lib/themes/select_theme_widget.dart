@@ -58,10 +58,10 @@ class ThemeTile extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: _themeView(back:e.primaryColor,front:e.primaryTextColor),
+                child: _themeView(back:e.cardsOnScaffold,front:e.textOnLight),
               ),
               Expanded(
-                child: _themeView(back: e.primaryDarkColor,front:e.primaryTextColor.value== e.secondaryColor.value?Colors.transparent:e.secondaryColor),
+                child: _themeView(back: e.primaryDarkColor,front:e.textOnLight.value== e.onPrimaryDark.value?Colors.transparent:e.onPrimaryDark),
               ),
             ],
           ),
