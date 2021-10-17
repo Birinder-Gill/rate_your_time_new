@@ -7,30 +7,31 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class GroupedBarChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  // final List<charts.Series> seriesList;
   final bool animate;
   final void Function(int index) onBarSelected;
+  final List<SingleDayAverage> av;
 
   final List<bool> tapped = [false];
 
-  GroupedBarChart(this.seriesList, {this.animate, this.onBarSelected});
+  GroupedBarChart(this.av, {this.animate, this.onBarSelected});
 
-  factory GroupedBarChart.withHoursData(
-      List<SingleDayAverage> av, void Function(int index) onBarSelected) {
-    return new GroupedBarChart(
-      _createSampleData(av),
-      animate: true,
-      onBarSelected: onBarSelected,
-    );
-  }
+  // factory GroupedBarChart.withHoursData(
+  //     List<SingleDayAverage> av, void Function(int index) onBarSelected) {
+  //   return new GroupedBarChart(
+  //     _createSampleData(av),
+  //     animate: true,
+  //     onBarSelected: onBarSelected,
+  //   );
+  // }
 
-  // static charts.Color get veryVeryLightBlue =>
-  //     charts.ColorUtil.fromDartColor(Colors.blue);
+
 
   @override
   Widget build(BuildContext context) {
+    final barColor = Theme.of(context).primaryColorDark;
     return new charts.BarChart(
-      seriesList,
+      _createSampleData(barColor),
       animate: animate,
       barRendererDecorator: charts.BarLabelDecorator<String>(
         insideLabelStyleSpec: charts.TextStyleSpec(color: charts.Color.transparent),
@@ -49,7 +50,6 @@ class GroupedBarChart extends StatelessWidget {
                   'Double tap to open details',
                 ),
                 duration: d,
-                backgroundColor: Colors.black87,
                 behavior: SnackBarBehavior.floating,
                 elevation: 4,
                 shape: const BeveledRectangleBorder(
@@ -70,8 +70,7 @@ class GroupedBarChart extends StatelessWidget {
   }
 
   /// Create series list with multiple series
-  static List<charts.Series<SingleDayAverage, String>> _createSampleData(
-      List<SingleDayAverage> av) {
+  List<charts.Series<SingleDayAverage, String>> _createSampleData(Color barColor) {
     final now = DateTime.now();
     List<SingleDayAverage> charter = av.map((element) {
       if (!DateUtils.isSameDay(element.date, now))
@@ -87,15 +86,15 @@ class GroupedBarChart extends StatelessWidget {
           measureFn: (SingleDayAverage sales, _) =>
               sales.worth > 0 ? sales.worth : 0,
           data: charter,
-          fillColorFn: (d, i) => charts.ColorUtil.fromDartColor(Color(0xff14213d)),
-          patternColorFn: (d, i) => charts.ColorUtil.fromDartColor(Color(0xff14213d)),
+          fillColorFn: (d, i) => charts.ColorUtil.fromDartColor(barColor),
+          patternColorFn: (d, i) => charts.ColorUtil.fromDartColor(barColor),
           fillPatternFn: (d, i) => DateUtils.isSameDay(d.date, now)
               ? charts.FillPatternType.forwardHatch
               : charts.FillPatternType.solid),
       new charts.Series<SingleDayAverage, String>(
         id: 'mobile',
         labelAccessorFn: (t,i)=>'',
-        fillColorFn: (d, i) => charts.ColorUtil.fromDartColor(Color(0xff14213d)),
+        fillColorFn: (d, i) => charts.ColorUtil.fromDartColor(barColor),
         domainFn: (SingleDayAverage sales, _) =>
             sales.label ?? Utils.shortDays[sales.date.weekday],
         measureFn: (SingleDayAverage sales, _) =>

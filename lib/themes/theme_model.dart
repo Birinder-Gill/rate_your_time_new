@@ -10,9 +10,8 @@ class MyTheme {
   MyTheme({
     @required this.cardsOnScaffold,
     @required this.scaffoldBackground,
-    @required this.primaryDarkColor,
+    @required this.backdropColor,
     @required this.onPrimaryDark,
-    @required this.onCards,
     @required this.accentColor,
     @required this.textOnDark,
     @required this.textOnLight,
@@ -21,9 +20,8 @@ class MyTheme {
 
   Color cardsOnScaffold;
   Color scaffoldBackground;
-  Color primaryDarkColor;
+  Color backdropColor;
   Color onPrimaryDark;
-  Color onCards;
   Color accentColor;
   Color textOnDark;
   Color textOnLight;
@@ -33,7 +31,7 @@ class MyTheme {
 
   get colorScheme =>  ColorScheme(
     primary: scaffoldBackground,
-    primaryVariant: primaryDarkColor,
+    primaryVariant: backdropColor,
     secondary: onPrimaryDark,
     secondaryVariant: accentColor,
     surface: cardsOnScaffold,
@@ -41,7 +39,7 @@ class MyTheme {
     error: Colors.red,
     onPrimary: textOnLight,
     onSecondary: textOnDark,
-    onSurface: primaryDarkColor,
+    onSurface: backdropColor,
     onBackground: accentColor,
     onError: Colors.white,
     brightness: isDark?Brightness.dark:Brightness.light,
@@ -56,9 +54,8 @@ class MyTheme {
     return MyTheme(
     cardsOnScaffold: json["primaryColor"] == null ? null : _parseColor(json["primaryColor"]),
     scaffoldBackground: json["primaryLightColor"] == null ? null : _parseColor(json["primaryLightColor"]),
-    primaryDarkColor: json["primaryDarkColor"] == null ? null : _parseColor(json["primaryDarkColor"]),
+    backdropColor: json["primaryDarkColor"] == null ? null : _parseColor(json["primaryDarkColor"]),
     onPrimaryDark: json["secondaryColor"] == null ? null : _parseColor(json["secondaryColor"]),
-    onCards: json["secondaryLightColor"] == null ? null : _parseColor(json["secondaryLightColor"]),
     accentColor: json["secondaryDarkColor"] == null ? null : _parseColor(json["secondaryDarkColor"]),
     textOnDark: json["secondaryTextColor"] == null ? null : _parseColor(json["secondaryTextColor"]),
     textOnLight: json["primaryTextColor"] == null ? null : _parseColor(json["primaryTextColor"]),
@@ -69,9 +66,8 @@ class MyTheme {
   Map<String, dynamic> toMap() => {
     "primaryColor": cardsOnScaffold == null ? null : cardsOnScaffold,
     "primaryLightColor": scaffoldBackground == null ? null : scaffoldBackground,
-    "primaryDarkColor": primaryDarkColor == null ? null : primaryDarkColor,
+    "primaryDarkColor": backdropColor == null ? null : backdropColor,
     "secondaryColor": onPrimaryDark == null ? null : onPrimaryDark,
-    "secondaryLightColor": onCards == null ? null : onCards,
     "secondaryDarkColor": accentColor == null ? null : accentColor,
     "secondaryTextColor": textOnDark == null ? null : textOnDark,
     "primaryTextColor": textOnLight == null ? null : textOnLight,

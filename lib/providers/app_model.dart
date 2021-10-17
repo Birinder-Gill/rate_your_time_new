@@ -36,13 +36,36 @@ class ThemeModel with ChangeNotifier {
 MyTheme(
         scaffoldBackground: Color(0xffe5e5e5),
         cardsOnScaffold: Color(0xffffffff),
-        primaryDarkColor: Color(0xff14213d),
+        backdropColor: Color(0xff14213d),
         onPrimaryDark: Color(0xfffca311),
-        onCards: Color(0xff14213d),
-        accentColor: Colors.red,
+        accentColor: Colors.red.shade600,
         textOnLight: Color(0xff14213d),
         textOnDark: Color(0xffffffff),
+        isDark: false),
+
+    MyTheme(
+        scaffoldBackground: Color(0xffd7e4eb),
+        cardsOnScaffold: Color(0xffffffff),
+        backdropColor: Color(0xff242424),
+        onPrimaryDark: Color(0xfffa5d00),
+        accentColor: Color(0xfffa5d00),
+        textOnLight: Color(0xff242424),
+        textOnDark: Color(0xffffffff),
+        isDark: false),
+
+
+    MyTheme(
+        scaffoldBackground: Color(0xff1d3557),
+        cardsOnScaffold: Color(0xff457b9d),
+        backdropColor: Color(0xffa8dadc),
+        onPrimaryDark: Color(0xffe63946),
+        accentColor: Color(0xfff1faee),
+        textOnLight: Color(0xffa8dadc),
+        textOnDark: Color(0xff1d3557),
         isDark: true),
+
+
+
   ];
 
   ThemeData get _defaultTheme => _buildFromMyTheme(themes[0]);
@@ -50,11 +73,13 @@ MyTheme(
   setTheme(int index) {
     this.selectedTheme = _buildFromMyTheme(themes[index]);
     SharedPrefs.setInt(SharedPrefs.themeIndex, index);
-    notifyListeners();
+    nextTick((){
+      notifyListeners();
+    });
   }
 
   IconThemeData _customIconTheme(IconThemeData original, MyTheme theme) {
-    return original.copyWith(color: theme.primaryDarkColor);
+    return original.copyWith(color: theme.backdropColor);
   }
 
   ThemeData _buildFromMyTheme(MyTheme theme) {
@@ -63,16 +88,16 @@ MyTheme(
       colorScheme: theme.colorScheme,
       accentColor: theme.accentColor,
       primaryColor: theme.cardsOnScaffold,
-      primaryColorDark: theme.primaryDarkColor,
+      primaryColorDark: theme.backdropColor,
       primaryColorLight: theme.scaffoldBackground,
-      buttonColor: theme.primaryDarkColor,
-      unselectedWidgetColor: theme.primaryDarkColor,
+      buttonColor: theme.backdropColor,
+      unselectedWidgetColor: theme.backdropColor,
       appBarTheme: AppBarTheme(
         elevation: 0,
           iconTheme:IconThemeData(
               color: theme.onPrimaryDark
           ),
-        backgroundColor: theme.primaryDarkColor,
+        backgroundColor: theme.backdropColor,
           titleTextStyle: TextStyle(color: theme.cardsOnScaffold),
           brightness: Brightness.dark
       ),
@@ -85,15 +110,15 @@ MyTheme(
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
               foregroundColor: MaterialStateProperty.resolveWith(
-                  (states) => theme.primaryDarkColor))),
+                  (states) => theme.backdropColor))),
       outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             shape: MaterialStateProperty.resolveWith(
                     (states) => RoundedRectangleBorder(
-                      side: BorderSide(color: theme.primaryDarkColor)
+                      side: BorderSide(color: theme.backdropColor)
                     )),
               foregroundColor: MaterialStateProperty.resolveWith(
-                  (states) => theme.primaryDarkColor))),
+                  (states) => theme.backdropColor))),
       scaffoldBackgroundColor: theme.scaffoldBackground,
       cardColor: theme.cardsOnScaffold,
 
@@ -103,16 +128,15 @@ MyTheme(
       buttonTheme: ButtonThemeData(
          textTheme: ButtonTextTheme.normal,
       ),
-      highlightColor: theme.onCards,
       primaryIconTheme: _customIconTheme(base.iconTheme, theme),
       textSelectionTheme: TextSelectionThemeData(
-        selectionHandleColor: theme.primaryDarkColor,
-        cursorColor: theme.primaryDarkColor,
-        selectionColor: theme.primaryDarkColor.withOpacity(.2)
+        selectionHandleColor: theme.backdropColor,
+        cursorColor: theme.backdropColor,
+        selectionColor: theme.backdropColor.withOpacity(.2)
       ),
       applyElevationOverlayColor: true,
       inputDecorationTheme: InputDecorationTheme(
-        labelStyle: TextStyle(color: theme.primaryDarkColor),
+        labelStyle: TextStyle(color: theme.backdropColor),
         enabledBorder: _cutCornerBorder(theme),
         border: _cutCornerBorder(theme),
         focusedBorder: _cutCornerBorder(theme,width: 1),
@@ -162,13 +186,13 @@ MyTheme(
           ),
         )
         .apply(
-          displayColor: theme.textOnLight,
-          bodyColor: theme.textOnLight,
+          displayColor: theme.isDark?theme.textOnDark: theme.textOnLight,
+          bodyColor: theme.isDark?theme.textOnDark: theme.textOnLight,
         ));
   }
 
   _cutCornerBorder(MyTheme theme,{Color color,double width}) =>CutCornersBorder(
-    borderSide: BorderSide(color: color??theme.primaryDarkColor, width: width??0.5),
+    borderSide: BorderSide(color: color??theme.backdropColor, width: width??0.5),
   );
 
 }

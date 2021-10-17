@@ -140,7 +140,7 @@ class HourWidget extends StatelessWidget {
   Widget _worthWidget(Hour hour) => hour.worth == 0
       ? _emptyWorthCard(theme)
       : LinearProgressIndicator(
-          minHeight: 32,
+          minHeight: 16,
           backgroundColor: theme.primaryColorLight,
           value: (hour.worth / 5),
           valueColor: AlwaysStoppedAnimation(theme.primaryColorDark),);

@@ -139,12 +139,10 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                           : FloatingActionButton(
                                               child: Icon(
                                                 Icons.refresh,
-                                                color: Theme.of(context)
-                                                    .primaryColor,
                                               ),
                                               onPressed: getApps,
                                               mini: true,
-                                              backgroundColor: primaryDark,
+                                              backgroundColor: Theme.of(context).accentColor,
                                             )
                                     ],
                                   ),

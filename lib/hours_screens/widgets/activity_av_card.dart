@@ -43,7 +43,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                   children: [
                     SizedBox(
                       height: 200,
-                      child: GroupedBarChart.withHoursData(
+                      child: GroupedBarChart(
                           List<SingleDayAverage>.generate(
                               7,
                               (index) => SingleDayAverage(
@@ -51,8 +51,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                                   widget.av.weekDayActivities[a.id][index + 1]
                                           ?.toDouble() ??
                                       0.0,
-                                  label: Utils.shortDays[index + 1])),
-                          (e) {}),
+                                  label: Utils.shortDays[index + 1])),),
                     ),
                   ],
                   subtitle: Text('${a.timeSpent}${_hrs(a.timeSpent)}',style: theme.textTheme.subtitle2,),
@@ -114,8 +113,8 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
           ),
           body: true? SizedBox(
             height: 300,
-            child: GroupedBarChart.withHoursData(List<SingleDayAverage>.generate(
-                entries.length, (index) => SingleDayAverage(null, entries.elementAt(index).value.toDouble(),label: entries.elementAt(index).key.toString())), (e){}),
+            child: GroupedBarChart(List<SingleDayAverage>.generate(
+                entries.length, (index) => SingleDayAverage(null, entries.elementAt(index).value.toDouble(),label: entries.elementAt(index).key.toString()))),
           ):ListView(children: [
             for (var i in entries)
               ListTile(

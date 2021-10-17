@@ -77,8 +77,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
         children: [
           Container(
             height: 90,
-            // padding: const EdgeInsets.symmetric(vertical:4.0),
-            child: SizedBox(
+             child: SizedBox(
               width: 60,
               child: Center(
                 child: Text(

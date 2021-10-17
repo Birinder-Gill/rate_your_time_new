@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
         create: (BuildContext context) =>_appModel,
         child: Consumer<ThemeModel>(
           builder: (_,model,__){
-            model.setTheme(0);
             return FeatureDiscovery(
               recordStepsInSharedPreferences: true,
               child: ListTileTheme(

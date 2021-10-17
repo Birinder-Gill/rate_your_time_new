@@ -96,7 +96,7 @@ class _WeekViewStats extends StatelessWidget {
                 Text('Average of hourly ratings given by yourself this week.')),
         Container(
             height: 300,
-            child: GroupedBarChart.withHoursData(model.av.averages, (i) {
+            child: GroupedBarChart(model.av.averages,onBarSelected: (i) {
               final hm = Provider.of<AppModel>(context, listen: false);
               hm.changeViewToggle(0);
               hm.refresh(model.av.averages[i].date);

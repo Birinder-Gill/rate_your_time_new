@@ -137,7 +137,7 @@ class CutCornersBorder extends OutlineInputBorder {
   }
 }
 
-void nextTick(void Function() run) {
+void nextTick(VoidCallback run) {
   Timer.run(run);
 }
 
