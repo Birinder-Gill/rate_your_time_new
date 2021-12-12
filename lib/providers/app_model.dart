@@ -17,7 +17,6 @@ const largeLetterSpacing = 1.0;
 class ThemeModel with ChangeNotifier {
   ThemeData selectedTheme;
 
-
   ThemeModel() {
     selectedTheme = _defaultTheme;
   }
@@ -33,7 +32,7 @@ class ThemeModel with ChangeNotifier {
     //     textOnLight: Colors.white,
     //     textOnDark: shrineBrown900,
     //     isDark: false),
-MyTheme(
+    MyTheme(
         scaffoldBackground: Color(0xffe5e5e5),
         cardsOnScaffold: Color(0xffffffff),
         backdropColor: Color(0xff14213d),
@@ -44,15 +43,15 @@ MyTheme(
         isDark: false),
 
     MyTheme(
-        scaffoldBackground: Color(0xffd7e4eb),
-        cardsOnScaffold: Color(0xffffffff),
-        backdropColor: Color(0xff242424),
-        onPrimaryDark: Color(0xfffa5d00),
-        accentColor: Color(0xfffa5d00),
-        textOnLight: Color(0xff242424),
-        textOnDark: Color(0xffffffff),
-        isDark: false,),
-
+      scaffoldBackground: Color(0xffd7e4eb),
+      cardsOnScaffold: Color(0xffffffff),
+      backdropColor: Color(0xff242424),
+      onPrimaryDark: Color(0xfffa5d00),
+      accentColor: Color(0xfffa5d00),
+      textOnLight: Color(0xff242424),
+      textOnDark: Color(0xffffffff),
+      isDark: false,
+    ),
 
     MyTheme(
         scaffoldBackground: Color(0xff1d3557),
@@ -63,9 +62,6 @@ MyTheme(
         textOnLight: Color(0xffa8dadc),
         textOnDark: Color(0xff1d3557),
         isDark: true),
-
-
-
   ];
 
   ThemeData get _defaultTheme => _buildFromMyTheme(themes[0]);
@@ -73,7 +69,7 @@ MyTheme(
   setTheme(int index) {
     this.selectedTheme = _buildFromMyTheme(themes[index]);
     SharedPrefs.setInt(SharedPrefs.themeIndex, index);
-    nextTick((){
+    nextTick(() {
       notifyListeners();
     });
   }
@@ -92,55 +88,54 @@ MyTheme(
       primaryColorLight: theme.scaffoldBackground,
       buttonColor: theme.backdropColor,
       unselectedWidgetColor: theme.backdropColor,
-      appBarTheme: AppBarTheme(
-        elevation: 0,
-          iconTheme:IconThemeData(
-              color: theme.onPrimaryDark
-          ),
-        backgroundColor: theme.backdropColor,
+      snackBarTheme: SnackBarThemeData(
+          backgroundColor: theme.backdropColor,
+          contentTextStyle: TextStyle(
+            color: !theme.isDark ? theme.textOnDark : theme.textOnLight,
+          )),
+      appBarTheme: base.appBarTheme.copyWith(
+          elevation: 0,
+          iconTheme: IconThemeData(color: theme.onPrimaryDark),
+          backgroundColor: theme.backdropColor,
           titleTextStyle: TextStyle(color: theme.cardsOnScaffold),
-          brightness: Brightness.dark
-      ),
+          brightness: theme.isDark ? Brightness.light : Brightness.dark),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith(
                   (states) => theme.cardsOnScaffold),
-          foregroundColor:MaterialStateProperty.resolveWith(
-                  (states) => theme.accentColor) )),
+              foregroundColor: MaterialStateProperty.resolveWith(
+                  (states) => theme.accentColor))),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
               foregroundColor: MaterialStateProperty.resolveWith(
                   (states) => theme.backdropColor))),
       outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
-            shape: MaterialStateProperty.resolveWith(
-                    (states) => RoundedRectangleBorder(
-                      side: BorderSide(color: theme.backdropColor)
-                    )),
+              shape: MaterialStateProperty.resolveWith((states) =>
+                  RoundedRectangleBorder(
+                      side: BorderSide(color: theme.backdropColor))),
               foregroundColor: MaterialStateProperty.resolveWith(
                   (states) => theme.backdropColor))),
       scaffoldBackgroundColor: theme.scaffoldBackground,
       cardColor: theme.cardsOnScaffold,
-
       dialogBackgroundColor: theme.cardsOnScaffold,
       errorColor: theme.accentColor,
-
       buttonTheme: ButtonThemeData(
-         textTheme: ButtonTextTheme.normal,
+        textTheme: ButtonTextTheme.normal,
       ),
       primaryIconTheme: _customIconTheme(base.iconTheme, theme),
       textSelectionTheme: TextSelectionThemeData(
-        selectionHandleColor: theme.backdropColor,
-        cursorColor: theme.backdropColor,
-        selectionColor: theme.backdropColor.withOpacity(.2)
-      ),
+          selectionHandleColor: theme.backdropColor,
+          cursorColor: theme.backdropColor,
+          selectionColor: theme.backdropColor.withOpacity(.2)),
       applyElevationOverlayColor: true,
       inputDecorationTheme: InputDecorationTheme(
         labelStyle: TextStyle(color: theme.backdropColor),
         enabledBorder: _cutCornerBorder(theme),
         border: _cutCornerBorder(theme),
-        focusedBorder: _cutCornerBorder(theme,width: 1),
-        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        focusedBorder: _cutCornerBorder(theme, width: 1),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       ),
       textTheme: _buildTextTheme(base.textTheme, theme),
       primaryTextTheme: _buildTextTheme(base.primaryTextTheme, theme),
@@ -186,51 +181,17 @@ MyTheme(
           ),
         )
         .apply(
-          displayColor: theme.isDark?theme.textOnDark: theme.textOnLight,
-          bodyColor: theme.isDark?theme.textOnDark: theme.textOnLight,
+          displayColor: theme.isDark ? theme.textOnDark : theme.textOnLight,
+          bodyColor: theme.isDark ? theme.textOnDark : theme.textOnLight,
         ));
   }
 
-  _cutCornerBorder(MyTheme theme,{Color color,double width}) =>CutCornersBorder(
-    borderSide: BorderSide(color: color??theme.backdropColor, width: width??0.5),
-  );
-
+  _cutCornerBorder(MyTheme theme, {Color color, double width}) =>
+      CutCornersBorder(
+        borderSide: BorderSide(
+            color: color ?? theme.backdropColor, width: width ?? 0.5),
+      );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

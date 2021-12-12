@@ -59,8 +59,8 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                         if ((model.hours?.length ?? 0) == 0)
                           EmptyView(),
                         for (var i in model.hours)
-                          HourWidget(i, updateHour: (id, activityId, note) {
-                            model.updateHour(id, activityId, note);
+                          HourWidget(i, updateHour: (id, activityId, note,rating) {
+                            model.updateHour(id, activityId, note,rating);
                           }),
                         // GoalWidgetWrapper(),
                       ],
@@ -73,59 +73,63 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
     );
   }
 
-  Widget _average(context, average) => Row(
-        children: [
-          Container(
-            height: 90,
-             child: SizedBox(
-              width: 60,
-              child: Center(
-                child: Text(
-                  'Average',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.bodyText2.color),
+  Widget _average(context, average) => Material(
+    elevation: 12,
+    color: Theme.of(context).scaffoldBackgroundColor,
+    child: Row(
+          children: [
+            Container(
+              height: 90,
+               child: SizedBox(
+                width: 60,
+                child: Center(
+                  child: Text(
+                    'Average',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.bodyText2.color),
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            // child: Dismissible(
-            //    background: Container(color: Colors.red,),
-            //   secondaryBackground: Container(color: Colors.green,),
+            Expanded(
+              // child: Dismissible(
+              //    background: Container(color: Colors.red,),
+              //   secondaryBackground: Container(color: Colors.green,),
 
-            // key: ValueKey(hour.id),
-            child: Container(
-              height: 90,
-              // padding: const EdgeInsets.symmetric(vertical:4.0),
-              decoration: const BoxDecoration(
-                  border: const Border(
-                left: const BorderSide(),
-              )),
-              child: Stack(
-                children: [
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16.0, horizontal: 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                         false?RatingStars(size: 50,): LinearProgressIndicator(
-                              minHeight: 16,
-                              backgroundColor: Colors.white,
-                              value: (average),
-                              valueColor: AlwaysStoppedAnimation(
-                                  Theme.of(context).accentColor)),
-                        ],
-                      )),
-                ],
+              // key: ValueKey(hour.id),
+              child: Container(
+                height: 90,
+                // padding: const EdgeInsets.symmetric(vertical:4.0),
+                decoration: const BoxDecoration(
+                    border: const Border(
+                  left: const BorderSide(),
+                )),
+                child: Stack(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                           false?RatingStars(size: 50,): LinearProgressIndicator(
+                                minHeight: 16,
+                                backgroundColor: Colors.white,
+                                value: (average),
+                                valueColor: AlwaysStoppedAnimation(
+                                    Theme.of(context).accentColor)),
+                          ],
+                        )),
+                  ],
+                ),
               ),
+              // ),
             ),
-            // ),
-          ),
-        ],
-      );
+          ],
+        ),
+  );
 
 }

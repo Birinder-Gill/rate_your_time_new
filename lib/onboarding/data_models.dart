@@ -1,37 +1,41 @@
 import 'package:rate_your_time_new/utils/constants.dart';
 
+//TODO:UNCOMMENT WHEN AND IF GOALS ADDED
+// const OnBoardingModel(
+//     'Set Plan for Day',
+//     'Use your morning to focus on yourself and set your goal for the day.\n\n'
+//         'What can you realistically accomplish that will further your goals and allow you to leave at the end of the day feeling like you’ve been productive and successful?',
+//     'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
+//
+
 const models = <OnBoardingModel>[
   const OnBoardingModel(
       'Welcome to ${Constants.appName}',
-      // TODO://
-      'A flana flana trick to keep you focused and improve your productivity.\n\n'
-          // '${Constants.appName} helps you to keep you focused on your long term goals.(Change this line)\n\n'
-          'Examine how you spend your day by breaking it down and evaluating every hour.\n\n',
+      'A simple trick to keep you focused and improve your productivity.\n\n'
+      'Examine how you spend your day by breaking it down and evaluating every hour.\n\n',
       'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
 
-  //TODO:UNCOMMENT WHEN AND IF GOALS ADDED
-  // const OnBoardingModel(
-  //     'Set Plan for Day',
-  //     'Use your morning to focus on yourself and set your goal for the day.\n\n'
-  //         'What can you realistically accomplish that will further your goals and allow you to leave at the end of the day feeling like you’ve been productive and successful?',
-  //     'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
-  //
   const OnBoardingModel(
       'Refocus every hour',
-      '${Constants.appName} gives you a notification every hour asking for a rating.\n\n'
-          'When it rings, rate your last hour based on how you think you spent it and deliberately recommit to how you are going to use the next hour.\n\n',
-          // 'Your hourly ratings are saved and beautifully presented for you to monitor and improve.',
-      // '\n\n Manage your day hour by hour.',
+      '${Constants.appName} gives you a notification every hour asking for a rating between 1 and 5.\n\n'
+      'When it rings, honestly rate your last hour based on how you think you spent it, now recommit to how you are going to use the next hour.\n\n',
       'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
-
 
   const OnBoardingModel(
       'Review every day',
       'At the end of the day, review your ratings.\n\n'
-          'Where did you focus? Where did you get distracted?\n\n'
-          'Which hours were the most productive.\n\n'
-          'What did you learn that will help you be more productive tomorrow?',
-      'https://www.freeiconspng.com/uploads/calendar-image-png-3.png')
+      'Which hours were the most productive?\n\n'
+      'What was the average rating for the day?\n\n'
+      'What did you learn that will help you be more productive and have better ratings for tomorrow?\n\n'
+      "We save these hourly ratings and provide daily, weekly and monthly averages.\n\n",
+      'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
+
+  const OnBoardingModel(
+      'Train your brain',
+      'Use the hourly notification as a reminder to use the next hour more productively.\n\n'
+      'Once you commit to improving your ratings, the brain automatically starts to train itself to stop wasting time and be more productive\n\n'
+      'Reach your life goals hour by hour\n',
+      'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
 ];
 
 class OnBoardingModel {

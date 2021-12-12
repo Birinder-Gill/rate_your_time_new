@@ -103,18 +103,22 @@ class _WeekViewStats extends StatelessWidget {
             })),
         // Text("Looks like monday was the most productive day of your week."),
         // Text("See what times were you most productive and doing what."),
-        Center(
-            child: RatingStars(
-          size: 50,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            RatingStars(
+              size: 32,
               rating: model.rating,
-        )),
-        OutlinedButton.icon(
-            onPressed: () {
-              showCupertinoModalPopup(
-                  context: context, builder: (c) => SelfAnalysisView());
-            },
-            icon: Icon(Icons.list_rounded),
-            label: Text("Self analysis")),
+            ),
+            OutlinedButton.icon(
+                onPressed: () {
+                  showCupertinoModalPopup(
+                      context: context, builder: (c) => SelfAnalysisView());
+                },
+                icon: Icon(Icons.list_rounded),
+                label: Text("Self analysis")),
+          ],
+        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: ActivityAverageCard(model.av),

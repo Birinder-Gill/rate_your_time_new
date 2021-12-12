@@ -37,7 +37,7 @@ class DayModel with ChangeNotifier {
       _loading = false;
     }
   }
-  updateHour(int id, int activity, String note) async {
+  updateHour(int id, int activity, String note,int rating) async {
     final body = {
       "id": id,
       'activity': activity,

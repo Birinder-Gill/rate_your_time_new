@@ -10,7 +10,7 @@ import 'package:rate_your_time_new/widgets/edit_hour_widget.dart';
 
 class HourWidget extends StatelessWidget {
   final Hour hour;
-  final void Function(int id, int activityId, String text) updateHour;
+  final void Function(int id, int activityId, String text,int rating) updateHour;
 
   static const _color = {
     0: Colors.grey,
@@ -30,7 +30,6 @@ class HourWidget extends StatelessWidget {
   };
 
   ThemeData theme;
-
 
   HourWidget(this.hour, {this.updateHour});
 
@@ -71,7 +70,7 @@ class HourWidget extends StatelessWidget {
                 border: const Border(
               left: const BorderSide(),
             )),
-            child: GestureDetector(
+            child: InkWell(
               onTap: () {
                 dialog(context, EditHourWidget(hour, updateHour: updateHour));
               },
@@ -90,7 +89,8 @@ class HourWidget extends StatelessWidget {
                               children: [
                                 Expanded(child: _worthWidget(hour)),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
                                   child: _activityIcon(context, hour),
                                 ),
                               ],
@@ -143,14 +143,13 @@ class HourWidget extends StatelessWidget {
           minHeight: 16,
           backgroundColor: theme.primaryColorLight,
           value: (hour.worth / 5),
-          valueColor: AlwaysStoppedAnimation(theme.primaryColorDark),);
+          valueColor: AlwaysStoppedAnimation(theme.primaryColorDark),
+        );
 
-  Widget _activityIcon(BuildContext context, Hour hour) =>
-        hour.activity != 0
-            ? FaIcon(activities[hour.activity].icon)
-            : Icon(
-                Icons.add,
-                size: 16,
-              );
-
+  Widget _activityIcon(BuildContext context, Hour hour) => hour.activity != 0
+      ? FaIcon(activities[hour.activity].icon)
+      : Icon(
+          Icons.add,
+          size: 16,
+        );
 }
