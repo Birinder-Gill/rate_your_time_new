@@ -56,44 +56,48 @@ class _FrontLayer extends StatelessWidget {
                 //   IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
                 Opacity(
                   opacity: model.animController.value,
-                  child: false?ToggleButtons(
-                      selectedColor: Theme.of(context).accentColor,
-                      onPressed: model.animController.value == 1
-                          ? model.changeViewToggle
-                          : null,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: FDelegate(
-                              title: 'Day view',
-                              description:
-                              'Day view shows your hourly rating for the selected day',
-                              featureId: 'calendar_view_day',
-                              child: Icon(Icons.calendar_view_day)),
-                        ),
-                       if(now.weekday>1) SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: FDelegate(
-                              title: 'Week View',
-                              description:
-                              'Week view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected week.',
-                              featureId: 'view_week',
-                              child: Icon(Icons.view_week)),
-                        ),
-                        if(now.day>1)SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: FDelegate(
-                              title: 'Month View',
-                              description:
-                              'Month view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected month.',
-                              featureId: 'date_range',
-                              child: Icon(Icons.date_range)),
-                        ),
-                      ],
-                      isSelected: model.selections):ViewToggle(),
+                  child: false
+                      ? ToggleButtons(
+                          selectedColor: Theme.of(context).accentColor,
+                          onPressed: model.animController.value == 1
+                              ? model.changeViewToggle
+                              : null,
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: FDelegate(
+                                  title: 'Day view',
+                                  description:
+                                      'Day view shows your hourly rating for the selected day',
+                                  featureId: 'calendar_view_day',
+                                  child: Icon(Icons.calendar_view_day)),
+                            ),
+                            if (now.weekday > 1)
+                              SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: FDelegate(
+                                    title: 'Week View',
+                                    description:
+                                        'Week view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected week.',
+                                    featureId: 'view_week',
+                                    child: Icon(Icons.view_week)),
+                              ),
+                            if (now.day > 1)
+                              SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: FDelegate(
+                                    title: 'Month View',
+                                    description:
+                                        'Month view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected month.',
+                                    featureId: 'date_range',
+                                    child: Icon(Icons.date_range)),
+                              ),
+                          ],
+                          isSelected: model.selections)
+                      : ViewToggle(),
                 ),
                 // if (model.toggle != 0)
                 //   IconButton(icon: Icon(Icons.chevron_right), onPressed: () {}),
@@ -173,9 +177,14 @@ class _BackdropTitle extends AnimatedWidget {
     //     : animation.isDismissed
     //     ? GalleryLocalizations.of(context).shrineTooltipCloseMenu
     //     : null;
-
+    print(Theme.of(context).colorScheme.brightness);
+    final theme = Theme.of(context);
     return DefaultTextStyle(
-      style: Theme.of(context).primaryTextTheme.headline6,
+      style: theme.primaryTextTheme.headline6.apply(
+            color: theme.colorScheme.brightness == Brightness.dark
+                ? theme.colorScheme.onSecondary
+                : theme.colorScheme.onPrimary,
+          ),
       softWrap: false,
       overflow: TextOverflow.ellipsis,
       child: Stack(
@@ -252,8 +261,7 @@ class _BackdropState extends State<Backdrop>
     super.initState();
     _controller = widget.controller;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
-      Timer(Duration(seconds: 1), (){
+      Timer(Duration(seconds: 1), () {
         _showFeatureOverlays();
       });
     });
@@ -342,16 +350,13 @@ class _BackdropState extends State<Backdrop>
 
     _layerAnimation = _getLayerAnimation(layerSize, layerTop);
 
+    final theme = Theme.of(context);
     return Stack(
       key: _backdropKey,
       children: [
         ExcludeSemantics(
           excluding: _frontLayerVisible,
-          child: Theme(
-              data: Theme.of(context).copyWith(
-                accentColor: Theme.of(context).colorScheme.secondary
-              ),
-              child: widget.backLayer),
+          child: widget.backLayer,
         ),
         PositionedTransition(
           rect: _layerAnimation,
@@ -376,7 +381,7 @@ class _BackdropState extends State<Backdrop>
 
   @override
   Widget build(BuildContext context) {
-     final appBar = AppBar(
+    final appBar = AppBar(
       leading: Builder(
           builder: (BuildContext c) => FDelegate(
                 featureId: 'menu',
@@ -399,9 +404,14 @@ class _BackdropState extends State<Backdrop>
         backTitle: widget.backTitle,
       ),
       actions: [
-        IconButton(icon: FaIcon(FontAwesomeIcons.chalkboardTeacher,size: 16,), onPressed: (){
-          _showFeatureOverlays();
-        }),
+        IconButton(
+            icon: FaIcon(
+              FontAwesomeIcons.chalkboardTeacher,
+              size: 16,
+            ),
+            onPressed: () {
+              _showFeatureOverlays();
+            }),
         FDelegate(
           featureId: 'add_event',
           description: "Click here to change date",
@@ -415,16 +425,28 @@ class _BackdropState extends State<Backdrop>
         ),
       ],
     );
+    final theme = Theme.of(context);
     return AnimatedBuilder(
       animation: PageStatus.of(context).cartController,
       builder: (context, child) => ExcludeSemantics(
         excluding: cartPageIsVisible(context),
-        child: Scaffold(
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          drawer: Drawer(child: SettingsScreen()),
-          appBar: appBar,
-          body: LayoutBuilder(
-            builder: _buildStack,
+        child: Theme(
+          data: theme.copyWith(
+            accentColor: theme.colorScheme.secondary,
+            colorScheme: theme.colorScheme.copyWith(
+              onPrimary: theme.colorScheme.onSecondary,
+
+                brightness: theme.colorScheme.brightness == Brightness.dark
+                    ? Brightness.light
+                    : Brightness.dark),
+          ),
+          child: Scaffold(
+            backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+            drawer: Drawer(child: SettingsScreen()),
+            appBar: appBar,
+            body: LayoutBuilder(
+              builder: _buildStack,
+            ),
           ),
         ),
       ),

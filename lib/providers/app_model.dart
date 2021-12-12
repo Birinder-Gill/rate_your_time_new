@@ -51,7 +51,7 @@ MyTheme(
         accentColor: Color(0xfffa5d00),
         textOnLight: Color(0xff242424),
         textOnDark: Color(0xffffffff),
-        isDark: false),
+        isDark: false,),
 
 
     MyTheme(
