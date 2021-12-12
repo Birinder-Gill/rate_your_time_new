@@ -26,36 +26,52 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
   @override
   Widget build(BuildContext context) {
     if (hoursModel == null) hoursModel = Provider.of<AppModel>(context);
-    if(widget.av.activities.isEmpty)
-      return SizedBox.shrink();
+    if (widget.av.activities.isEmpty) return SizedBox.shrink();
     final theme = Theme.of(context);
     return Card(
       child: Column(
         children: [
-          Text("Activities you spent most time spent on"),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            "Activities you spent most time spent on",
+            style: theme.textTheme.subtitle1.copyWith(
+                fontWeight: FontWeight.bold, color: theme.primaryColorDark),
+          ),
+          Divider(),
           for (final a in widget.av.activities)
             if (a.id != 16)
               if (widget.isWeek)
                 ExpansionTile(
-
-                  title: Text("$a",style: theme.textTheme.subtitle1,),
+                  title: Text(
+                    "$a",
+                    style: theme.textTheme.subtitle1,
+                  ),
                   initiallyExpanded: false,
                   children: [
                     SizedBox(
                       height: 200,
                       child: GroupedBarChart(
-                          List<SingleDayAverage>.generate(
-                              7,
-                              (index) => SingleDayAverage(
-                                  null,
-                                  widget.av.weekDayActivities[a.id][index + 1]
-                                          ?.toDouble() ??
-                                      0.0,
-                                  label: Utils.shortDays[index + 1])),),
+                        List<SingleDayAverage>.generate(
+                            7,
+                            (index) => SingleDayAverage(
+                                null,
+                                widget.av.weekDayActivities[a.id][index + 1]
+                                        ?.toDouble() ??
+                                    0.0,
+                                label: Utils.shortDays[index + 1])),
+                      ),
                     ),
                   ],
-                  subtitle: Text('${a.timeSpent}${_hrs(a.timeSpent)}',style: theme.textTheme.subtitle2,),
-                  leading: FaIcon(a.icon,color: Theme.of(context).primaryColorDark,),
+                  subtitle: Text(
+                    '${a.timeSpent}${_hrs(a.timeSpent)}',
+                    style: theme.textTheme.subtitle2,
+                  ),
+                  leading: FaIcon(
+                    a.icon,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
                 )
               else
                 ListTile(
@@ -111,18 +127,24 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
           appBar: AppBar(
             title: Text("Time spent on $a in $label"),
           ),
-          body: true? SizedBox(
-            height: 300,
-            child: GroupedBarChart(List<SingleDayAverage>.generate(
-                entries.length, (index) => SingleDayAverage(null, entries.elementAt(index).value.toDouble(),label: entries.elementAt(index).key.toString()))),
-          ):ListView(children: [
-            for (var i in entries)
-              ListTile(
-                title: Text(i.key.toString() + "-$label"),
-                trailing: Text("${i.value} ${i.value > 1 ? 'hrs' : 'hr'}"),
-                subtitle: Divider(),
-              )
-          ]),
+          body: true
+              ? SizedBox(
+                  height: 300,
+                  child: GroupedBarChart(List<SingleDayAverage>.generate(
+                      entries.length,
+                      (index) => SingleDayAverage(
+                          null, entries.elementAt(index).value.toDouble(),
+                          label: entries.elementAt(index).key.toString()))),
+                )
+              : ListView(children: [
+                  for (var i in entries)
+                    ListTile(
+                      title: Text(i.key.toString() + "-$label"),
+                      trailing:
+                          Text("${i.value} ${i.value > 1 ? 'hrs' : 'hr'}"),
+                      subtitle: Divider(),
+                    )
+                ]),
         ),
         dialog: true);
   }

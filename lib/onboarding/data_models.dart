@@ -18,7 +18,8 @@ const models = <OnBoardingModel>[
   const OnBoardingModel(
       'Refocus every hour',
       '${Constants.appName} gives you a notification every hour asking for a rating between 1 and 5.\n\n'
-      'When it rings, honestly rate your last hour based on how you think you spent it, now recommit to how you are going to use the next hour.\n\n',
+      'When it rings, honestly rate your last hour based on how you think you spent it.\n\n'
+      'Now recommit to how you are going to use the next hour.\n\n',
       'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
 
   const OnBoardingModel(
@@ -32,9 +33,10 @@ const models = <OnBoardingModel>[
 
   const OnBoardingModel(
       'Train your brain',
-      'Use the hourly notification as a reminder to use the next hour more productively.\n\n'
-      'Once you commit to improving your ratings, the brain automatically starts to train itself to stop wasting time and be more productive\n\n'
-      'Reach your life goals hour by hour\n',
+      'Use the hourly notification as a reminder to refocus and use the next hour more productively.\n\n'
+      'Once you commit to improving your ratings, your brain automatically trains itself to stop wasting time and be more productive\n\n'
+      'Improve your ratings day by day.\n'
+      'Reach your goals hour by hour',
       'https://www.freeiconspng.com/uploads/calendar-image-png-3.png'),
 ];
 
