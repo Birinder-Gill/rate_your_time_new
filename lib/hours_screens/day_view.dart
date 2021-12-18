@@ -59,8 +59,8 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                         if ((model.hours?.length ?? 0) == 0)
                           EmptyView(),
                         for (var i in model.hours)
-                          HourWidget(i, updateHour: (id, activityId, note,rating) {
-                            model.updateHour(id, activityId, note,rating);
+                          HourWidget(i, updateHour: (hour) {
+                            model.updateHour(hour);
                           }),
                         // GoalWidgetWrapper(),
                       ],

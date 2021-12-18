@@ -43,8 +43,8 @@ public class DataRepository implements DataSource {
     }
 
     @Override
-    public void updateHour(int id, int activity, String note, MethodChannel.Result result) {
-        dataSource.updateHour(id,activity,note,result);
+    public void updateHour(int id, int activity, String note,int worth, MethodChannel.Result result) {
+        dataSource.updateHour(id,activity,note,worth,result);
     }
 
     @Override

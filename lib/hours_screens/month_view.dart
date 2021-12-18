@@ -1,13 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/activity_av_card.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/app_usage_card.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_month_view.dart';
-import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/month_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -45,9 +41,21 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
     return Scaffold(
       body: Consumer<MonthModel>(
         builder: (BuildContext context, model, Widget child) {
+          final appModel = Provider.of<AppModel>(context, listen: false);
+          final date = appModel.frontLabel(MaterialLocalizations.of(context));
           return ListView(
             children: [
-              _MonthViewStats(model),
+              _MonthViewStats(
+                model,
+                date: date,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ActivityAverageCard(
+                  model.av,
+                  isWeek: false,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AppUsageCard(
@@ -65,6 +73,7 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
                           distinctApps: list,
                         ));
                   },
+                  date: date,
                 ),
               ),
             ],
@@ -78,94 +87,101 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
 class _MonthViewStats extends StatelessWidget {
   final MonthModel model;
 
-  // final bool firstDay;
+  final String date;
 
-  _MonthViewStats(this.model);
+
+  _MonthViewStats(this.model, {this.date});
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width - 16;
     if (!model.loaded) return simpleLoader();
     if (model.isEmpty) {
       return EmptyMonthView();
     }
     final primaryDark = Theme.of(context).primaryColorDark;
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Your time efficiency this month so far"),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Wrap(
-            children: [
-              for (final i in model.av.averages)
-                Container(
-
-                  padding: EdgeInsets.all(1),
-                  width: width / 5,
-                  height: 86,
-                  child: InkWell(
-                    onLongPress: () {
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (c) => AlertDialog(
-                      //           content: Text('$i'),
-                      //         ));
-                      final hm =
-                          Provider.of<AppModel>(context, listen: false);
-                      hm.changeViewToggle(0);
-                      hm.refresh(i.date);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [
-                            primaryDark
-                                .withOpacity((i.worth + i.pendingSales) / 5),
-                            if(!DateUtils.isSameDay(i.date, DateTime.now()))
-                            primaryDark
-                                .withOpacity((i.worth + i.pendingSales) / 5)
+    final gridHeight = _gridHeight(model.av.averages.length);
+    final theme = Theme.of(context);
+    return Card(
+      child: Column(
+        children: [
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Time efficiency for $date.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.subtitle1.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.primaryColorDark))),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: gridHeight,
+              child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: model.av.averages.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5, mainAxisExtent: 86),
+                  itemBuilder: (c, index) {
+                    final i = model.av.averages[index];
+                    return Container(
+                      padding: EdgeInsets.all(1),
+                      child: InkWell(
+                        onLongPress: () {
+                          final hm =
+                              Provider.of<AppModel>(context, listen: false);
+                          hm.changeViewToggle(0);
+                          hm.refresh(i.date);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  colors: [
+                                primaryDark.withOpacity(
+                                    (i.worth + i.pendingSales) / 5),
+                                if (!DateUtils.isSameDay(
+                                    i.date, DateTime.now()))
+                                  primaryDark.withOpacity(
+                                      (i.worth + i.pendingSales) / 5)
                                 else
-                              for(double w=0;w< i.whiteBlocks;w++)
-                                Theme.of(context).primaryColorLight,
-                          ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Text(
-                              "${i.date.day}",
-                              textAlign: TextAlign.center,
-                            ),
+                                  for (double w = 0; w < i.whiteBlocks; w++)
+                                    Theme.of(context).primaryColorLight,
+                              ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Text(
+                                  "${i.date.day}",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Text(
+                                  (i.worth + i.pendingSales) > 0
+                                      ? "${((i.worth + i.pendingSales) * 20).toInt()}%"
+                                      : ".",
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              Text("")
+                            ],
                           ),
-                          Text(
-                              (i.worth + i.pendingSales) > 0
-                                  ? "${((i.worth + i.pendingSales) * 20).toInt()}%"
-                                  : ".",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text("")
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                )
-            ],
+                    );
+                  }),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ActivityAverageCard(
-            model.av,
-            isWeek: false,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
+  }
+
+  double _gridHeight(int length) {
+    if (length % 5 == 0) {
+      return 86 * (length / 5);
+    }
+    return (86 * ((length ~/ 5) + 1)).toDouble();
   }
 }

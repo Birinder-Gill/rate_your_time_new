@@ -13,7 +13,7 @@ class EditHourWidget extends StatefulWidget {
   @override
   _EditHourWidgetState createState() => _EditHourWidgetState();
 
-  final void Function(int id, int activityId, String text, int rating)
+  final void Function(Hour hour)
       updateHour;
 }
 
@@ -101,8 +101,12 @@ class _EditHourWidgetState extends State<EditHourWidget> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        widget.updateHour(
-                            widget.hour.id, activityId, commentC.text, rating);
+                        final hour = widget.hour.copyWith(
+                          worth: rating,
+                          note: commentC.text,
+                          activity: activityId
+                        );
+                        widget.updateHour(hour);
                         Navigator.pop(context);
                       },
                       child: Text("Submit"),

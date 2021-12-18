@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rate_your_time_new/app_usage_tracker/detailed_report.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
-import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/models/average_app_usage_model.dart';
-import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class AppUsageCard extends StatelessWidget {
@@ -16,9 +12,20 @@ class AppUsageCard extends StatelessWidget {
 
   final void Function(List<UsageStat> stats) openDetails;
 
-  AppUsageCard(this.appUsage, this.accessGranted, {@required this.onRetry,this.openDetails});
+  final String date;
 
-  num get sum => appUsage.highApps.fold(0, (previousValue, element) => previousValue+element.totalTimeInForeground)+appUsage.otherApps.fold(0, (previousValue, element) => previousValue+element.totalTimeInForeground);
+  AppUsageCard(this.appUsage, this.accessGranted,
+      {@required this.onRetry, this.openDetails, @required this.date});
+
+  num get sum =>
+      appUsage.highApps.fold(
+          0,
+          (previousValue, element) =>
+              previousValue + element.totalTimeInForeground) +
+      appUsage.otherApps.fold(
+          0,
+          (previousValue, element) =>
+              previousValue + element.totalTimeInForeground);
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +35,40 @@ class AppUsageCard extends StatelessWidget {
     if (appUsage == null) return simpleLoader();
     if (appUsage.highApps?.isEmpty ?? true)
       return Center(
-          child: Text(
-        "Could not get app usage stats for this time period."
-        "\n If you're looking for app usage of single day, maybe go to App usage screen",
-        textAlign: TextAlign.center,
+          child: Column(
+        children: [
+          Text(
+            "Could not get app usage stats for this time period."
+            "\n If you're looking for app usage of single day, maybe go to App usage screen",
+            textAlign: TextAlign.center,
+          ),
+          OutlinedButton(
+              onPressed: () => openDetails(null),
+              child: Text("GOTO APP USAGE SCREEN"))
+        ],
       ));
-    final theme=Theme.of(context).textTheme;
+    final themeData = Theme.of(context);
+    final theme = themeData.textTheme;
     return Card(
       child: Column(
         children: [
-          Text('Total screen time this week: '),
+          SizedBox(
+            height: 16,
+          ),
+          Text('Total time spent using phone.\n($date)',
+              textAlign: TextAlign.center,
+              style: theme.subtitle1.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: themeData.primaryColorDark)),
           Text(
             TimeUtils.convertMillsToTime(sum),
             textAlign: TextAlign.center,
             style: theme.headline4,
           ),
-          Text('Most used apps',style: theme.headline6,),
+          Text(
+            'Most used apps',
+            style: theme.headline6,
+          ),
           for (final i in appUsage.highApps)
             ListTile(
               horizontalTitleGap: 0,
@@ -60,11 +85,20 @@ class AppUsageCard extends StatelessWidget {
               ),
             ),
           ListTile(
-            leading: Icon(Icons.apps),
-            title: Text("${appUsage.otherApps.length} other apps"),
+            title: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.apps),
+                ),
+                Text("${appUsage.otherApps.length} other apps"),
+              ],
+            ),
             trailing: OutlinedButton.icon(
               onPressed: () {
-                openDetails([...appUsage.highApps,...appUsage.otherApps],);
+                openDetails(
+                  [...appUsage.highApps, ...appUsage.otherApps],
+                );
               },
               icon: Text("Detailed report"),
               label: Icon(Icons.arrow_right),

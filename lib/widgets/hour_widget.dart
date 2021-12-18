@@ -1,35 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/data/activities.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
-import 'package:rate_your_time_new/providers/day_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/edit_hour_widget.dart';
 
 class HourWidget extends StatelessWidget {
   final Hour hour;
-  final void Function(int id, int activityId, String text,int rating) updateHour;
+  final void Function(Hour hour) updateHour;
 
-  static const _color = {
-    0: Colors.grey,
-    1: Colors.red,
-    2: Color(0xffbf360c),
-    3: Colors.orange,
-    4: Colors.lightGreen,
-    5: Colors.green
-  };
+  // static const _color = {
+  //   0: Colors.grey,
+  //   1: Colors.red,
+  //   2: Color(0xffbf360c),
+  //   3: Colors.orange,
+  //   4: Colors.lightGreen,
+  //   5: Colors.green
+  // };
 
-  static const _emojis = {
-    1: Icons.face_outlined,
-    2: Icons.face_outlined,
-    3: Icons.face_outlined,
-    4: Icons.tag_faces_sharp,
-    5: Icons.emoji_emotions_rounded
-  };
+  // static const _emojis = {
+  //   1: Icons.face_outlined,
+  //   2: Icons.face_outlined,
+  //   3: Icons.face_outlined,
+  //   4: Icons.tag_faces_sharp,
+  //   5: Icons.emoji_emotions_rounded
+  // };
 
-  ThemeData theme;
 
   HourWidget(this.hour, {this.updateHour});
 
@@ -37,10 +34,9 @@ class HourWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    theme = Theme.of(context);
+    final theme = Theme.of(context);
     final primaryDark = theme.primaryColorDark;
-    final double emojiSize = 14;
-    return Row(
+     return Row(
       children: [
         Container(
           height: 100,
@@ -87,7 +83,7 @@ class HourWidget extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Expanded(child: _worthWidget(hour)),
+                                Expanded(child: _worthWidget(hour,theme)),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
@@ -137,7 +133,7 @@ class HourWidget extends StatelessWidget {
         height: i,
       );
 
-  Widget _worthWidget(Hour hour) => hour.worth == 0
+  Widget _worthWidget(Hour hour, ThemeData theme) => hour.worth == 0
       ? _emptyWorthCard(theme)
       : LinearProgressIndicator(
           minHeight: 16,

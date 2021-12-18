@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/providers/app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/test_screen.dart';
 import 'package:rate_your_time_new/widgets/finance_entity.dart';
+import 'package:rate_your_time_new/widgets/graphs/pie%20chart.dart';
 import 'package:rate_your_time_new/widgets/pie_chart.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -40,8 +43,6 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   DateTime to, from;
 
-  bool datesChanged = false;
-
   double get sum =>
       sumOf<UsageStat>(distinctApps, (e) => e.totalTimeInForeground);
 
@@ -65,7 +66,6 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     } catch (e) {
       error = true;
     }
-    datesChanged = false;
     setState(() {
       loading = false;
     });
@@ -96,11 +96,32 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).textTheme;
+    final themeData = Theme.of(context);
+    final theme = themeData.textTheme;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        actions: [],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 8.0),
+            child: TextButton.icon(
+              onPressed: pickFromDate,
+              label: Text(
+                "${_label(from)} - ${_label(to)}",
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    .copyWith(
+                    color:
+                    themeData.accentColor),
+              ),
+              icon: Icon(Icons.edit,
+                  size: 16,
+                  color: themeData.accentColor),
+            ),
+          ),
+        ],
       ),
       body: !granted
           ? gotoSettingsView()
@@ -112,103 +133,134 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                       child: ListView(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              // height: 100,
+                            padding: const EdgeInsets.all(0),
+                            child: Material(
+                              elevation: 12,
+                              color: themeData.primaryColorDark,
+                              // borderRadius:
+                              //     BorderRadius.all(Radius.circular(12)),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.center,
                                     children: [
-                                      OutlinedButton.icon(
-                                        onPressed: pickFromDate,
-                                        label: Text(
-                                          "${_label(from)} - ${_label(to)}",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5,
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0),
+                                        child: Text(
+                                          "Total screen time",
+                                          textAlign: TextAlign.center,
+                                          style: theme.subtitle1.copyWith(
+                                              color: themeData
+                                                  .colorScheme.onSecondary),
                                         ),
-                                        icon: Icon(Icons.edit),
                                       ),
-                                      datesChanged
-                                          ? ElevatedButton(
-                                              onPressed: getApps,
-                                              child: Text("Get stats"))
-                                          : FloatingActionButton(
-                                              child: Icon(
-                                                Icons.refresh,
-                                              ),
-                                              onPressed: getApps,
-                                              mini: true,
-                                              backgroundColor: Theme.of(context).accentColor,
-                                            )
                                     ],
                                   ),
+                                  // Divider(),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        TimeUtils.convertMillsToTime(sum),
+                                        textAlign: TextAlign.center,
+                                        style: theme.headline3.copyWith(
+                                            color: themeData
+                                                .colorScheme.onSecondary),
+                                      ),
+                                      IconButton(
+                                        iconSize: 36,
+                                        icon: Icon(
+                                          Icons.refresh,
+                                          color: Theme.of(context).accentColor,
+                                        ),
+                                        onPressed: getApps,
+                                        // mini: true,
+                                        // backgroundColor:
+                                        //     Theme.of(context).accentColor,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 24,
+                                  )
                                 ],
                               ),
                             ),
                           ),
-                          Text(
-                            "Time spent on mobile",
-                            textAlign: TextAlign.center,
-                            style: theme.headline5,
+                          _categoryGraph(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Text('Most used apps'),
+                                for(final e in [0,1])
+                                Row(
+                                  children: [
+                                    for(final i in [0,1])
+                                    Expanded(
+                                      child: Material(
+                                        elevation: 4,
+                                        child: ListTile(
+                                            leading: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child:
+                                                  Image.memory(distinctApps[int.parse('$e$i',radix: 2)].appLogo),
+                                            ),
+                                            title: Text(
+                                              TimeUtils.convertMillsToTime(
+                                                distinctApps[int.parse('$e$i',radix: 2)].totalTimeInForeground,
+                                              ),
+                                              style: theme.bodyText1.copyWith(
+                                                  color: themeData.accentColor),
+                                            )),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            TimeUtils.convertMillsToTime(sum),
-                            textAlign: TextAlign.center,
-                            style: theme.headline4,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                                height: 200,
+                                child: DatumLegendWithMeasures.withSampleData()),
                           ),
-                          Text('in last 24 hrs', textAlign: TextAlign.center),
-                          // if (distinctApps.isNotEmpty)
-                          //   Container(
-                          //     height: 200,
-                          //     width: MediaQuery.of(context).size.width,
-                          //     child: RallyPieChart(
-                          //       heroLabel: "",
-                          //       wholeAmount: sum,
-                          //       heroAmount: '',
-                          //       segments: distinctApps
-                          //           .sublist(0, 4)
-                          //           .map(
-                          //             (e) => RallyPieChartSegment(
-                          //                 color: e.color,
-                          //                 value: e.totalTimeInForeground
-                          //                     .toDouble()),
-                          //           )
-                          //           .toList(),
-                          //     ),
-                          //   ),
+                          Center(child: Text('All apps')),
                           for (UsageStat i in distinctApps ?? [])
                             if (i.package.contains(search) ||
                                 i.appName.contains(search))
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ListTile(
-                                    subtitle: Text(
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 4),
+                                child: Card(
+                                  // elevation: 2,
+                                  child: ListTile(
+                                    trailing: Text(
                                       TimeUtils.convertMillsToTime(
                                         i.totalTimeInForeground,
                                       ),
+                                      style: theme.bodyText1.copyWith(
+                                          color: themeData.accentColor),
                                     ),
                                     title: Text(
-                                      i.appName,
+                                      "${i.appName}",
                                       style: theme.headline6,
                                     ),
-                                    trailing: SizedBox(
-                                      width: 100,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: LinearProgressIndicator(
-                                          value: i.totalTimeInForeground / sum,
-                                          minHeight: 14,
-                                          valueColor: AlwaysStoppedAnimation(
-                                              primaryDark),
-                                          backgroundColor:
-                                              Theme.of(context).primaryColor,
-                                        ),
+                                    subtitle: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: LinearProgressIndicator(
+                                        value: i.totalTimeInForeground / sum,
+                                        minHeight: 8,
+                                        valueColor:
+                                            AlwaysStoppedAnimation(primaryDark),
+                                        backgroundColor:
+                                            themeData.scaffoldBackgroundColor,
                                       ),
                                     ),
                                     leading: Padding(
@@ -217,12 +269,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                     ),
                                     // horizontalTitleGap: 0,
                                   ),
-                                  const Divider(
-                                    height: 16,
-                                    indent: 16,
-                                    endIndent: 16,
-                                  ),
-                                ],
+                                ),
                               ),
                         ],
                       ),
@@ -247,7 +294,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     ));
   }
 
-  _errorView() => Center(child: Text("An error occured"));
+  _errorView() => Center(child: Text("An error occurred"));
 
   String _label(DateTime date) => date == null
       ? "-/-"
@@ -259,13 +306,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     showDateRangePicker(
             builder: (context, child) => Theme(
                 data: theme.copyWith(
-                    colorScheme:c.copyWith(
-                      onSurface: c.secondaryVariant,
-                      primary: c.primaryVariant,
-                      brightness: Brightness.light,
-                      onPrimary: c.onSecondary,
-                      onSecondary: c.onPrimary
-                    )),
+                    colorScheme: c.copyWith(
+                        onSurface: c.secondaryVariant,
+                        primary: c.primaryVariant,
+                        brightness: Brightness.light,
+                        onPrimary: c.onSecondary,
+                        onSecondary: c.onPrimary)),
                 child: child),
             context: context,
             initialDateRange: DateTimeRange(start: from, end: to),
@@ -274,13 +320,16 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
         .then((value) {
       if (value != null) {
         if (value.start != from || value.end != to) {
-          datesChanged = true;
           from = value.start;
           to = value.end;
-          setState(() {});
+          getApps();
         }
       }
     });
+  }
+
+  _categoryGraph() {
+    return SizedBox.shrink();
   }
 }
 

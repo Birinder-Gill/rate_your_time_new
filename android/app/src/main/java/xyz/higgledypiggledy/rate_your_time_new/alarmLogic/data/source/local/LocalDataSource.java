@@ -130,11 +130,11 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override
-    public void updateHour(int id, int activity, String note, MethodChannel.Result result) {
+    public void updateHour(int id, int activity, String note,int worth, MethodChannel.Result result) {
         executors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                dao.updateHour(id,activity,note);
+                dao.updateHour(id,activity,note,worth);
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
                     public void run() {

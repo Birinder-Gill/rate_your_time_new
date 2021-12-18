@@ -37,7 +37,7 @@ public interface DataSource
     ///GET DATA FOR THIS MONTH
     void getMonthData(Calendar cal, RangeProgressCallback success);
 
-    void updateHour(int id, int activity, String note, MethodChannel.Result result);
+    void updateHour(int id, int activity, String note,int worth, MethodChannel.Result result);
 
     void getRunningApps(final Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback);
 

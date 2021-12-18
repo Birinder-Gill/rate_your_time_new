@@ -14,7 +14,6 @@ class DayModel with ChangeNotifier {
   double average = 0.0;
 
   final DateTime date;
-  AverageDataModel av;
   bool loaded = false;
 
   Map hd = {};
@@ -31,36 +30,34 @@ class DayModel with ChangeNotifier {
       consoleLog("Hours returned = $hours");
 
       setData(hours);
-    } catch (e,trace) {
+    } catch (e, trace) {
       consoleLog("Error Caught = $e,$trace");
     } finally {
       _loading = false;
     }
   }
-  updateHour(int id, int activity, String note,int rating) async {
+
+  updateHour(Hour hour) async {
     final body = {
-      "id": id,
-      'activity': activity,
-      'note': note
+      "id": hour.id,
+      'activity': hour.activity,
+      'note': hour.note,
+      'worth': hour.worth
     };
     consoleLog("Calling updTE hours with body $body");
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     await channel.invokeMethod(Constants.updateHour, body);
-    hours.singleWhere((element) => element.id == id).update(
-        activity: activity, note: note);
-    AverageModel.clearCache();
+    _updateInMemory(hour);
+    _calculateAverage();
     notifyListeners();
   }
+
   void setData(hoursJson) {
     if (hoursJson == null) this.hours = [];
     try {
       this.hours =
-      List<Hour>.from(hoursJson.map((e) => Hour.fromJson(jsonEncode(e))));
-      Iterable<Hour> setHours = hours.where((element) => element.worth > 0);
-      if (setHours.isNotEmpty)
-        average = sumOf<Hour>(setHours, (e) => (e.worth / 5)) / setHours.length;
-      else
-        average = 0.0;
+          List<Hour>.from(hoursJson.map((e) => Hour.fromJson(jsonEncode(e))));
+      _calculateAverage();
     } catch (e) {
       consoleLog("Error caught in setData ${e.stackTrace}");
       this.hours = [];
@@ -69,4 +66,19 @@ class DayModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void _updateInMemory(Hour hour) {
+    hours
+        .singleWhere((element) => element.id == hour.id)
+        .update(activity: hour.activity, note: hour.note, worth: hour.worth);
+    AverageModel.clearCache();
+  }
+
+  void _calculateAverage() {
+    Iterable<Hour> setHours = hours.where((element) => element.worth > 0);
+    if (setHours.isNotEmpty) {
+      average = sumOf<Hour>(setHours, (e) => (e.worth / 5)) / setHours.length;
+    } else {
+      average = 0.0;
+    }
+  }
 }

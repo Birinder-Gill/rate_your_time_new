@@ -29,7 +29,7 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.black, body: SleepPage());
+    // return Scaffold(backgroundColor: Colors.black, body: SleepPage());
     // return SearchPage();
     // return Scaffold(
     //   body: Column(
@@ -106,42 +106,47 @@ class _TestScreenState extends State<TestScreen> {
                 pushTo(context, HomeScreen());
               },
             ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Neumorphic(
-                style: NeumorphicStyle(
-                    color: Theme.of(context).primaryColor,
-                    shadowDarkColor: Colors.black,
-                    shadowLightColor: Colors.white,
-                    shape: NeumorphicShape.convex,
-                    shadowDarkColorEmboss: Colors.black,
-                    boxShape: NeumorphicBoxShape.rect(),
-                    shadowLightColorEmboss: Colors.white,
-                    depth: slideVal),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 16),
-                      child: Text("2:00 am"),
-                    ),
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: true
-                          ? NeumorphicProgress(
-                              percent: .7,
-                              style: ProgressStyle(
-                                depth: slideVal,
-                                accent: Theme.of(context).accentColor,
-                                variant: Theme.of(context).accentColor,
+            Transform.rotate(
+              angle: pi + pi/2,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Neumorphic(
+                  style: NeumorphicStyle(
+                      color: Theme.of(context).primaryColor,
+                      shadowDarkColor: Colors.black,
+                      shadowLightColor: Colors.white,
+                      shape: NeumorphicShape.convex,
+                      shadowDarkColorEmboss: Colors.black,
+                      boxShape: NeumorphicBoxShape.rect(),
+                      shadowLightColorEmboss: Colors.white,
+                      depth: slideVal),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 16),
+                        child: Text("2:00 am"),
+                      ),
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: true
+                            ? NeumorphicProgress(
+                                percent: .7,
+                                height: 16,
+
+                                style: ProgressStyle(
+                                  depth: slideVal,
+                                  accent: Theme.of(context).accentColor,
+                                  variant: Theme.of(context).accentColor,
+                                ),
+                              )
+                            : LinearProgressIndicator(
+                                value: .45,
                               ),
-                            )
-                          : LinearProgressIndicator(
-                              value: .45,
-                            ),
-                    ))
-                  ],
+                      ))
+                    ],
+                  ),
                 ),
               ),
             )

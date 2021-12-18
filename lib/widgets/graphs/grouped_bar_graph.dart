@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 /// Bar chart example
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -14,7 +13,10 @@ class GroupedBarChart extends StatelessWidget {
 
   final List<bool> tapped = [false];
 
-  GroupedBarChart(this.av, {this.animate, this.onBarSelected});
+  final bool showLabel;
+
+  GroupedBarChart(this.av,
+      {this.animate, this.onBarSelected, this.showLabel = true});
 
   // factory GroupedBarChart.withHoursData(
   //     List<SingleDayAverage> av, void Function(int index) onBarSelected) {
@@ -25,8 +27,6 @@ class GroupedBarChart extends StatelessWidget {
   //   );
   // }
 
-
-
   @override
   Widget build(BuildContext context) {
     final barColor = Theme.of(context).primaryColorDark;
@@ -34,12 +34,17 @@ class GroupedBarChart extends StatelessWidget {
       _createSampleData(barColor),
       animate: animate,
       barRendererDecorator: charts.BarLabelDecorator<String>(
-        insideLabelStyleSpec: charts.TextStyleSpec(color: charts.Color.transparent),
-        outsideLabelStyleSpec: charts.TextStyleSpec(fontSize: 8,fontWeight: '900',),
+        insideLabelStyleSpec:
+            charts.TextStyleSpec(color: charts.Color.transparent),
+        outsideLabelStyleSpec: charts.TextStyleSpec(
+          fontSize: 8,
+          fontWeight: '900',
+        ),
       ),
       barGroupingType: charts.BarGroupingType.stacked,
       selectionModels: [
-        charts.SelectionModelConfig(updatedListener: (charts.SelectionModel model) {
+        charts.SelectionModelConfig(
+            updatedListener: (charts.SelectionModel model) {
           if (model.hasDatumSelection && onBarSelected != null) {
             if (!tapped[0]) {
               tapped[0] = true;
@@ -70,7 +75,8 @@ class GroupedBarChart extends StatelessWidget {
   }
 
   /// Create series list with multiple series
-  List<charts.Series<SingleDayAverage, String>> _createSampleData(Color barColor) {
+  List<charts.Series<SingleDayAverage, String>> _createSampleData(
+      Color barColor) {
     final now = DateTime.now();
     List<SingleDayAverage> charter = av.map((element) {
       if (!DateUtils.isSameDay(element.date, now))
@@ -81,8 +87,9 @@ class GroupedBarChart extends StatelessWidget {
       new charts.Series<SingleDayAverage, String>(
           id: 'tv',
           domainFn: (SingleDayAverage sales, _) =>
-          sales.label ?? Utils.shortDays[sales.date.weekday],
-          labelAccessorFn: (t,i)=>av[i].worth>0?"${av[i].worth.toInt()}h":'',
+              sales.label ?? Utils.shortDays[sales.date.weekday],
+          labelAccessorFn: (t, i) =>
+              (showLabel && av[i].worth > 0) ? "${av[i].worth.toInt()}h" : '',
           measureFn: (SingleDayAverage sales, _) =>
               sales.worth > 0 ? sales.worth : 0,
           data: charter,
@@ -93,7 +100,7 @@ class GroupedBarChart extends StatelessWidget {
               : charts.FillPatternType.solid),
       new charts.Series<SingleDayAverage, String>(
         id: 'mobile',
-        labelAccessorFn: (t,i)=>'',
+        labelAccessorFn: (t, i) => '',
         fillColorFn: (d, i) => charts.ColorUtil.fromDartColor(barColor),
         domainFn: (SingleDayAverage sales, _) =>
             sales.label ?? Utils.shortDays[sales.date.weekday],
@@ -118,10 +125,10 @@ class SingleDayAverage {
 
   SingleDayAverage(this.date, this.worth,
       {this.pendingSales = 0.0,
-        // this.filledRegion = 0,
-        this.label});
+      // this.filledRegion = 0,
+      this.label});
 
-  double get whiteBlocks => (pendingSales/(worth+pendingSales))*5;
+  double get whiteBlocks => (pendingSales / (worth + pendingSales)) * 5;
 
   SingleDayAverage copyWith(
           {DateTime date,

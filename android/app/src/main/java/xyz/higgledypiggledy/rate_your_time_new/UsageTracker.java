@@ -5,6 +5,7 @@ import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -36,6 +37,7 @@ public class UsageTracker {
             @Override
             public void run() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    PackageManager pm = context.getPackageManager();
                     UsageStatsManager mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
 
                     Calendar fromC = Calendar.getInstance();
@@ -59,6 +61,10 @@ public class UsageTracker {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             map.put("TotalTimeVisible", u.getTotalTimeVisible());
                         }
+                        final String cat = getAppInfo(pm,u.getPackageName(),context);
+                        if(cat !=null){
+                            map.put("category", cat);
+                        }
                         map.put("appName", getAppName(context, u.getPackageName()));
                         if (u.getTotalTimeInForeground() > 0 && hasLauncher(context, u.getPackageName())) {
                             String logo=getAppLogo(context, u.getPackageName());
@@ -79,6 +85,20 @@ public class UsageTracker {
                 });
             }
         });
+    }
+
+    private static String getAppInfo(PackageManager pm,String packageName, Context context) {
+        try {
+            ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                int appCategory = applicationInfo.category;
+                return (String) ApplicationInfo.getCategoryTitle(context, appCategory);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     private static boolean hasLauncher(Context context, String packageName) {

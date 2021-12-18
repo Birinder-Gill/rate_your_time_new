@@ -42,9 +42,9 @@ class _AboutPageContent extends StatelessWidget {
   final title = 'Intention:';
   final points = [
     'How often do you find yourself thinking "Where did all that time go?"',
-    "Sometimes you fail to achieve your goals or targets even though you think you're working hard.",
+    "Sometimes people fail to achieve their goals or targets even though they think they're working hard.",
     'Most people fail to realise how much of there time actually gets wasted during the day.',
-    '${Constants.appName} was developed with an intention to provide you a tool to assess every hour of your time and train your brain to stay focused through out the day and make everyday more productive.'
+    '${Constants.appName} was developed with an intention to provide you a tool to assess every hour of your time and train your brain to stay focused through out the day.'
   ];
   final buttonText = 'How this works';
 

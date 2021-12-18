@@ -26,7 +26,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
   @override
   Widget build(BuildContext context) {
     if (hoursModel == null) hoursModel = Provider.of<AppModel>(context);
-    if (widget.av.activities.isEmpty) return SizedBox.shrink();
+    if (widget.av?.activities?.isEmpty??true) return SizedBox.shrink();
     final theme = Theme.of(context);
     return Card(
       child: Column(
@@ -111,7 +111,8 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                       leading: FaIcon(a.icon),
                     ),
                 ],
-              )
+              ),
+          SizedBox(height: 16,)
         ],
       ),
     );
@@ -127,8 +128,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
           appBar: AppBar(
             title: Text("Time spent on $a in $label"),
           ),
-          body: true
-              ? SizedBox(
+          body:  SizedBox(
                   height: 300,
                   child: GroupedBarChart(List<SingleDayAverage>.generate(
                       entries.length,
@@ -136,15 +136,6 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                           null, entries.elementAt(index).value.toDouble(),
                           label: entries.elementAt(index).key.toString()))),
                 )
-              : ListView(children: [
-                  for (var i in entries)
-                    ListTile(
-                      title: Text(i.key.toString() + "-$label"),
-                      trailing:
-                          Text("${i.value} ${i.value > 1 ? 'hrs' : 'hr'}"),
-                      subtitle: Divider(),
-                    )
-                ]),
         ),
         dialog: true);
   }

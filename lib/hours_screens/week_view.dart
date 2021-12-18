@@ -45,24 +45,42 @@ class WeekViewScreen extends StatefulWidget {
 class _WeekViewScreenState extends State<WeekViewScreen> {
   @override
   Widget build(BuildContext context) {
+    final appModel = Provider.of<AppModel>(context, listen: false);
+    final date =
+    appModel.frontLabel(MaterialLocalizations.of(context));
     return Scaffold(
       body: Consumer<WeekModel>(
         builder: (BuildContext context, model, Widget child) {
           return SingleChildScrollView(
             child: Column(
               children: [
-                _WeekViewStats(model),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: AppUsageCard(model.appUsage, model.accessGranted, onRetry:() {
-                    model.refresh(hours: false);
-                  },openDetails: (list)async{
-                    pushTo(context, AppsUsageScreen(
-                      from: await TimeUtils.getWeekStart(model.date),
-                      to: await TimeUtils.getWeekEnd(model.date),
-                      distinctApps: list,
-                    ));
-                  },),
+                  child: _WeekViewStats(model,date: date,),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ActivityAverageCard(model.av),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppUsageCard(
+                    model.appUsage,
+                    model.accessGranted,
+                    onRetry: () {
+                      model.refresh(hours: false);
+                    },
+                    openDetails: (list) async {
+                      pushTo(
+                          context,
+                          AppsUsageScreen(
+                            from: await TimeUtils.getWeekStart(model.date),
+                            to: await TimeUtils.getWeekEnd(model.date),
+                            distinctApps: list,
+                          ));
+                    },
+                    date:date,
+                  ),
                 ),
                 SizedBox(
                   height: 24,
@@ -79,9 +97,11 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
 class _WeekViewStats extends StatelessWidget {
   final WeekModel model;
 
+  final String date;
+
   // final bool firstDay;
 
-  _WeekViewStats(this.model);
+  _WeekViewStats(this.model,{this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -89,43 +109,44 @@ class _WeekViewStats extends StatelessWidget {
     if (model.isEmpty) {
       return EmptyWeekView();
     }
-    return Column(
-      children: [
-        ListTile(
-            title:
-                Text('Average of hourly ratings given by yourself this week.')),
-        Container(
-            height: 300,
-            child: GroupedBarChart(model.av.averages,onBarSelected: (i) {
-              final hm = Provider.of<AppModel>(context, listen: false);
-              hm.changeViewToggle(0);
-              hm.refresh(model.av.averages[i].date);
-            })),
-        // Text("Looks like monday was the most productive day of your week."),
-        // Text("See what times were you most productive and doing what."),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            RatingStars(
-              size: 32,
-              rating: model.rating,
-            ),
-            OutlinedButton.icon(
-                onPressed: () {
-                  showCupertinoModalPopup(
-                      context: context, builder: (c) => SelfAnalysisView());
-                },
-                icon: Icon(Icons.list_rounded),
-                label: Text("Self analysis")),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ActivityAverageCard(model.av),
-        ),
-        // Text(
-        //     "You are only concentrating on work, you need to balance between every activity")
-      ],
+    final theme = Theme.of(context);
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+              title:
+                  Text('Averages of hourly ratings for $date.',
+                      textAlign: TextAlign.center,
+                      style:theme.textTheme.subtitle1.copyWith(
+                          fontWeight: FontWeight.bold, color: theme.primaryColorDark))),
+          Container(
+              height: 300,
+              child: GroupedBarChart(model.av.averages, onBarSelected: (i) {
+                final hm = Provider.of<AppModel>(context, listen: false);
+                hm.changeViewToggle(0);
+                hm.refresh(model.av.averages[i].date);
+              }, showLabel: false)),
+          // Text("Looks like monday was the most productive day of your week."),
+          // Text("See what times were you most productive and doing what."),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              RatingStars(
+                size: 32,
+                rating: model.rating,
+              ),
+              OutlinedButton.icon(
+                  onPressed: () {
+                    showCupertinoModalPopup(
+                        context: context, builder: (c) => SelfAnalysisView());
+                  },
+                  icon: Icon(Icons.list_rounded),
+                  label: Text("Self analysis")),
+            ],
+          ),
+          SizedBox(height: 16,)
+        ],
+      ),
     );
   }
 }

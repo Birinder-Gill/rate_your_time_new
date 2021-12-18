@@ -22,8 +22,8 @@ public interface ProgressDao{
     @Insert
     void addHour(Hour hour);
 
-    @Query("UPDATE entries SET activity=:activity, note=:note WHERE id=:id")
-    void updateHour(int id,int activity,String note);
+    @Query("UPDATE entries SET activity=:activity, note=:note, worth=:worth WHERE id=:id")
+    void updateHour(int id,int activity,String note,int worth);
     
     @Query("SELECT * FROM goals WHERE date = :day AND month = :month AND year = :year")
     List<Goal> getGoalFor(int day, int month, int year);

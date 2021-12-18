@@ -74,8 +74,8 @@ public class MockDataSource implements DataSource {
     }
 
     @Override
-    public void updateHour(int id, int activity, String note, MethodChannel.Result result) {
-        Log.d(TAG, "updateHour() called with: id = [" + id + "], activity = [" + activity + "], note = [" + note + "], result = [" + result + "]");
+    public void updateHour(int id, int activity, String note,int worth, MethodChannel.Result result) {
+        Log.d(TAG, "updateHour() called with: id = [" + id + "], activity = [" + activity + "], note = [" + note + "], worth = [" + worth + "], result = [" + result + "]");
     }
 
     @Override

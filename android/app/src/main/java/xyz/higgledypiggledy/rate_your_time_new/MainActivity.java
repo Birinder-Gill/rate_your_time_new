@@ -210,7 +210,7 @@ public class MainActivity extends FlutterActivity {
                     return;
                 }
                 case "updateHour": {
-                    updateHour(call.argument("id"), call.argument("activity"), call.argument("note"), result);
+                    updateHour(call.argument("id"), call.argument("activity"), call.argument("note"), call.argument("worth"), result);
                     return;
                 }
                 case "openAppSettings": {
@@ -240,8 +240,8 @@ public class MainActivity extends FlutterActivity {
         getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().apply();
     }
 
-    private void updateHour(int id, int activity, String note, MethodChannel.Result result) {
-        Injection.provideRepository(getApplicationContext()).updateHour(id, activity, note, result);
+    private void updateHour(int id, int activity, String note,int worth, MethodChannel.Result result) {
+        Injection.provideRepository(getApplicationContext()).updateHour(id, activity, note,worth, result);
 
     }
 

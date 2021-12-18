@@ -108,7 +108,7 @@ class AppModel with ChangeNotifier {
 
   void _manageTodayCases() {
     final now = DateTime.now();
-    if(DateUtils.isSameDay(this.date, now)){
+    if (DateUtils.isSameDay(this.date, now)) {
       if (toggle == 1 && this.date.weekday == 1) {
         toggle = 0;
       }
@@ -139,6 +139,27 @@ class Hour {
   int activity;
   String note;
 
+  Hour copyWith({
+    int date,
+    int month,
+    int year,
+    int id,
+    int time,
+    int worth,
+    int activity,
+    String note,
+  }) =>
+      Hour(
+        date: date ?? this.date,
+        month: month ?? this.month,
+        year: year ?? this.year,
+        id: id ?? this.id,
+        time: time ?? this.time,
+        worth: worth ?? this.worth,
+        activity: activity ?? this.activity,
+        note: note ?? this.note,
+      );
+
   factory Hour.fromJson(String str) => Hour.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
@@ -165,8 +186,9 @@ class Hour {
         "note": note
       };
 
-  void update({int activity, String note}) {
+  void update({int activity, String note,int worth}) {
     this.activity = activity;
     this.note = note;
+    this.worth = worth;
   }
 }

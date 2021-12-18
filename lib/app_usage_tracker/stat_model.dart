@@ -17,7 +17,7 @@ class UsageStat {
   Uint8List appLogo;
 
   Color color;
-
+/**CATEGORY_UNDEFINED, CATEGORY_GAME, CATEGORY_AUDIO, CATEGORY_VIDEO, CATEGORY_IMAGE, CATEGORY_SOCIAL, CATEGORY_NEWS, CATEGORY_MAPS, CATEGORY_PRODUCTIVITY, or CATEGORY_ACCESSIBILITY*/
   UsageStat({
     this.lastTimeStamp,
     this.package,
@@ -25,7 +25,7 @@ class UsageStat {
     this.totalTimeVisible,
     this.firstTimeStamp,
     this.lastTimeUsed,
-    this.totalTimeInForeground, this.appLogo, this.color,
+    this.totalTimeInForeground, this.appLogo, this.color,this.category
   });
 
   int lastTimeStamp;
@@ -34,6 +34,7 @@ class UsageStat {
   int firstTimeStamp;
   int lastTimeUsed;
   int totalTimeInForeground;
+  String category;
 
   factory UsageStat.fromJson(String str) => UsageStat.fromMap(json.decode(str));
 
@@ -49,7 +50,8 @@ class UsageStat {
     lastTimeUsed: json["LastTimeUsed"] == null ? null : json["LastTimeUsed"],
     totalTimeInForeground: json["TotalTimeInForeground"] == null ? null : json["TotalTimeInForeground"],
     appName: json["appName"] == null ? 'null' : json["appName"],
-      color:json["color"] == null ? null : Color(int.parse(json["color"].replaceAll("#", '0xff')))
+      color:json["color"] == null ? null : Color(int.parse(json["color"].replaceAll("#", '0xff'))),
+      category:json['category']
   );
     try{
       stat.appLogo= json["appLogo"] == null ? Uint8List(0) : base64.decode(json["appLogo"]);
@@ -71,6 +73,7 @@ class UsageStat {
     "LastTimeUsed": lastTimeUsed == null ? null : lastTimeUsed,
     "TotalTimeInForeground": totalTimeInForeground == null ? null : totalTimeInForeground,
     "appName":appName,
+    'category':category
     // "appLogo":base64.encode(appLogo),
   };
 }

@@ -12,6 +12,7 @@ class EmptyView extends StatelessWidget {
     return _emptyView(context);
   }
   Widget _emptyView(BuildContext context) {
+    final model = Provider.of<AppModel>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -23,7 +24,7 @@ class EmptyView extends StatelessWidget {
           color: Theme.of(context).primaryColorDark.withOpacity(0.6),
         ),
         Text(
-          "No data found",
+          "No data found for\n${model.frontLabel(MaterialLocalizations.of(context))}",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5,
         ),
@@ -34,19 +35,19 @@ class EmptyView extends StatelessWidget {
           child: Opacity(
             opacity: .7,
             child: Text(
-              "No data for this date, please choose another date.",
+              "Please choose another date.",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.caption,
             ),
           ),
         ),
 
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 12,
+        const SizedBox(
+          height:16,
         ),
 
         ElevatedButton.icon(
-          onPressed:Provider.of<AppModel>(context,listen: false).toggleBackdrop,
+          onPressed:model.toggleBackdrop,
           icon: Icon(Icons.date_range),
           label: Text("Choose another date"),
           style: ButtonStyle(),
