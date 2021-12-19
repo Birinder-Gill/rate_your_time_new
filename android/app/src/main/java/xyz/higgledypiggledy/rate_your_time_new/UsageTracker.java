@@ -1,6 +1,7 @@
 package xyz.higgledypiggledy.rate_your_time_new;
 
 import android.app.Activity;
+import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.DataSource;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
@@ -36,7 +38,7 @@ public class UsageTracker {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                     PackageManager pm = context.getPackageManager();
                     UsageStatsManager mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
 
@@ -47,7 +49,7 @@ public class UsageTracker {
                     Calendar toC = Calendar.getInstance();
                     toC.set(y2,m2,d2);
                     long to = toC.getTimeInMillis();
-                    // We get usage stats for the last 10 seconds
+                    Log.i(TAG, "run: FROM C = "+fromC.toString()+"TO C = "+toC.toString());
                     List<UsageStats> stats = new ArrayList<>(mUsageStatsManager.queryAndAggregateUsageStats(from, to).values());
 
                     // Sort the stats by the last time used
@@ -61,10 +63,10 @@ public class UsageTracker {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             map.put("TotalTimeVisible", u.getTotalTimeVisible());
                         }
-                        final String cat = getAppInfo(pm,u.getPackageName(),context);
-                        if(cat !=null){
+                        final int cat = getAppInfo(pm,u.getPackageName(),context);
+//                        if(cat !=null){
                             map.put("category", cat);
-                        }
+//                        }
                         map.put("appName", getAppName(context, u.getPackageName()));
                         if (u.getTotalTimeInForeground() > 0 && hasLauncher(context, u.getPackageName())) {
                             String logo=getAppLogo(context, u.getPackageName());
@@ -87,17 +89,66 @@ public class UsageTracker {
         });
     }
 
-    private static String getAppInfo(PackageManager pm,String packageName, Context context) {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    public HashMap<String, AppUsageInfo> queryUsageStatistics(Context context, long startTime, long endTime) {
+        UsageEvents.Event currentEvent;
+        List<UsageEvents.Event> allEvents = new ArrayList<>();
+        HashMap<String, AppUsageInfo> map = new HashMap<>();
+        UsageStatsManager mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+        assert mUsageStatsManager != null;
+        // Here we query the events from startTime till endTime.
+        UsageEvents usageEvents = mUsageStatsManager.queryEvents(startTime, endTime);
+
+        // go over all events.
+        while (usageEvents.hasNextEvent()) {
+            currentEvent = new UsageEvents.Event();
+            usageEvents.getNextEvent(currentEvent);
+            String packageName = currentEvent.getPackageName();
+            if (currentEvent.getEventType() == UsageEvents.Event.ACTIVITY_RESUMED || currentEvent.getEventType() == UsageEvents.Event.ACTIVITY_PAUSED ||
+                    currentEvent.getEventType() == UsageEvents.Event.ACTIVITY_STOPPED) {
+                allEvents.add(currentEvent); // an extra event is found, add to all events list.
+                // taking it into a collection to access by package name
+                if (!map.containsKey(packageName)) {
+                    map.put(packageName, new AppUsageInfo());
+                }
+            }
+        }
+
+        // iterate through all events.
+        for (int i = 0; i < allEvents.size() - 1; i++) {
+            UsageEvents.Event event0 = allEvents.get(i);
+            UsageEvents.Event event1 = allEvents.get(i + 1);
+
+            //for launchCount of apps in time range
+            if (!event0.getPackageName().equals(event1.getPackageName()) && event1.getEventType() == UsageEvents.Event.ACTIVITY_RESUMED) {
+                // if true, E1 (launch event of an app) app launched
+                Objects.requireNonNull(map.get(event1.getPackageName())).launchCount++;
+            }
+
+            //for UsageTime of apps in time range
+            if (event0.getEventType() == UsageEvents.Event.ACTIVITY_RESUMED &&
+                    (event1.getEventType() == UsageEvents.Event.ACTIVITY_PAUSED || event1.getEventType() == UsageEvents.Event.ACTIVITY_STOPPED)
+                    && event0.getPackageName().equals(event1.getPackageName())) {
+                long diff = event1.getTimeStamp() - event0.getTimeStamp();
+                Objects.requireNonNull(map.get(event0.getPackageName())).timeInForeground += diff;
+            }
+        }
+        // and return the map.
+        return map;
+    }
+
+    private static int getAppInfo(PackageManager pm,String packageName, Context context) {
         try {
             ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 int appCategory = applicationInfo.category;
-                return (String) ApplicationInfo.getCategoryTitle(context, appCategory);
+                return appCategory;
+//                return (String) ApplicationInfo.getCategoryTitle(context, appCategory);
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return null;
+        return -1;
 
     }
 

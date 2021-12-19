@@ -43,6 +43,8 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   DateTime to, from;
 
+  Map<int, int> catMap;
+
   double get sum =>
       sumOf<UsageStat>(distinctApps, (e) => e.totalTimeInForeground);
 
@@ -59,10 +61,11 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
         final model = AppUsageModel();
         await model.getApps(begin: from, end: to);
         distinctApps = model.distinctApps;
+        catMap = model.catMap;
       } else
-        setState(() {
-          distinctApps = widget.distinctApps;
-        });
+        distinctApps = widget.distinctApps;
+      catMap = AppUsageModel.makeCatMap(distinctApps);
+      setState(() {});
     } catch (e) {
       error = true;
     }
@@ -103,8 +106,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
         centerTitle: true,
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextButton.icon(
               onPressed: pickFromDate,
               label: Text(
@@ -112,13 +114,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                 style: Theme.of(context)
                     .textTheme
                     .caption
-                    .copyWith(
-                    color:
-                    themeData.accentColor),
+                    .copyWith(color: themeData.accentColor),
               ),
-              icon: Icon(Icons.edit,
-                  size: 16,
-                  color: themeData.accentColor),
+              icon: Icon(Icons.edit, size: 16, color: themeData.accentColor),
             ),
           ),
         ],
@@ -142,8 +140,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                               child: Column(
                                 children: [
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -191,46 +188,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                               ),
                             ),
                           ),
-                          _categoryGraph(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Text('Most used apps'),
-                                for(final e in [0,1])
-                                Row(
-                                  children: [
-                                    for(final i in [0,1])
-                                    Expanded(
-                                      child: Material(
-                                        elevation: 4,
-                                        child: ListTile(
-                                            leading: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child:
-                                                  Image.memory(distinctApps[int.parse('$e$i',radix: 2)].appLogo),
-                                            ),
-                                            title: Text(
-                                              TimeUtils.convertMillsToTime(
-                                                distinctApps[int.parse('$e$i',radix: 2)].totalTimeInForeground,
-                                              ),
-                                              style: theme.bodyText1.copyWith(
-                                                  color: themeData.accentColor),
-                                            )),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                                height: 200,
-                                child: DatumLegendWithMeasures.withSampleData()),
-                          ),
-                          Center(child: Text('All apps')),
+                          _mostUsedApps(themeData),
+                          _categoryGraph(themeData),
+                          Center(child: _subTitle('All apps', themeData)),
                           for (UsageStat i in distinctApps ?? [])
                             if (i.package.contains(search) ||
                                 i.appName.contains(search))
@@ -238,8 +198,76 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 4, vertical: 4),
                                 child: Card(
-                                  // elevation: 2,
+                                  elevation: 4,
                                   child: ListTile(
+                                    onTap: () {
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (c) => SimpleDialog(
+                                            titlePadding: EdgeInsets.zero,
+                                                title: ListTile(
+                                                  title: Text('${i.appName}'),
+                                                  subtitle: Text(i.package),
+                                                  leading: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child:
+                                                        Image.memory(i.appLogo),
+                                                  ),
+                                                ),
+                                                children: [
+                                                  ListTile(
+                                                    title: Text("Category"),
+                                                    subtitle: Text(
+                                                        "${TimeSpent.cats[i.category]}"),
+                                                  ),
+                                                  ListTile(
+                                                    title:
+                                                        Text("Last timestamp"),
+                                                    subtitle: Text(
+                                                      MaterialLocalizations.of(
+                                                              context)
+                                                          .formatShortDate(
+                                                        DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                                i.lastTimeStamp),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  ListTile(
+                                                    title: Text(
+                                                        "Total time visible"),
+                                                    subtitle: Text(
+                                                      TimeUtils
+                                                          .convertMillsToTime(i
+                                                              .totalTimeVisible),
+                                                    ),
+                                                  ),
+                                                  ListTile(
+                                                    title: Text(
+                                                        "Total time in foreground"),
+                                                    subtitle: Text(
+                                                      TimeUtils.convertMillsToTime(
+                                                          i.totalTimeInForeground),
+                                                    ),
+                                                  ),
+                                                  ListTile(
+                                                    title:
+                                                        Text("Last time used"),
+                                                    subtitle: Text(
+                                                      MaterialLocalizations.of(
+                                                              context)
+                                                          .formatShortDate(
+                                                        DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                                i.lastTimeUsed),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ));
+                                    },
                                     trailing: Text(
                                       TimeUtils.convertMillsToTime(
                                         i.totalTimeInForeground,
@@ -255,7 +283,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: LinearProgressIndicator(
-                                        value: i.totalTimeInForeground / sum,
+                                        value: i.totalTimeInForeground /
+                                            distinctApps[0]
+                                                .totalTimeInForeground,
                                         minHeight: 8,
                                         valueColor:
                                             AlwaysStoppedAnimation(primaryDark),
@@ -328,56 +358,71 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     });
   }
 
-  _categoryGraph() {
-    return SizedBox.shrink();
-  }
-}
-
-class TestDeco extends Decoration {
-  @override
-  BoxPainter createBoxPainter([onChanged]) {
-    return TestPainter();
-  }
-}
-
-class TestPainter extends BoxPainter {
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
-    const strokeWidth = 4.0;
-    final outerRadius = math.min(
-          configuration.size.width,
-          configuration.size.height,
-        ) /
-        2;
-    final outerRect = Rect.fromCircle(
-      center: configuration.size.center(offset),
-      radius: outerRadius - strokeWidth * 3,
-    );
-    final innerRect = Rect.fromCircle(
-      center: configuration.size.center(offset),
-      radius: outerRadius - strokeWidth * 15,
-    );
-
-    // Paint each arc with spacing.
-    var cumulativeSpace = 0.0;
-    var cumulativeTotal = 0.0;
-    var colors = [
-      Colors.red,
-      Colors.blue,
-      Colors.green,
-      Colors.yellow,
-      Colors.grey,
-      Colors.purple,
-      Colors.brown
-    ];
-    double startAngle = 0;
-    double sweepAngle = 1;
-    for (final segment in [0, 1, 2, 3, 4, 5]) {
-      final paint = Paint()..color = colors[segment];
-      canvas.drawArc(outerRect, startAngle, sweepAngle, true, paint);
-      startAngle += 1;
+  Widget _mostUsedApps(ThemeData themeData) {
+    if ((distinctApps?.length ?? 0) < 4) {
+      return SizedBox.shrink();
     }
-    // final paint = Paint()..color = Colors.white;
-    // canvas.drawCircle(outerRect.center, innerRect.height/2, paint);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          _subTitle('Most used apps', themeData, showDivider: false),
+          for (final e in [0, 1])
+            Row(
+              children: [
+                for (final i in [0, 1])
+                  Expanded(
+                    child: Material(
+                      elevation: 4,
+                      child: ListTile(
+                          leading: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.memory(
+                                distinctApps[int.parse('$e$i', radix: 2)]
+                                    .appLogo),
+                          ),
+                          title: Text(
+                            TimeUtils.convertMillsToTime(
+                              distinctApps[int.parse('$e$i', radix: 2)]
+                                  .totalTimeInForeground,
+                            ),
+                            style: themeData.textTheme.bodyText1
+                                .copyWith(color: themeData.accentColor),
+                          )),
+                    ),
+                  )
+              ],
+            ),
+        ],
+      ),
+    );
   }
+
+  Widget _categoryGraph(ThemeData themeData) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          _subTitle("Categories", themeData),
+          SizedBox(
+              height: 200, child: DatumLegendWithMeasures.withCatData(catMap)),
+        ],
+      ),
+    );
+  }
+
+  Widget _subTitle(String s, ThemeData theme, {bool showDivider = true}) =>
+      Column(
+        children: [
+          if (showDivider) const Divider(),
+          Text(
+            s,
+            style: theme.textTheme.subtitle1.copyWith(
+                fontWeight: FontWeight.bold, color: theme.primaryColorDark),
+          ),
+          const SizedBox(
+            height: 8,
+          )
+        ],
+      );
 }

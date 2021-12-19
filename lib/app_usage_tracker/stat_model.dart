@@ -34,7 +34,7 @@ class UsageStat {
   int firstTimeStamp;
   int lastTimeUsed;
   int totalTimeInForeground;
-  String category;
+  int category;
 
   factory UsageStat.fromJson(String str) => UsageStat.fromMap(json.decode(str));
 

@@ -23,57 +23,63 @@ class DatumLegendWithMeasures extends StatelessWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(
-      seriesList,
-      animate: animate,
-      // Add the legend behavior to the chart to turn on legends.
-      // This example shows how to optionally show measure and provide a custom
-      // formatter.
-      behaviors: [
-        new charts.DatumLegend(
-          // Positions for "start" and "end" will be left and right respectively
-          // for widgets with a build context that has directionality ltr.
-          // For rtl, "start" and "end" will be right and left respectively.
-          // Since this example has directionality of ltr, the legend is
-          // positioned on the right side of the chart.
-          position: charts.BehaviorPosition.end,
-          // By default, if the position of the chart is on the left or right of
-          // the chart, [horizontalFirst] is set to false. This means that the
-          // legend entries will grow as new rows first instead of a new column.
-          horizontalFirst: false,
-          // This defines the padding around each legend entry.
-          cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
-          // Set [showMeasures] to true to display measures in series legend.
-          showMeasures: true,
-          // Configure the measure value to be shown by default in the legend.
-          legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,
-          // Optionally provide a measure formatter to format the measure value.
-          // If none is specified the value is formatted as a decimal.
-          measureFormatter: (num value) {
-            return value == null ? '-' : '${value}k';
-          },
-        ),
-      ],
-    );
+    return new charts.PieChart(seriesList,
+        animate: animate,
+        // Add an [ArcLabelDecorator] configured to render labels outside of the
+        // arc with a leader line.
+        //
+        // Text style for inside / outside can be controlled independently by
+        // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
+        //
+        // Example configuring different styles for inside/outside:
+        //       new charts.ArcLabelDecorator(
+        //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
+        //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
+        defaultRenderer: new charts.ArcRendererConfig(
+            arcWidth: 12,
+            arcRendererDecorators: [
+          new charts.ArcLabelDecorator(
+              labelPosition: charts.ArcLabelPosition.outside)
+        ]));
   }
 
   /// Create series list with one series
-  static List<charts.Series<LinearSales, int>> _createSampleData() {
+  static List<charts.Series<TimeSpent, String>> _createSampleData() {
     final data = [
-      new LinearSales(0, 100),
-      new LinearSales(1, 75),
-      new LinearSales(2, 25),
-      new LinearSales(3, 5),
     ];
 
     return [
-      new charts.Series<LinearSales, int>(
+      new charts.Series<TimeSpent, String>(
         id: 'Sales',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
+        domainFn: (TimeSpent sales, _) => sales.category,
+        measureFn: (TimeSpent sales, _) => sales.hours,
+        colorFn: (sales, _) => charts.ColorUtil.fromDartColor(Colors.redAccent),
+        data: data,
+      )
+    ];
+  }
+
+  static withCatData(Map<int, int> catMap) {
+    return new DatumLegendWithMeasures(
+      _createData(catMap),
+      // Disable animations for image tests.
+      animate: false,
+    );
+  }
+
+  static List<charts.Series> _createData(Map<int, int> catMap) {
+    final data = <TimeSpent>[];
+    catMap.forEach((key, value) {
+      data.add(TimeSpent(key, value));
+    });
+    return [
+      new charts.Series<TimeSpent, String>(
+        id: 'Sales',
+        domainFn: (TimeSpent sales, _) => sales.category,
+        measureFn: (TimeSpent sales, _) => sales.hours,
+        colorFn: (sales, _) => charts.ColorUtil.fromDartColor(sales.color),
         data: data,
       )
     ];
@@ -81,9 +87,36 @@ class DatumLegendWithMeasures extends StatelessWidget {
 }
 
 /// Sample linear data type.
-class LinearSales {
-  final int year;
-  final int sales;
+class TimeSpent {
+  // (4, -1, 0, 5, 7, 1, 2, 3)
+  static const cats = {
+    1: 'Music',
+    0: 'Games',
+    3: 'Images',
+    6: 'Maps',
+    5: 'News',
+    7: 'Productivity',
+    4: 'Social',
+    -1: 'Others',
+    2: 'Videos',
+  };
+  final int cat;
+  final int hours;
 
-  LinearSales(this.year, this.sales);
+  static const colors = {
+    1: Colors.pinkAccent,
+    0: Colors.deepPurple,
+    3: Color(0xff278EA5),
+    6: Colors.purpleAccent,
+    5: Color(0xff064663),
+    7: Color(0xffFF4C29),
+    4: Color(0xffC70039),
+    -1:Color(0xff374045),
+    2: Colors.purpleAccent,
+  };
+  TimeSpent(this.cat, this.hours);
+
+  String get category => TimeSpent.cats[cat];
+
+  Color get color => colors[cat];
 }

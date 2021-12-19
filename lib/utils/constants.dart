@@ -142,7 +142,6 @@ void nextTick(VoidCallback run) {
 }
 
 class Constants {
-
   static const String appName = "Rate your time.";
 
   static const String getDayData = "getDayData";
@@ -168,24 +167,22 @@ class Constants {
 
   static const String saveSettings = 'saveSettings';
 
-  static const double datePickerHeight =420;
+  static const double datePickerHeight = 420;
 
   static final months = [
-  'Jan',
-  'Feb',
-  'Mar',
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec"
+    'Jan',
+    'Feb',
+    'Mar',
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec"
   ];
-
-
 }
 
 double letterSpacingOrNone(double letterSpacing) => letterSpacing;
@@ -198,18 +195,22 @@ Widget adButton() => OutlinedButton.icon(
     label: Text("Watch an Ad"));
 
 Future<T> pushTo<T>(BuildContext context, Widget screen,
-    {bool replace = false, bool clear = false, bool dialog=false}) {
+    {bool replace = false, bool clear = false, bool dialog = false}) {
   if (clear) {
-   return Navigator.pushAndRemoveUntil<T>(
-        context, CupertinoPageRoute(builder: (c) => screen,fullscreenDialog: dialog), (route) => false,);
-
+    return Navigator.pushAndRemoveUntil<T>(
+      context,
+      CupertinoPageRoute(builder: (c) => screen, fullscreenDialog: dialog),
+      (route) => false,
+    );
   }
   if (replace) {
     return Navigator.pushReplacement(
-        context, CupertinoPageRoute(builder: (c) => screen,fullscreenDialog: dialog),);
-
+      context,
+      CupertinoPageRoute(builder: (c) => screen, fullscreenDialog: dialog),
+    );
   }
-  return Navigator.push<T>(context, CupertinoPageRoute(builder: (c) => screen,fullscreenDialog: dialog));
+  return Navigator.push<T>(context,
+      CupertinoPageRoute(builder: (c) => screen, fullscreenDialog: dialog));
 }
 
 void dialog(context, Widget screen) =>
@@ -218,7 +219,7 @@ void dialog(context, Widget screen) =>
 Widget simpleLoader() => Center(child: CircularProgressIndicator());
 
 consoleLog(e, {bool log = true}) {
- if(log) print("$e");
+  if (log) print("$e");
 }
 
 double sumOf<T>(Iterable<T> where, num Function(T e) fun) {
@@ -291,24 +292,21 @@ class TimeUtils {
   }
 
   static Future<DateTime> getWeekEnd(DateTime from) async {
-    final to = from.add(Duration(days: 7-from.weekday));
+    final to = from.add(Duration(days: 7 - from.weekday));
     final now = DateTime.now();
     consoleLog('----------------------------');
     consoleLog(from);
     return to.isBefore(now) ? to : now;
   }
-
 
   static Future<DateTime> getMonthEnd(DateTime from) async {
-
-    final to = DateTime(from.year,from.month,DateUtils.getDaysInMonth(from.year, from.month));
+    final to = DateTime(
+        from.year, from.month, DateUtils.getDaysInMonth(from.year, from.month));
     final now = DateTime.now();
     consoleLog('----------------------------');
     consoleLog(from);
     return to.isBefore(now) ? to : now;
   }
-
-
 
   static Future<DateTime> getMonthStart(DateTime to) async {
     //TODO: Maybe we could remove initial dae check and make it synchronous;
@@ -319,7 +317,6 @@ class TimeUtils {
     consoleLog(installDate);
     return from.isBefore(installDate) ? installDate : from;
   }
-
 }
 
 class Utils {
@@ -358,27 +355,30 @@ class Utils {
                 List<Map<String, dynamic>>.from(value.map((e) =>
                     Map<String, dynamic>.from(
                         e.map((k, v) => MapEntry("$k", v))))))));
-    consoleLog(hours,log:true);
+    consoleLog(hours, log: true);
     AverageDataModel av = AverageDataModel();
     if (av.averages == null) av.averages = [];
     final tempActivityMap = {};
-    final weekDayActivityMap = <int,Map<int,int>>{};
+    final weekDayActivityMap = <int, Map<int, int>>{};
+
     ///Looping through every day data.
     hours.entries.forEach((element) {
       double total = 0.0;
+
       ///Looping through every hour of single day data
       element.value.forEach((e) {
         total += e['worth'];
         tempActivityMap[e['activity']] =
             (tempActivityMap[e['activity']] ?? 0) + 1;
 
-        if(weekDayActivityMap[e['activity']]==null){
-          weekDayActivityMap[e['activity']]={};
+        if (weekDayActivityMap[e['activity']] == null) {
+          weekDayActivityMap[e['activity']] = {};
         }
         final ymd = element.key.split('-');
-        final dt = DateTime(int.parse(ymd[0]),int.parse(ymd[1])+1,int.parse(ymd[2]));
+        final dt = DateTime(
+            int.parse(ymd[0]), int.parse(ymd[1]) + 1, int.parse(ymd[2]));
         print("DATETIME DT =========>  $dt");
-        var key=data['week']==true?dt.weekday:dt.day;
+        var key = data['week'] == true ? dt.weekday : dt.day;
         weekDayActivityMap[e['activity']][key] =
             (1 + (weekDayActivityMap[e['activity']][key] ?? 0));
       });
@@ -395,15 +395,16 @@ class Utils {
         int.parse(keys[2]),
       );
       consoleLog(dt);
-      if(!filledSales.isNaN) {
-        double pendingSales = ((total/element.value.length) - filledSales);
-        av.averages
-            .add(SingleDayAverage(dt, filledSales, pendingSales: pendingSales.isNaN?0:pendingSales));
+      if (!filledSales.isNaN) {
+        double pendingSales = ((total / element.value.length) - filledSales);
+        av.averages.add(SingleDayAverage(dt, filledSales,
+            pendingSales: pendingSales.isNaN ? 0 : pendingSales));
         // filledRegion:((element.value.length/Utils.wokeHours())*5).toInt()
       }
     });
 
-    consoleLog("${tempActivityMap.map((key, value) => MapEntry("${activities[key]}",value))}");
+    consoleLog(
+        "${tempActivityMap.map((key, value) => MapEntry("${activities[key]}", value))}");
     consoleLog("Day activity map = $weekDayActivityMap");
     av.averages.sort((a, b) =>
         a.date.millisecondsSinceEpoch - b.date.millisecondsSinceEpoch);
@@ -425,21 +426,42 @@ class Utils {
           timeSpent: temp.sublist(ACTIVITIES_TO_SHOW).fold(0,
               (previousValue, element) => previousValue + element.timeSpent)));
     }
-    consoleLog(av,log:true);
+    consoleLog(av, log: true);
 
-
-    av.weekDayActivities  = weekDayActivityMap.map((key, value) => MapEntry(key,SplayTreeMap<int, int>.from(value,
-            (a, b) => a.compareTo(b)).map((key, value) => MapEntry(key, value))));
+    av.weekDayActivities = weekDayActivityMap.map((key, value) => MapEntry(
+        key,
+        SplayTreeMap<int, int>.from(value, (a, b) => a.compareTo(b))
+            .map((key, value) => MapEntry(key, value))));
 
     return av;
   }
 
-  static AverageAppUsageModel parseStatsData(List list){
-    consoleLog("In parsestat data with list = $list");
+  static AverageAppUsageModel parseStatsData(List list) {
+    ///Get actual time range interval
+    int min, max;
+    list.forEach((element) {
+      final from = element['firstTimeStamp'];
+      if (min == null) {
+        min = from;
+      }
+      if (min > from) {
+        min = from;
+      }
+      final to = element['LastTimeStamp'];
+      if (max == null) {
+        max = to;
+      }
+      if (max < to) {
+        max = to;
+      }
+    });
+
     final result = AverageAppUsageModel();
+    result.minTimeStamp = min;
+    result.maxTimeStamp = max;
     var apps = List<UsageStat>.from(
         list.map((e) => UsageStat.fromJson(jsonEncode(e))));
-    apps.sort((b,a)=>a.totalTimeInForeground-b.totalTimeInForeground);
+    apps.sort((b, a) => a.totalTimeInForeground - b.totalTimeInForeground);
 
     if (apps.length > APPS_TO_SHOW) {
       final temp = List<UsageStat>.from(apps);
@@ -448,11 +470,12 @@ class Utils {
       final others = temp.sublist(APPS_TO_SHOW);
       result.highApps = apps;
       result.otherApps = others;
-    }else{
+    } else {
       result.highApps = apps;
       result.otherApps = [];
     }
     return result;
+
     ///DO NOT DELETE
     // var distinctApps = <UsageStat>[];
     // apps.forEach((element) {
@@ -486,15 +509,11 @@ class Utils {
     channel.invokeMethod(Constants.openAppSettings);
   }
 
-
-
   static void openNotificationSettings() {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     channel.invokeMethod(Constants.openNotificationSettings);
   }
 
   ///The number of hours between wake up and sleep time.
-  static int wokeHours() =>22-7;
-
-
+  static int wokeHours() => 22 - 7;
 }

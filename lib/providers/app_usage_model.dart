@@ -8,20 +8,32 @@ import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class AppUsageModel with ChangeNotifier {
-  List<UsageStat> distinctApps=[];
-
+  List<UsageStat> distinctApps = [];
+  final catMap = <int,int>{};
   bool error = false;
   bool loading = false;
 
-  getApps({DateTime begin,DateTime end}) async {
+  getApps({DateTime begin, DateTime end}) async {
     try {
-      if(begin==null||end == null)return;
-      var model = await ApiHelper.trackUsageData(begin,end);
+      if (begin == null || end == null) return;
+      var model = await ApiHelper.trackUsageData(begin, end);
+      distinctApps.clear();
       distinctApps.addAll(model.highApps);
       distinctApps.addAll(model.otherApps);
-    } catch (e,trace) {
+      catMap.clear();
+      catMap.addAll(makeCatMap(distinctApps));
+
+    } catch (e, trace) {
       consoleLog("$e $trace");
       error = true;
     }
+  }
+
+  static Map<int,int> makeCatMap(List<UsageStat> distinctApps) {
+    final catMap = <int,int>{};
+    distinctApps.forEach((a) {
+      catMap[a.category] = (catMap[a.category] ?? 0) + 1;
+    });
+    return catMap;
   }
 }

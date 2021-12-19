@@ -55,7 +55,7 @@ class AppUsageCard extends StatelessWidget {
           SizedBox(
             height: 16,
           ),
-          Text('Total time spent using phone.\n($date)',
+          Text('Total time spent using phone.\n($date)\n${appUsage.minTimeStamp} - ${appUsage.maxTimeStamp}',
               textAlign: TextAlign.center,
               style: theme.subtitle1.copyWith(
                   fontWeight: FontWeight.bold,
@@ -100,7 +100,7 @@ class AppUsageCard extends StatelessWidget {
                   [...appUsage.highApps, ...appUsage.otherApps],
                 );
               },
-              icon: Text("Detailed report"),
+              icon: Text("Details"),
               label: Icon(Icons.arrow_right),
             ),
           )
