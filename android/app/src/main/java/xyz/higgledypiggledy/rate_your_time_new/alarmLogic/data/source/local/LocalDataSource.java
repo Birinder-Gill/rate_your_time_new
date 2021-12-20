@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,6 +67,12 @@ public class LocalDataSource implements DataSource {
 
     ArrayList<HashMap<String, Object>> getHoursFor(int day, int month, int year) {
         List<Hour> list = (dao.getDataFor(day, month, year));
+        list.sort(new Comparator<Hour>() {
+            @Override
+            public int compare(Hour hour, Hour t1) {
+                return hour.getTime() - t1.getTime();
+            }
+        });
         final ArrayList<HashMap<String, Object>> finalList = new ArrayList<>();
         int tempTime = 7;//TODO:: WAKE UP HOUR HERE
         for (Hour h : list) {
@@ -85,8 +92,8 @@ public class LocalDataSource implements DataSource {
         if ((!finalList.isEmpty()) && (now.get(Calendar.MONTH) == month) && (now.get(Calendar.YEAR) == year) && (now.get(Calendar.DATE) > day)) {
             int lastHour = (int) finalList.get(finalList.size() - 1).get("time");
             while (lastHour != MainActivity.LAST_HOUR) {
-                finalList.add(new Hour(0, lastHour, day, month, year, 0, "").toMap());
                 lastHour++;
+                finalList.add(new Hour(0, lastHour, day, month, year, 0, "").toMap());
             }
         }
         return finalList;
@@ -141,6 +148,17 @@ public class LocalDataSource implements DataSource {
                         result.success(true);
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    public void addHour(Hour hour, MethodChannel.Result result) {
+        executors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                dao.addHour(hour);
+                AppExecutors.getInstance().mainThread().execute(() -> result.success(true));
             }
         });
     }

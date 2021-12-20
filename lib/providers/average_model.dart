@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
 import 'package:rate_your_time_new/utils/api_helper.dart';
@@ -52,6 +53,12 @@ class AverageModel {
     _appsLoading=true;
 
     this.accessGranted=true;
+    if(to.isAfter(DateTime.now())){
+      to = DateUtils.dateOnly(DateTime.now());
+    }
+    if(DateUtils.isSameDay(from, to) || from.isAfter(to)){
+      from = to.subtract(Duration(days: 1));
+    }
     this.appUsage = (cache.getAppsData(to, from));
     if(this.appUsage==null) {
       this.accessGranted = await Utils.isUsageAccessGranted();

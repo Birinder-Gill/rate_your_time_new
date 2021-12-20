@@ -62,9 +62,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           )),
           ListTile(
-            title: Text("Rate on Google play"),
-          ),
-          ListTile(
             onTap: () {
               dialog(
                 context,

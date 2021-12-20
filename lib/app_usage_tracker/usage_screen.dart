@@ -11,6 +11,7 @@ import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/providers/app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/test_screen.dart';
+import 'package:rate_your_time_new/utils/usage_interval_info_dialog.dart';
 import 'package:rate_your_time_new/widgets/finance_entity.dart';
 import 'package:rate_your_time_new/widgets/graphs/pie%20chart.dart';
 import 'package:rate_your_time_new/widgets/pie_chart.dart';
@@ -21,7 +22,9 @@ class AppsUsageScreen extends StatefulWidget {
   final DateTime to;
   final List<UsageStat> distinctApps;
 
-  const AppsUsageScreen({Key key, this.from, this.to, this.distinctApps})
+  final String dateRangeLabel;
+
+  const AppsUsageScreen({Key key, this.from, this.to, this.distinctApps, this.dateRangeLabel})
       : super(key: key);
 
   @override
@@ -45,6 +48,8 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
 
   Map<int, int> catMap;
 
+  String label = '';
+
   double get sum =>
       sumOf<UsageStat>(distinctApps, (e) => e.totalTimeInForeground);
 
@@ -62,10 +67,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
         await model.getApps(begin: from, end: to);
         distinctApps = model.distinctApps;
         catMap = model.catMap;
-      } else
+        label = model.label;
+      } else {
         distinctApps = widget.distinctApps;
-      catMap = AppUsageModel.makeCatMap(distinctApps);
-      setState(() {});
+        catMap = AppUsageModel.makeCatMap(distinctApps);
+        label = widget.dateRangeLabel;
+      }
     } catch (e) {
       error = true;
     }
@@ -139,21 +146,28 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                               //     BorderRadius.all(Radius.circular(12)),
                               child: Column(
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0),
-                                        child: Text(
-                                          "Total screen time",
+                                  GestureDetector(
+                                    onTap: (){
+                                      showIntervalInfoDialog(context,label);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Total screen time ($label)",
                                           textAlign: TextAlign.center,
                                           style: theme.subtitle1.copyWith(
                                               color: themeData
                                                   .colorScheme.onSecondary),
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(width: 4,),
+                                        Icon(
+                                          Icons.info_sharp,
+                                          size: 12,
+                                          color: themeData.colorScheme.secondary,
+                                        )
+                                      ],
+                                    ),
                                   ),
                                   // Divider(),
                                   Row(
@@ -333,6 +347,10 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   void pickFromDate() {
     final theme = Theme.of(context);
     final c = Theme.of(context).colorScheme;
+    final lastDate = DateTime.now();
+    if(to.isAfter(lastDate)){
+      to = lastDate;
+    }
     showDateRangePicker(
             builder: (context, child) => Theme(
                 data: theme.copyWith(
@@ -346,7 +364,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
             context: context,
             initialDateRange: DateTimeRange(start: from, end: to),
             firstDate: DateTime(2018),
-            lastDate: DateTime.now())
+            lastDate: lastDate)
         .then((value) {
       if (value != null) {
         if (value.start != from || value.end != to) {

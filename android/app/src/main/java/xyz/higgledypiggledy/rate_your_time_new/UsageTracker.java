@@ -32,7 +32,9 @@ import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.DataSource
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 
 public class UsageTracker {
-//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    private static final long DAY = 1000*60*60*24;
+
+    //    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public static void getRunningApps(final Context context, int d1, int m1, int y1, int d2, int m2, int y2, DataSource.LoadProgressCallback callback) {
         ArrayList<HashMap<String, Object>> result = new ArrayList<>();
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
@@ -48,6 +50,15 @@ public class UsageTracker {
 
                     Calendar toC = Calendar.getInstance();
                     toC.set(y2,m2,d2);
+                    final long now = Calendar.getInstance().getTimeInMillis();
+                    if(toC.getTimeInMillis()>now){
+                        toC.setTimeInMillis(now);
+                    }
+
+                    if(isSameDay(fromC,toC)){
+                        fromC.setTimeInMillis(toC.getTimeInMillis() - DAY);
+                    }
+
                     long to = toC.getTimeInMillis();
                     Log.i(TAG, "run: FROM C = "+fromC.toString()+"TO C = "+toC.toString());
                     List<UsageStats> stats = new ArrayList<>(mUsageStatsManager.queryAndAggregateUsageStats(from, to).values());
@@ -89,8 +100,14 @@ public class UsageTracker {
         });
     }
 
+    public static boolean isSameDay(Calendar cal1,Calendar cal2){
+        return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-    public HashMap<String, AppUsageInfo> queryUsageStatistics(Context context, long startTime, long endTime) {
+    public static HashMap<String, AppUsageInfo> queryUsageStatistics(Context context, long startTime, long endTime) {
         UsageEvents.Event currentEvent;
         List<UsageEvents.Event> allEvents = new ArrayList<>();
         HashMap<String, AppUsageInfo> map = new HashMap<>();

@@ -294,6 +294,7 @@ class TimeUtils {
   static Future<DateTime> getWeekEnd(DateTime from) async {
     final to = from.add(Duration(days: 7 - from.weekday));
     final now = DateTime.now();
+    return to;
     consoleLog('----------------------------');
     consoleLog(from);
     return to.isBefore(now) ? to : now;
@@ -316,6 +317,16 @@ class TimeUtils {
     consoleLog(from);
     consoleLog(installDate);
     return from.isBefore(installDate) ? installDate : from;
+  }
+
+  static String makeLabelForTimestampRange(int min, int max) {
+    final l = DefaultMaterialLocalizations();
+    final from = DateTime.fromMillisecondsSinceEpoch(min);
+    final to = DateTime.fromMillisecondsSinceEpoch(max);
+    if (from.year == to.year) {
+      return '${l.formatShortMonthDay(from)} - ${l.formatShortMonthDay(to)}';
+    }
+    return '${l.formatShortDate(from)}  - ${l.formatShortDate(to)}';
   }
 }
 
@@ -459,8 +470,12 @@ class Utils {
     final result = AverageAppUsageModel();
     result.minTimeStamp = min;
     result.maxTimeStamp = max;
+    result.label = TimeUtils.makeLabelForTimestampRange(min, max);
     var apps = List<UsageStat>.from(
-        list.map((e) => UsageStat.fromJson(jsonEncode(e))));
+      list.map(
+        (e) => UsageStat.fromJson(jsonEncode(e)),
+      ),
+    );
     apps.sort((b, a) => a.totalTimeInForeground - b.totalTimeInForeground);
 
     if (apps.length > APPS_TO_SHOW) {

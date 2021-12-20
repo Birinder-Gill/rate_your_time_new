@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:rate_your_time_new/utils/usage_interval_info_dialog.dart';
 
 class AppUsageCard extends StatelessWidget {
   final AverageAppUsageModel appUsage;
@@ -12,7 +15,7 @@ class AppUsageCard extends StatelessWidget {
 
   final void Function(List<UsageStat> stats) openDetails;
 
-  final String date;
+  final String Function() date;
 
   AppUsageCard(this.appUsage, this.accessGranted,
       {@required this.onRetry, this.openDetails, @required this.date});
@@ -29,6 +32,7 @@ class AppUsageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return SizedBox.shrink();
     if (!accessGranted) {
       return _noAccessGranted(context);
     }
@@ -55,11 +59,34 @@ class AppUsageCard extends StatelessWidget {
           SizedBox(
             height: 16,
           ),
-          Text('Total time spent using phone.\n($date)\n${appUsage.minTimeStamp} - ${appUsage.maxTimeStamp}',
+          Text('Total time spent using phone.',
               textAlign: TextAlign.center,
               style: theme.subtitle1.copyWith(
                   fontWeight: FontWeight.bold,
                   color: themeData.primaryColorDark)),
+          GestureDetector(
+            onTap: () {
+              showIntervalInfoDialog(context,date());
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('(${date()})',
+                    textAlign: TextAlign.center,
+                    style: theme.subtitle1.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: themeData.primaryColorDark)),
+                SizedBox(
+                  width: 4,
+                ),
+                Icon(
+                  Icons.info_outline,
+                  size: 16,
+                  color: themeData.colorScheme.secondaryVariant,
+                )
+              ],
+            ),
+          ),
           Text(
             TimeUtils.convertMillsToTime(sum),
             textAlign: TextAlign.center,

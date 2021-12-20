@@ -27,6 +27,8 @@ import io.flutter.plugin.common.MethodChannel;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmClockProvider;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.AlarmNotificationService;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.TimeUtil;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.Hour;
+import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.data.source.DataRepository;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.AppExecutors;
 import xyz.higgledypiggledy.rate_your_time_new.alarmLogic.utils.Injection;
 
@@ -210,7 +212,16 @@ public class MainActivity extends FlutterActivity {
                     return;
                 }
                 case "updateHour": {
-                    updateHour(call.argument("id"), call.argument("activity"), call.argument("note"), call.argument("worth"), result);
+                    updateHour(
+                            call.argument("date"),
+                            call.argument("month"),
+                            call.argument("year"),
+                            call.argument("id"),
+                            call.argument("time"),
+                            call.argument("worth"),
+                            call.argument("activity"),
+                            call.argument("note"),
+                            result);
                     return;
                 }
                 case "openAppSettings": {
@@ -240,8 +251,24 @@ public class MainActivity extends FlutterActivity {
         getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().apply();
     }
 
-    private void updateHour(int id, int activity, String note,int worth, MethodChannel.Result result) {
-        Injection.provideRepository(getApplicationContext()).updateHour(id, activity, note,worth, result);
+    private void updateHour(
+            int date,
+            int month,
+            int year,
+            int id,
+            int time,
+            int worth,
+            int activity,
+            String note,
+            MethodChannel.Result result) {
+
+        DataRepository repo = Injection.provideRepository(getApplicationContext());
+        if(id!=0) {
+            repo.updateHour(id, activity, note, worth, result);
+        }else{
+            final Hour hour=new Hour(worth,time,date,month-1,year,activity,note);
+            repo.addHour(hour,result);
+        }
 
     }
 

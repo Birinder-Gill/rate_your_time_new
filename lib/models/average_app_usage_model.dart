@@ -5,4 +5,5 @@ class AverageAppUsageModel{
   List<UsageStat> otherApps=[];
   int minTimeStamp;
   int maxTimeStamp;
+  String label;
 }

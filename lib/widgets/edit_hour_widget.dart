@@ -39,6 +39,7 @@ class _EditHourWidgetState extends State<EditHourWidget> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Text(widget.hour.toJson()),
           Row(
             children: [
               for (final i in [1, 2, 3, 4, 5])

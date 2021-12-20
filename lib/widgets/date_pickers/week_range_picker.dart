@@ -9,11 +9,11 @@ class WeekRangePicker extends StatelessWidget {
 
   final DateTime firstDate;
 
-  WeekRangePicker({Key key, this.model, this.firstDate}) : super(key: key){
-    setSelection(model.date,refreshModel:false);
+  WeekRangePicker({Key key, this.model, this.firstDate}) : super(key: key) {
+    setSelection(model.date, refreshModel: false);
   }
 
-  void selectionChanged(DateRangePickerSelectionChangedArgs args)async {
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) async {
     PickerDateRange ranges = args.value;
     DateTime date1 = ranges.startDate;
     setSelection(date1);
@@ -21,22 +21,24 @@ class WeekRangePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = MaterialLocalizations.of(context);
     return SfDateRangePicker(
-        controller: model.controller,
-        view: DateRangePickerView.month,
-        minDate: firstDate,
-        maxDate: DateTime.now(),
-        selectionMode: DateRangePickerSelectionMode.range,
-        onSelectionChanged: selectionChanged,
-        monthViewSettings: DateRangePickerMonthViewSettings(enableSwipeSelection: false,firstDayOfWeek: 1),
-      );
+      controller: model.controller,
+      view: DateRangePickerView.month,
+      minDate: firstDate,
+      maxDate: DateTime.now(),
+      selectionMode: DateRangePickerSelectionMode.range,
+      onSelectionChanged: selectionChanged,
+      monthViewSettings: DateRangePickerMonthViewSettings(
+          enableSwipeSelection: false,
+          firstDayOfWeek: l.firstDayOfWeekIndex + 1),
+    );
   }
 
-  void setSelection(DateTime date1, {bool refreshModel = true}) async{
-    final to =  await TimeUtils.getWeekEnd(date1);
+  void setSelection(DateTime date1, {bool refreshModel = true}) async {
+    final to = await TimeUtils.getWeekEnd(date1);
     final from = await TimeUtils.getWeekStart(date1);
-    model.controller.selectedRange = PickerDateRange(from,to);
-    if(refreshModel)
-    model.refresh(date1);
+    model.controller.selectedRange = PickerDateRange(from, to);
+    if (refreshModel) model.refresh(date1);
   }
 }

@@ -105,7 +105,7 @@ public class Goal {
         map.put("ratingTarget",this. ratingTarget);
         map.put("date",this. date);
         map.put("month",this. month);
-        map.put("year",this. year+1);
+        map.put("year",this. year);
         map.put("isAccomplished",this. isAccomplished);
         map.put("goal",this. goal);
         return map;

@@ -46,8 +46,7 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
   @override
   Widget build(BuildContext context) {
     final appModel = Provider.of<AppModel>(context, listen: false);
-    final date =
-    appModel.frontLabel(MaterialLocalizations.of(context));
+    final date = appModel.frontLabel(MaterialLocalizations.of(context));
     return Scaffold(
       body: Consumer<WeekModel>(
         builder: (BuildContext context, model, Widget child) {
@@ -62,7 +61,7 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: ActivityAverageCard(model.av),
                 ),
-                Padding(
+                if(model.loaded && !model.isEmpty) Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: AppUsageCard(
                     model.appUsage,
@@ -77,9 +76,10 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
                             from: await TimeUtils.getWeekStart(model.date),
                             to: await TimeUtils.getWeekEnd(model.date),
                             distinctApps: list,
+                            dateRangeLabel: model.appUsage.label,
                           ));
                     },
-                    date:date,
+                    date:()=>model.appUsage.label,
                   ),
                 ),
                 SizedBox(
@@ -107,7 +107,7 @@ class _WeekViewStats extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!model.loaded) return simpleLoader();
     if (model.isEmpty) {
-      return EmptyWeekView();
+      return Center(child: EmptyWeekView());
     }
     final theme = Theme.of(context);
     return Card(

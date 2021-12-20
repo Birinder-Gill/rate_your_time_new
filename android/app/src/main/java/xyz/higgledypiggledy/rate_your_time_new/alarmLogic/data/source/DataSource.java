@@ -39,6 +39,8 @@ public interface DataSource
 
     void updateHour(int id, int activity, String note,int worth, MethodChannel.Result result);
 
+    void addHour(Hour hour, MethodChannel.Result result);
+
     void getRunningApps(final Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback);
 
     void isTableEmpty(CheckFirstTimeCallback callback);

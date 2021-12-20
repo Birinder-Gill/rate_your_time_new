@@ -37,7 +37,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^19.2.49
   intro_views_flutter: ^3.2.0
   feature_discovery: ^0.14.0
-
+  animated_background: ^2.0.0
   sleek_circular_slider: ^2.0.1
 
 dev_dependencies:

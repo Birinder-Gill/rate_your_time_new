@@ -27,7 +27,7 @@ class DayModel with ChangeNotifier {
     _loading = true;
     try {
       final hours = await ApiHelper.getData(date);
-      consoleLog("Hours returned = $hours");
+      consoleLog("Hours returned = ${hours.map((e) => e['time'])}");
 
       setData(hours);
     } catch (e, trace) {
@@ -38,13 +38,8 @@ class DayModel with ChangeNotifier {
   }
 
   updateHour(Hour hour) async {
-    final body = {
-      "id": hour.id,
-      'activity': hour.activity,
-      'note': hour.note,
-      'worth': hour.worth
-    };
-    consoleLog("Calling updTE hours with body $body");
+    final body = hour.toMap();
+    print(hour.toMap());
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     await channel.invokeMethod(Constants.updateHour, body);
     _updateInMemory(hour);
@@ -68,7 +63,7 @@ class DayModel with ChangeNotifier {
 
   void _updateInMemory(Hour hour) {
     hours
-        .singleWhere((element) => element.id == hour.id)
+        .singleWhere((element) => element==hour)
         .update(activity: hour.activity, note: hour.note, worth: hour.worth);
     AverageModel.clearCache();
   }

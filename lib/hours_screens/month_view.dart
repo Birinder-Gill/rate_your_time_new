@@ -56,7 +56,7 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
                   isWeek: false,
                 ),
               ),
-              Padding(
+              if(model.loaded && !model.isEmpty)Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AppUsageCard(
                   model.appUsage,
@@ -66,14 +66,16 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
                   },
                   openDetails: (list) async {
                     pushTo(
-                        context,
-                        AppsUsageScreen(
-                          from: await TimeUtils.getMonthStart(model.date),
-                          to: await TimeUtils.getMonthEnd(model.date),
-                          distinctApps: list,
-                        ));
+                      context,
+                      AppsUsageScreen(
+                        from: await TimeUtils.getMonthStart(model.date),
+                        to: await TimeUtils.getMonthEnd(model.date),
+                        distinctApps: list,
+                        dateRangeLabel: model.appUsage.label,
+                      ),
+                    );
                   },
-                  date: date,
+                  date:()=> model.appUsage.label,
                 ),
               ),
             ],
@@ -88,7 +90,6 @@ class _MonthViewStats extends StatelessWidget {
   final MonthModel model;
 
   final String date;
-
 
   _MonthViewStats(this.model, {this.date});
 

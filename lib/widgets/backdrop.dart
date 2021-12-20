@@ -52,56 +52,11 @@ class _FrontLayer extends StatelessWidget {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // if (model.toggle != 0)
-                //   IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
                 Opacity(
                   opacity: model.animController.value,
-                  child: false
-                      ? ToggleButtons(
-                          selectedColor: Theme.of(context).accentColor,
-                          onPressed: model.animController.value == 1
-                              ? model.changeViewToggle
-                              : null,
-                          children: [
-                            SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: FDelegate(
-                                  title: 'Day view',
-                                  description:
-                                      'Day view shows your hourly rating for the selected day',
-                                  featureId: 'calendar_view_day',
-                                  child: Icon(Icons.calendar_view_day)),
-                            ),
-                            if (now.weekday > 1)
-                              SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: FDelegate(
-                                    title: 'Week View',
-                                    description:
-                                        'Week view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected week.',
-                                    featureId: 'view_week',
-                                    child: Icon(Icons.view_week)),
-                              ),
-                            if (now.day > 1)
-                              SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: FDelegate(
-                                    title: 'Month View',
-                                    description:
-                                        'Month view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected month.',
-                                    featureId: 'date_range',
-                                    child: Icon(Icons.date_range)),
-                              ),
-                          ],
-                          isSelected: model.selections)
-                      : ViewToggle(),
+                  child: ViewToggle(),
                 ),
-                // if (model.toggle != 0)
-                //   IconButton(icon: Icon(Icons.chevron_right), onPressed: () {}),
-              ],
+               ],
             );
           }),
         ),
@@ -410,7 +365,7 @@ class _BackdropState extends State<Backdrop>
               size: 16,
             ),
             onPressed: () {
-              _showFeatureOverlays();
+              _showFeatureOverlays(force: true);
             }),
         FDelegate(
           featureId: 'add_event',
@@ -453,14 +408,18 @@ class _BackdropState extends State<Backdrop>
     );
   }
 
-  void _showFeatureOverlays() {
-    FeatureDiscovery.discoverFeatures(context, <String>[
+  void _showFeatureOverlays({bool force = false}) {
+    final steps = <String>[
       'menu',
       'calendar_view_day',
       'view_week',
       'date_range',
       'add_event'
-    ]);
+    ];
+    if(force) {
+      FeatureDiscovery.clearPreferences(context, steps);
+    }
+    FeatureDiscovery.discoverFeatures(context, steps);
   }
 }
 

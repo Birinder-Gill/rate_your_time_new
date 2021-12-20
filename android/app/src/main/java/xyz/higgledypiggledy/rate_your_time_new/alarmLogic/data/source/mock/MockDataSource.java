@@ -79,6 +79,11 @@ public class MockDataSource implements DataSource {
     }
 
     @Override
+    public void addHour(Hour hour, MethodChannel.Result result) {
+        Log.d(TAG, "addHour() called with: hour = [" + hour + "], result = [" + result + "]");
+    }
+
+    @Override
     public void getRunningApps(Context context, int d1, int m1, int y1, int d2, int m2, int y2, LoadProgressCallback callback) {
         ArrayList<HashMap<String, Object>> result = new ArrayList<>();
         for (String u:mockApps) {

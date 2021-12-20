@@ -10,6 +10,7 @@ import 'package:rate_your_time_new/utils/constants.dart';
 class AppUsageModel with ChangeNotifier {
   List<UsageStat> distinctApps = [];
   final catMap = <int,int>{};
+  String label = '';
   bool error = false;
   bool loading = false;
 
@@ -22,6 +23,7 @@ class AppUsageModel with ChangeNotifier {
       distinctApps.addAll(model.otherApps);
       catMap.clear();
       catMap.addAll(makeCatMap(distinctApps));
+      label = model.label;
 
     } catch (e, trace) {
       consoleLog("$e $trace");

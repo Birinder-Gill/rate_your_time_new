@@ -54,7 +54,7 @@ class AppModel with ChangeNotifier {
     if (toggle == e) return;
     toggle = e;
     _manageTodayCases();
-    dates = await _setLabel();
+    dates = await _setDates();
     notifyListeners();
   }
 
@@ -66,14 +66,14 @@ class AppModel with ChangeNotifier {
     }
     _manageTodayCases();
     loaded = false;
-    dates = await _setLabel();
+    dates = await _setDates();
     notifyListeners();
     nextTick(() {
       animController.forward();
     });
   }
 
-  Future<List<DateTime>> _setLabel() async {
+  Future<List<DateTime>> _setDates() async {
     if (toggle == 1) {
       return [
         await TimeUtils.getWeekStart(date),
@@ -107,6 +107,7 @@ class AppModel with ChangeNotifier {
   }
 
   void _manageTodayCases() {
+    return;
     final now = DateTime.now();
     if (DateUtils.isSameDay(this.date, now)) {
       if (toggle == 1 && this.date.weekday == 1) {
@@ -164,6 +165,19 @@ class Hour {
 
   String toJson() => json.encode(toMap());
 
+  @override
+  bool operator ==(Object other) {
+    if (other is Hour) {
+      return other.id != 0 && id != 0
+          ? (id == other.id)
+          : (other.year == year &&
+              other.month == month &&
+              other.date == date &&
+              other.time == time);
+    }
+    return false;
+  }
+
   factory Hour.fromMap(Map<String, dynamic> json) => Hour(
         date: json["date"] == null ? null : json["date"],
         month: json["month"] == null ? null : json["month"],
@@ -186,9 +200,12 @@ class Hour {
         "note": note
       };
 
-  void update({int activity, String note,int worth}) {
+  void update({int activity, String note, int worth}) {
     this.activity = activity;
     this.note = note;
     this.worth = worth;
   }
+
+  @override
+  int get hashCode => super.hashCode;
 }
