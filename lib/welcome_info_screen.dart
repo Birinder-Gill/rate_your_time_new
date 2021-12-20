@@ -55,7 +55,7 @@ class _WelcomeInfoScreenState extends State<WelcomeInfoScreen> {
               width: 100,
               child: (_page == _length)
                   ? OutlinedButton(
-                      onPressed: _navigateAhead, child: Text("N E X T"))
+                      onPressed: widget.onPrev??_navigateAhead, child: Text(widget.onPrev!=null?"D O N E":"N E X T"))
                   : IconButton(
                       icon: Icon(Icons.navigate_next),
                       onPressed: () {

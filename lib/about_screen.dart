@@ -86,76 +86,81 @@ class _AboutPageContent extends StatelessWidget {
             child: Material(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               elevation: 24,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Stack(
                 children: [
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Center(
-                    child: Text(
-                      "About",
-                      style: theme.textTheme.headline6.copyWith(
-                          fontWeight: FontWeight.bold, letterSpacing: 1),
-                    ),
-                  ),
-                  Divider(),
-                  Center(
-                    child: AppLogo(
-                      size: 100,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  for (final p in points)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        p,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.subtitle1,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 8,
                       ),
-                    ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Center(
-                    child: OutlinedButton(
-                        onPressed: onNext,
+                      Center(
                         child: Text(
-                          buttonText,
-                          style: theme.textTheme.headline5,
-                        )),
+                          "About",
+                          style: theme.textTheme.headline6.copyWith(
+                              fontWeight: FontWeight.bold, letterSpacing: 1),
+                        ),
+                      ),
+                      Divider(),
+                      Center(
+                        child: AppLogo(
+                          size: 100,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      for (final p in points)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            p,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.subtitle1,
+                          ),
+                        ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Center(
+                        child: OutlinedButton(
+                            onPressed: onNext,
+                            child: Text(
+                              buttonText,
+                              style: theme.textTheme.headline5,
+                            )),
+                      ),
+                      // ListTile(
+                      //   title: Text("Version:"),
+                      //   trailing: Text(
+                      //     "1.0",
+                      //     style:
+                      //         theme.textTheme.headline6.copyWith(fontWeight: FontWeight.bold),
+                      //   ),
+                      // ),
+                      ListTile(
+                        leading: TextButton(
+                            onPressed: () {
+                              showAboutDialog(
+                                  context: context,
+                                  applicationIcon: AppLogo(
+                                    size: 24,
+                                  ),
+                                  applicationName: "Rate your time",
+                                  applicationVersion: '1.0',
+                                  children: [
+                                    Text('Developed by Birinder gill in India')
+                                  ]);
+                            },
+                            child: Text("Licences")),
+                      ),
+                      ListTile(
+                          leading: TextButton(
+                              onPressed: () {},
+                              child: Text("Rate on Google play"))),
+                    ],
                   ),
-                  // ListTile(
-                  //   title: Text("Version:"),
-                  //   trailing: Text(
-                  //     "1.0",
-                  //     style:
-                  //         theme.textTheme.headline6.copyWith(fontWeight: FontWeight.bold),
-                  //   ),
-                  // ),
-                  ListTile(
-                    leading: TextButton(
-                        onPressed: () {
-                          showAboutDialog(
-                              context: context,
-                              applicationIcon: AppLogo(
-                                size: 24,
-                              ),
-                              applicationName: "Rate your time",
-                              applicationVersion: '1.0',
-                              children: [
-                                Text('Developed by Birinder gill in India')
-                              ]);
-                        },
-                        child: Text("Licences")),
-                  ),
-                  ListTile(
-                      leading: TextButton(
-                          onPressed: () {},
-                          child: Text("Rate on Google play"))),
+                  BackButton()
                 ],
               ),
             ),
