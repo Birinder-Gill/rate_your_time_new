@@ -29,7 +29,6 @@ class _WelcomeInfoScreenState extends State<WelcomeInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         height: 72,
@@ -67,29 +66,34 @@ class _WelcomeInfoScreenState extends State<WelcomeInfoScreen> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-                child: PageView(
-                    onPageChanged: (e) {
-                      consoleLog(e);
-                      setState(() {
-                        _page = e;
-                      });
-                    },
-                    controller: _pageC,
-                    physics: const BouncingScrollPhysics(),
-                    children: [
-                  for (final model in models)
-                    OnBoardingPage(
-                      model: model,
-                    ),
-                ])),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(left:24.0,bottom:24.0,right:24.0,),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 32,child: Align(alignment: Alignment.centerRight,child: TextButton(
+                  onPressed: widget.onPrev??_navigateAhead, child: Text("SKIP",style: TextStyle(letterSpacing: 1),))
+                ,),),
+              Expanded(
+                  child: PageView(
+                      onPageChanged: (e) {
+                        consoleLog(e);
+                        setState(() {
+                          _page = e;
+                        });
+                      },
+                      controller: _pageC,
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                    for (final model in models)
+                      OnBoardingPage(
+                        model: model,
+                      ),
+                  ])),
+            ],
+          ),
         ),
       ),
     );

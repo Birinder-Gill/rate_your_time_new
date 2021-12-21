@@ -22,16 +22,6 @@ class ThemeModel with ChangeNotifier {
   }
 
   List<MyTheme> themes = [
-    // MyTheme(
-    //     cardsOnScaffold: shrineBrown900,
-    //     scaffoldBackground: shrineSurfaceWhite,
-    //     primaryDarkColor: shrinePink400,
-    //     onPrimaryDark: shrineBrown900,
-    //     onCards: shrineBrown600,
-    //     primaryColor: shrineErrorRed,
-    //     textOnLight: Colors.white,
-    //     textOnDark: shrineBrown900,
-    //     isDark: false),
     MyTheme(
         scaffoldBackground: Color(0xffe5e5e5),
         cardsOnScaffold: Color(0xffffffff),
@@ -56,11 +46,11 @@ class ThemeModel with ChangeNotifier {
     MyTheme(
         scaffoldBackground: Color(0xff1d3557),
         cardsOnScaffold: Color(0xff457b9d),
-        backdropColor: Color(0xffa8dadc),
+        backdropColor: Color(0xff242424),
         onPrimaryDark: Color(0xffe63946),
         accentColor: Color(0xfff1faee),
         textOnLight: Color(0xffa8dadc),
-        textOnDark: Color(0xff1d3557),
+        textOnDark: Color(0xfffca311),
         isDark: true),
   ];
 

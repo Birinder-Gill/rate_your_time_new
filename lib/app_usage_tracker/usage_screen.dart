@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/providers/app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -24,17 +25,19 @@ class AppsUsageScreen extends StatefulWidget {
 
   final String dateRangeLabel;
 
-  const AppsUsageScreen({Key key, this.from, this.to, this.distinctApps, this.dateRangeLabel})
+  const AppsUsageScreen(
+      {Key key, this.from, this.to, this.distinctApps, this.dateRangeLabel})
       : super(key: key);
 
   @override
   _AppsUsageScreenState createState() => _AppsUsageScreenState();
 }
 
-class _AppsUsageScreenState extends State<AppsUsageScreen> {
+class _AppsUsageScreenState extends State<AppsUsageScreen>
+    with WidgetsBindingObserver {
   List<UsageStat> apps;
 
-  var _granted;
+  bool _granted;
 
   var search = '';
 
@@ -56,6 +59,21 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   get granted => (_granted != null && (_granted));
 
   Color get primaryDark => Theme.of(context).primaryColorDark;
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (_granted == false) {
+          isAccessGranted();
+        }
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
 
   getApps({bool forceReload = true}) async {
     setState(() {
@@ -89,6 +107,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   void initState() {
     to = DateUtils.dateOnly(widget.to ?? DateTime.now());
     from = widget.from ?? to.subtract(Duration(days: 1));
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       isAccessGranted();
     });
@@ -108,24 +127,26 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final theme = themeData.textTheme;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextButton.icon(
-              onPressed: pickFromDate,
-              label: Text(
-                "${_label(from)} - ${_label(to)}",
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    .copyWith(color: themeData.accentColor),
+          if (granted)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: TextButton.icon(
+                onPressed: pickFromDate,
+                label: Text(
+                  "${_label(from)} - ${_label(to)}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(color: themeData.accentColor),
+                ),
+                icon: Icon(Icons.edit, size: 16, color: themeData.accentColor),
               ),
-              icon: Icon(Icons.edit, size: 16, color: themeData.accentColor),
             ),
-          ),
         ],
       ),
       body: !granted
@@ -147,11 +168,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                               child: Column(
                                 children: [
                                   GestureDetector(
-                                    onTap: (){
-                                      showIntervalInfoDialog(context,label);
+                                    onTap: () {
+                                      showIntervalInfoDialog(context, label);
                                     },
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           "Total screen time ($label)",
@@ -160,11 +182,14 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                               color: themeData
                                                   .colorScheme.onSecondary),
                                         ),
-                                        SizedBox(width: 4,),
+                                        SizedBox(
+                                          width: 4,
+                                        ),
                                         Icon(
                                           Icons.info_sharp,
                                           size: 12,
-                                          color: themeData.colorScheme.secondary,
+                                          color:
+                                              themeData.colorScheme.secondary,
                                         )
                                       ],
                                     ),
@@ -215,10 +240,22 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                   elevation: 4,
                                   child: ListTile(
                                     onTap: () {
+                                      final lastDateUsed =
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              i.lastTimeUsed);
+                                      final lastTimeUsed =
+                                          TimeOfDay.fromDateTime(lastDateUsed);
+                                      final lastDateStamp =
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              i.lastTimeStamp);
+                                      final lastTimeStamp =
+                                          TimeOfDay.fromDateTime(lastDateStamp);
+                                      final loc =
+                                          MaterialLocalizations.of(context);
                                       showCupertinoModalPopup(
                                           context: context,
                                           builder: (c) => SimpleDialog(
-                                            titlePadding: EdgeInsets.zero,
+                                                titlePadding: EdgeInsets.zero,
                                                 title: ListTile(
                                                   title: Text('${i.appName}'),
                                                   subtitle: Text(i.package),
@@ -240,13 +277,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                                     title:
                                                         Text("Last timestamp"),
                                                     subtitle: Text(
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .formatShortDate(
-                                                        DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                                i.lastTimeStamp),
-                                                      ),
+                                                     '${loc.formatShortDate(lastDateStamp)} ${loc.formatTimeOfDay(lastTimeStamp)}'
                                                     ),
                                                   ),
                                                   ListTile(
@@ -270,13 +301,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
                                                     title:
                                                         Text("Last time used"),
                                                     subtitle: Text(
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .formatShortDate(
-                                                        DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                                i.lastTimeUsed),
-                                                      ),
+                                                        '${loc.formatShortDate(lastDateUsed)} ${loc.formatTimeOfDay(lastTimeUsed)}'
                                                     ),
                                                   )
                                                 ],
@@ -322,20 +347,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
   }
 
   gotoSettingsView() {
-    return Center(
-        child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Make tutorial on how to give access rights here",
-            textAlign: TextAlign.center,
-          ),
-          ElevatedButton(onPressed: openSettings, child: Text("Settings"))
-        ],
-      ),
-    ));
+    return _OpenSettingsView(
+      openSettings: openSettings,
+    );
   }
 
   _errorView() => Center(child: Text("An error occurred"));
@@ -348,7 +362,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
     final theme = Theme.of(context);
     final c = Theme.of(context).colorScheme;
     final lastDate = DateTime.now();
-    if(to.isAfter(lastDate)){
+    if (to.isAfter(lastDate)) {
       to = lastDate;
     }
     showDateRangePicker(
@@ -444,3 +458,74 @@ class _AppsUsageScreenState extends State<AppsUsageScreen> {
         ],
       );
 }
+
+class _OpenSettingsView extends StatelessWidget {
+  final VoidCallback openSettings;
+
+  const _OpenSettingsView({Key key, this.openSettings}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text(
+                  "This app needs Android's usage access permission to get your app usage stats.",
+                  style: tt.textTheme.headline5,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: GestureDetector(
+                    onTap: openSettings,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          image: DecorationImage(
+                              image: AssetImage(
+                                'assets/images/settings_asset.jpg',
+                              ),
+                              fit: BoxFit.cover)),
+                      height: 200,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                FaIcon(
+                  FontAwesomeIcons.handPointUp,
+                  size: 32,
+                  color: tt.primaryColorDark,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    "In your device's usage access settings, Switch on ${Constants.appName} in order to access this feature.",
+                    style: tt.textTheme.headline6,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+            ElevatedButton(
+                onPressed: openSettings, child: Text("Open usage settings"))
+          ],
+        ),
+      ),
+    );
+  }
+}
+// app usage, apps monitor data manager, stay free, usage analyser

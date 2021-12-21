@@ -11,6 +11,7 @@ import 'package:rate_your_time_new/troubleshooting_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
 import 'package:rate_your_time_new/welcome_info_screen.dart';
+import 'package:slide_digital_clock/slide_digital_clock.dart';
 
 import 'alarms_screen.dart';
 
@@ -34,9 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       time = MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.now());
-      setState(() {
-        
-      });
+      setState(() {});
     });
     timer = Timer.periodic(Duration(seconds: 1), (t) {
       setState(() {
@@ -55,17 +54,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
           DrawerHeader(
               child: Container(
             child: Center(
-              child: Text(
-                time,
-                style: Theme.of(context).textTheme.headline3,
-              ),
+              child: true
+                  ? DigitalClock(
+                      is24HourTimeFormat: false,
+                      showSecondsDigit: true,
+                      areaDecoration: BoxDecoration(),
+                      areaAligment: AlignmentDirectional.center,
+                      hourMinuteDigitDecoration: BoxDecoration(),
+                      secondDigitDecoration: BoxDecoration(
+
+                      ),
+                      digitAnimationStyle: Curves.decelerate,
+                      hourMinuteDigitTextStyle:
+                      Theme.of(context).textTheme.headline3,
+                      secondDigitTextStyle:
+                      Theme.of(context).textTheme.caption,
+                      amPmDigitTextStyle:
+                      Theme.of(context).textTheme.headline6,
+                    )
+                  : Text(
+                      time,
+                      style: Theme.of(context).textTheme.headline3,
+                    ),
             ),
           )),
           ListTile(
             onTap: () {
-              dialog(
+              pushTo(
                 context,
-                AlertDialog(content: SelectThemeWidget()),
+                SelectThemeWidget(),
               );
             },
             title: Text("Select theme"),
@@ -74,7 +91,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () {
               pushTo(context, AppsUsageScreen());
             },
-            title: Text("Track app usage (beta)"),
+            title: Text("See app usage"),
           ),
           ListTile(
             onTap: () {
@@ -89,32 +106,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
             title: Text("TroubleShoot"),
           ),
-          ListTile(
-            onTap: () {
-              pushTo(context, WelcomeInfoScreen());
-            },
-            title: Text("Welcome"),
-          ),
+          // ListTile(
+          //   onTap: () {
+          //     pushTo(context, WelcomeInfoScreen());
+          //   },
+          //   title: Text("Welcome"),
+          // ),
 
-          ListTile(
-            onTap: () async{
-              await SharedPrefs.clear();
-              pushTo(context, SplashScreen(),clear: true);
-            },
-            title: Text("Clear data and restart"),
-          ),
+          // ListTile(
+          //   onTap: () async{
+          //     await SharedPrefs.clear();
+          //     pushTo(context, SplashScreen(),clear: true);
+          //   },
+          //   title: Text("Clear data and restart"),
+          // ),
           ListTile(
             onTap: () {
               pushTo(context, SelectTimeScreen());
             },
             title: Text("Select time"),
           ),
-          ListTile(
-            onTap: () {
-              pushTo(context, AlarmsScreen());
-            },
-            title: Text("See Alarms"),
-          ),
+          // ListTile(
+          //   onTap: () {
+          //     pushTo(context, AlarmsScreen());
+          //   },
+          //   title: Text("See Alarms"),
+          // ),
           // ListTile(
           //   onTap: (){
           //     setState(() {

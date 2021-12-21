@@ -19,8 +19,8 @@ class _SelectThemeWidgetState extends State<SelectThemeWidget> {
       body: Row(
         children: [
           Expanded(
-            child: Wrap(
-              alignment: WrapAlignment.spaceEvenly,
+            child: Column(
+              // alignment: WrapAlignment.spaceEvenly,
                 children: [
                   for(int i=0;i<model.themes.length;i++)
                     GestureDetector(

@@ -1,6 +1,7 @@
 import 'package:animated_background/animated_background.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:rate_your_time_new/app_logo.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/welcome_info_screen.dart';
@@ -73,16 +74,19 @@ class _AboutPageContent extends StatelessWidget {
     '${Constants.appName} was developed with an intention to provide you a tool to assess every hour of your time and train your brain to stay focused through out the day.'
   ];
 
-  final buttonText = 'How this works?';
+  final buttonText = 'How it works';
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: [
+        SizedBox(
+          height: 24,
+        ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical:24.0,horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16),
             child: Material(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               elevation: 24,
@@ -96,7 +100,7 @@ class _AboutPageContent extends StatelessWidget {
                       ),
                       Center(
                         child: Text(
-                          "About",
+                          "Rate your time",
                           style: theme.textTheme.headline6.copyWith(
                               fontWeight: FontWeight.bold, letterSpacing: 1),
                         ),
@@ -108,7 +112,7 @@ class _AboutPageContent extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: 24,
+                        height: 16,
                       ),
                       for (final p in points)
                         Padding(
@@ -120,44 +124,61 @@ class _AboutPageContent extends StatelessWidget {
                           ),
                         ),
                       SizedBox(
-                        height: 16,
+                        height: 24,
                       ),
                       Center(
-                        child: OutlinedButton(
+                        child: ElevatedButton(
                             onPressed: onNext,
-                            child: Text(
-                              buttonText,
-                              style: theme.textTheme.headline5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                buttonText.toUpperCase(),style: TextStyle(letterSpacing: 1),),
                             )),
                       ),
-                      // ListTile(
-                      //   title: Text("Version:"),
-                      //   trailing: Text(
-                      //     "1.0",
-                      //     style:
-                      //         theme.textTheme.headline6.copyWith(fontWeight: FontWeight.bold),
-                      //   ),
-                      // ),
                       ListTile(
-                        leading: TextButton(
-                            onPressed: () {
-                              showAboutDialog(
-                                  context: context,
-                                  applicationIcon: AppLogo(
-                                    size: 24,
-                                  ),
-                                  applicationName: "Rate your time",
-                                  applicationVersion: '1.0',
-                                  children: [
-                                    Text('Developed by Birinder gill in India')
-                                  ]);
-                            },
-                            child: Text("Licences")),
+                        onTap: (){
+                          showAboutDialog(
+                              context: context,
+                              applicationIcon: AppLogo(
+                                size: 24,
+                              ),
+                              applicationName: "Rate your time",
+                              applicationVersion: '1.0',
+                              children: [
+                                Text('Developed by Birinder gill in India')
+                              ]);
+                        },
+                        leading: Icon(Icons.paste_outlined),
+                        title: Text("Licences"),
                       ),
                       ListTile(
-                          leading: TextButton(
-                              onPressed: () {},
-                              child: Text("Rate on Google play"))),
+                        leading: Icon(Icons.star_rate_outlined),
+                        onTap: (){
+                          LaunchReview.launch();
+                        },
+                          title:  Text("Rate on Google play",style: TextStyle(color: Colors.black),)),
+                      ListTile(
+                        leading: Icon(Icons.share),
+                          title: Text("Share app")),
+                      Expanded(
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _icon(FontAwesomeIcons.facebook),
+                              _icon(
+                                FontAwesomeIcons.instagram,
+                              ),
+                              _icon(
+                                FontAwesomeIcons.youtube,
+                              ),
+                              _icon(
+                                FontAwesomeIcons.whatsapp,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   BackButton()
@@ -167,24 +188,8 @@ class _AboutPageContent extends StatelessWidget {
           ),
         ),
         SizedBox(
-            height: 100,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _icon(FontAwesomeIcons.facebook),
-                  _icon(
-                    FontAwesomeIcons.instagram,
-                  ),
-                  _icon(
-                    FontAwesomeIcons.youtube,
-                  ),
-                  _icon(
-                    FontAwesomeIcons.whatsapp,
-                  ),
-                ],
-              ),
-            ))
+          height: 50,
+        )
       ],
     );
   }

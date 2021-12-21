@@ -64,7 +64,7 @@ class DayModel with ChangeNotifier {
   void _updateInMemory(Hour hour) {
     hours
         .singleWhere((element) => element==hour)
-        .update(activity: hour.activity, note: hour.note, worth: hour.worth);
+        .update(activity: hour.activity, note: hour.note, worth: hour.worth,);
     AverageModel.clearCache();
   }
 

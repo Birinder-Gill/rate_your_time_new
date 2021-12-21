@@ -17,39 +17,34 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scrollbar(
-        isAlwaysShown: true,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                "${widget.model.title}",
-                style: Theme.of(context).textTheme.headline4,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              Image.network(
-                "${widget.model.imagePath}",
-                // ,
-                fit: BoxFit.cover,
-                height: _size,
-                width: _size,
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              Text("${widget.model.desc}",
-                  style: Theme.of(context).textTheme.headline6,
-                  textAlign: TextAlign.start),
-            ],
-          ),
+    return Scrollbar(
+      isAlwaysShown: true,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              "${widget.model.title}",
+              style: Theme.of(context).textTheme.headline4,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Image.network(
+              "${widget.model.imagePath}",
+              // ,
+              fit: BoxFit.cover,
+              height: _size,
+              width: _size,
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Text("${widget.model.desc}",
+                style: Theme.of(context).textTheme.headline6,
+                textAlign: TextAlign.start),
+          ],
         ),
       ),
     );

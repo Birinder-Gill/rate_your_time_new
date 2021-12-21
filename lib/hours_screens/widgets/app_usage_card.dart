@@ -144,9 +144,13 @@ class AppUsageCard extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  "No access granted\nA small description about why and how to give usage access",
-                  textAlign: TextAlign.center,
+                Text('Total screen time',style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "You need to give android's usage access permission to access this feature",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 ElevatedButton(
                     onPressed: openSettings, child: Text("Open settings")),
