@@ -237,7 +237,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 4, vertical: 4),
                                 child: Card(
-                                  elevation: 4,
+                                  elevation: 1,
                                   child: ListTile(
                                     onTap: () {
                                       final lastDateUsed =
