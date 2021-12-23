@@ -143,7 +143,10 @@ class HourWidget extends StatelessWidget {
         );
 
   Widget _activityIcon(BuildContext context, Hour hour) => hour.activity != 0
-      ? FaIcon(activities[hour.activity].icon)
+      ? FaIcon(activities[hour.activity].icon,
+    size: 16,
+
+  )
       : Icon(
           Icons.add,
           size: 16,

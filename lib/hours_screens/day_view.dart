@@ -53,7 +53,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    // physics: const BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
                         if ((model.hours?.length ?? 0) == 0)

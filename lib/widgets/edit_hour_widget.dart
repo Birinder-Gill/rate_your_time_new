@@ -27,6 +27,7 @@ class _EditHourWidgetState extends State<EditHourWidget> {
   void initState() {
     rating = widget.hour.worth;
     activityId = widget.hour.activity;
+    commentC.text = widget.hour.note??"";
     super.initState();
   }
 

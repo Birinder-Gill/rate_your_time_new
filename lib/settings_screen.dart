@@ -1,17 +1,10 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rate_your_time_new/about_screen.dart';
-import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/select_time_screen.dart';
 import 'package:rate_your_time_new/splash_screen.dart';
 import 'package:rate_your_time_new/themes/select_theme_widget.dart';
-import 'package:rate_your_time_new/troubleshooting_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
 import 'package:rate_your_time_new/welcome_info_screen.dart';
-import 'package:slide_digital_clock/slide_digital_clock.dart';
 
 import 'alarms_screen.dart';
 
@@ -21,63 +14,41 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String time = '';
+  final expes = [false, false];
 
-  Timer timer;
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      time = MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.now());
-      setState(() {});
-    });
-    timer = Timer.periodic(Duration(seconds: 1), (t) {
-      setState(() {
-        time =
-            MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.now());
-      });
-    });
-    super.initState();
-  }
+  final _cardColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
+      appBar: AppBar(),
+      body: Column(
         children: [
-          DrawerHeader(
-              child: Container(
-            child: Center(
-              child: true
-                  ? DigitalClock(
-                      is24HourTimeFormat: false,
-                      showSecondsDigit: true,
-                      areaDecoration: BoxDecoration(),
-                      areaAligment: AlignmentDirectional.center,
-                      hourMinuteDigitDecoration: BoxDecoration(),
-                      secondDigitDecoration: BoxDecoration(
-
-                      ),
-                      digitAnimationStyle: Curves.decelerate,
-                      hourMinuteDigitTextStyle:
-                      Theme.of(context).textTheme.headline3,
-                      secondDigitTextStyle:
-                      Theme.of(context).textTheme.caption,
-                      amPmDigitTextStyle:
-                      Theme.of(context).textTheme.headline6,
-                    )
-                  : Text(
-                      time,
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-            ),
-          )),
+          ListTile(
+            onTap: () {
+              pushTo(context, WelcomeInfoScreen());
+            },
+            title: Text("Welcome"),
+          ),
+          ListTile(
+            onTap: () {
+              pushTo(context, AlarmsScreen());
+            },
+            title: Text("See Alarms"),
+          ),
+          ListTile(
+            onTap: () async {
+              await SharedPrefs.clear();
+              pushTo(context, SplashScreen(), clear: true);
+            },
+            title: Text("Clear data and restart"),
+          ),
+          ListTile(
+            onTap: () {
+              pushTo(context, SelectTimeScreen());
+            },
+            title: Text("Select time"),
+          ),
           ListTile(
             onTap: () {
               pushTo(
@@ -87,65 +58,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
             title: Text("Select theme"),
           ),
-          ListTile(
-            onTap: () {
-              pushTo(context, AppsUsageScreen());
-            },
-            title: Text("See app usage"),
-          ),
-          ListTile(
-            onTap: () {
-              showCupertinoModalPopup(
-                  context: context, builder: (c) => AboutScreen());
-            },
-            title: Text("About Rate your time"),
-          ),
-          ListTile(
-            onTap: () {
-              pushTo(context, TroubleShootingScreen());
-            },
-            title: Text("TroubleShoot"),
-          ),
-          // ListTile(
-          //   onTap: () {
-          //     pushTo(context, WelcomeInfoScreen());
-          //   },
-          //   title: Text("Welcome"),
-          // ),
-
-          // ListTile(
-          //   onTap: () async{
-          //     await SharedPrefs.clear();
-          //     pushTo(context, SplashScreen(),clear: true);
-          //   },
-          //   title: Text("Clear data and restart"),
-          // ),
-          ListTile(
-            onTap: () {
-              pushTo(context, SelectTimeScreen());
-            },
-            title: Text("Select time"),
-          ),
-          // ListTile(
-          //   onTap: () {
-          //     pushTo(context, AlarmsScreen());
-          //   },
-          //   title: Text("See Alarms"),
-          // ),
-          // ListTile(
-          //   onTap: (){
-          //     setState(() {
-          //       Constants.testFlag = !Constants.testFlag;
-          //     });
-          //   },
-          //   leading: Icon(Icons.bug_report_sharp,color: Constants.testFlag?Colors.green:Colors.grey,),
-          //   title: Text("Debug mode"),
-          //   trailing: CupertinoSwitch(value: Constants.testFlag, onChanged: (e){
-          //     setState(() {
-          //       Constants.testFlag = e;
-          //     });
-          //   }),
-          // ),
+          ExpansionPanelList(
+              elevation: 1,
+              expansionCallback: (i, b) {
+                setState(() {
+                  this.expes[i] = !b;
+                });
+              },
+              children: <ExpansionPanel>[
+                ExpansionPanel(
+                  backgroundColor: _cardColor,
+                  canTapOnHeader: true,
+                  isExpanded: expes[0],
+                  headerBuilder: (c, b) => ListTile(
+                    title: Text("Rating notification"),
+                    isThreeLine: true,
+                    subtitle: Text(
+                        "Rating notification does'nt show up on lock screen or float as a head"),
+                  ),
+                  body: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        onTap: Utils.openNotificationSettings,
+                        title: Text("Notification settings"),
+                        subtitle: Text(
+                            "Go here and allow notifications to be shown on lock screen"),
+                      ),
+                    ],
+                  ),
+                ),
+                ExpansionPanel(
+                  canTapOnHeader: true,
+                  backgroundColor: _cardColor,
+                  isExpanded: expes[1],
+                  headerBuilder: (c, b) => ListTile(
+                    title: Text("Usage limit problem"),
+                    isThreeLine: true,
+                    subtitle: Text(
+                        "If the system is killing your app in the background and the notification service stops, here's something you can do."),
+                  ),
+                  body: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        title: Text("Restart service"),
+                        subtitle: Text(
+                            "If the notification service has stopped, try and restart it here"),
+                        trailing: ElevatedButton(
+                            onPressed: () {}, child: Text("Restart service")),
+                      ),
+                      ListTile(
+                        title: Text("Don't kill my app website"),
+                      ),
+                      ListTile(
+                        onTap: Utils.openAppSettingsScreen,
+                        title: Text("Apps system level settings"),
+                        subtitle: Text(
+                            "Go here and remove restrictions from battery saver"),
+                      ),
+                    ],
+                  ),
+                ),
+              ])
         ],
       ),
     );

@@ -16,7 +16,7 @@ import 'package:rate_your_time_new/feature_discovery/delegate.dart';
 import 'package:rate_your_time_new/feature_discovery/feature_discovery.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/toggle.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
-import 'package:rate_your_time_new/settings_screen.dart';
+import 'package:rate_your_time_new/drawer_widget.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/page_status.dart';
 
@@ -397,7 +397,7 @@ class _BackdropState extends State<Backdrop>
           ),
           child: Scaffold(
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-            drawer: Drawer(child: SettingsScreen()),
+            drawer: Drawer(child: DrawerWidget()),
             appBar: appBar,
             body: LayoutBuilder(
               builder: _buildStack,

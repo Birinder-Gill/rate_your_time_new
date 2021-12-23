@@ -44,6 +44,7 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
           final appModel = Provider.of<AppModel>(context, listen: false);
           final date = appModel.frontLabel(MaterialLocalizations.of(context));
           return ListView(
+            physics: const BouncingScrollPhysics(),
             children: [
               _MonthViewStats(
                 model,

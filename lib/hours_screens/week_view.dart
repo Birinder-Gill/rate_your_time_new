@@ -51,6 +51,7 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
       body: Consumer<WeekModel>(
         builder: (BuildContext context, model, Widget child) {
           return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 Padding(
