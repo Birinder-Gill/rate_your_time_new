@@ -13,33 +13,28 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         children: [
           DrawerHeader(
-              child: Container(
-            child: Center(
-              child:
-                   DigitalClock(
-                      is24HourTimeFormat: false,
-                      showSecondsDigit: true,
-                      areaDecoration: BoxDecoration(),
-                      areaAligment: AlignmentDirectional.center,
-                      hourMinuteDigitDecoration: BoxDecoration(),
-                      secondDigitDecoration: BoxDecoration(),
-                      digitAnimationStyle: Curves.decelerate,
-                      hourMinuteDigitTextStyle:
-                      Theme.of(context).textTheme.headline3,
-                      secondDigitTextStyle:
-                      Theme.of(context).textTheme.caption,
-                      amPmDigitTextStyle:
-                      Theme.of(context).textTheme.headline6,
-                    )
+            child: Container(
+              child: Center(
+                  child: DigitalClock(
+                is24HourTimeFormat: false,
+                showSecondsDigit: true,
+                areaDecoration: BoxDecoration(),
+                areaAligment: AlignmentDirectional.center,
+                hourMinuteDigitDecoration: BoxDecoration(),
+                secondDigitDecoration: BoxDecoration(),
+                digitAnimationStyle: Curves.decelerate,
+                hourMinuteDigitTextStyle: Theme.of(context).textTheme.headline3,
+                secondDigitTextStyle: Theme.of(context).textTheme.caption,
+                amPmDigitTextStyle: Theme.of(context).textTheme.headline6,
+              )),
             ),
-          ),),
+          ),
           ListTile(
             leading: Icon(Icons.android_outlined),
             onTap: () {

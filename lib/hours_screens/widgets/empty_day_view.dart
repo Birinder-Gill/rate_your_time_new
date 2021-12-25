@@ -5,7 +5,7 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 
 import 'first_time_empty_view.dart';
 
-class EmptyWeekView extends StatelessWidget {
+class EmptyDayView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final newUser = Provider.of<AppModel>(context).isEmpty;

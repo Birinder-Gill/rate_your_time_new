@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/goal/goal_widget.dart';
+import 'package:rate_your_time_new/hours_screens/widgets/empty_day_view.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/day_model.dart';
@@ -56,12 +57,12 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        if ((model.hours?.length ?? 0) == 0)
-                          EmptyView(),
-                        for (var i in model.hours)
-                          HourWidget(i, updateHour: (hour) {
-                            model.updateHour(hour);
-                          }),
+                        // if ((model.hours?.length ?? 0) == 0)
+                          EmptyDayView(),
+                        // for (var i in model.hours)
+                        //   HourWidget(i, updateHour: (hour) {
+                        //     model.updateHour(hour);
+                        //   }),
                         // GoalWidgetWrapper(),
                       ],
                     ),

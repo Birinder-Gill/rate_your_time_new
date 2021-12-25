@@ -103,9 +103,11 @@ class AppModel with ChangeNotifier {
   }
 
   checkIfHoursTableEmpty() async {
-    isEmpty = await ApiHelper.isTableEmpty();
+    // isEmpty = await ApiHelper.isTableEmpty();
+    isEmpty = true;
   }
 
+  ///I don't think we need this now
   void _manageTodayCases() {
     return;
     final now = DateTime.now();
