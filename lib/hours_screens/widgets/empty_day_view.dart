@@ -11,7 +11,12 @@ class EmptyDayView extends StatelessWidget {
     final newUser = Provider.of<AppModel>(context).isEmpty;
 
     if (newUser) {
-      return FirstTimeEmptyView();
+      return FirstTimeEmptyView(
+        title: 'Day view',
+        desc:
+            'Your daily hourly ratings will be shown here after you input them via notification.',
+        assetPath: 'assets/images/day_view.jpg',
+      );
     } else {
       return EmptyView();
     }

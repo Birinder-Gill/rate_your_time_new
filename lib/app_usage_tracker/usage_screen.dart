@@ -127,7 +127,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final theme = themeData.textTheme;
-
+_granted=false;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -514,14 +514,18 @@ class _OpenSettingsView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     "In your device's usage access settings, Switch on ${Constants.appName} in order to access this feature.",
-                    style: tt.textTheme.headline6,
+                    style: tt.textTheme.subtitle1,
                     textAlign: TextAlign.center,
                   ),
                 ),
               ],
             ),
             ElevatedButton(
-                onPressed: openSettings, child: Text("Open usage settings"))
+                onPressed: openSettings, child: Text("Open usage settings")),
+            SizedBox.shrink(),
+            SizedBox.shrink(),
+            SizedBox.shrink(),
+            SizedBox.shrink(),
           ],
         ),
       ),

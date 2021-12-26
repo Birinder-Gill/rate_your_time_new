@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/select_time_screen.dart';
 import 'package:rate_your_time_new/splash_screen.dart';
 import 'package:rate_your_time_new/themes/select_theme_widget.dart';
+import 'package:rate_your_time_new/troubleshooting_page.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
 import 'package:rate_your_time_new/welcome_info_screen.dart';
@@ -14,115 +16,112 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final expes = [false, false];
 
-  final _cardColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          ListTile(
-            onTap: () {
-              pushTo(context, WelcomeInfoScreen());
-            },
-            title: Text("Welcome"),
+    return Material(
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: false,
+            pinned: true,
+            expandedHeight: 220,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                "Settings",
+                style: TextStyle(color: Colors.white),
+              ),
+              background: Image.network(
+                'https://images.pexels.com/photos/1410119/pexels-photo-1410119.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          ListTile(
-            onTap: () {
-              pushTo(context, AlarmsScreen());
-            },
-            title: Text("See Alarms"),
-          ),
-          ListTile(
-            onTap: () async {
-              await SharedPrefs.clear();
-              pushTo(context, SplashScreen(), clear: true);
-            },
-            title: Text("Clear data and restart"),
-          ),
-          ListTile(
-            onTap: () {
-              pushTo(context, SelectTimeScreen());
-            },
-            title: Text("Select time"),
-          ),
-          ListTile(
-            onTap: () {
-              pushTo(
-                context,
-                SelectThemeWidget(),
-              );
-            },
-            title: Text("Select theme"),
-          ),
-          ExpansionPanelList(
-              elevation: 1,
-              expansionCallback: (i, b) {
-                setState(() {
-                  this.expes[i] = !b;
-                });
-              },
-              children: <ExpansionPanel>[
-                ExpansionPanel(
-                  backgroundColor: _cardColor,
-                  canTapOnHeader: true,
-                  isExpanded: expes[0],
-                  headerBuilder: (c, b) => ListTile(
-                    title: Text("Rating notification"),
-                    isThreeLine: true,
-                    subtitle: Text(
-                        "Rating notification does'nt show up on lock screen or float as a head"),
-                  ),
-                  body: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        onTap: Utils.openNotificationSettings,
-                        title: Text("Notification settings"),
-                        subtitle: Text(
-                            "Go here and allow notifications to be shown on lock screen"),
-                      ),
-                    ],
-                  ),
+          SliverFillRemaining(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+               _themeSelector(),
+                Divider(),
+                _setting(icon:Icons.access_time_outlined,label:"Select time",onTap: () {
+                  pushTo(context, SelectTimeScreen());
+                }),
+                if(false)
+                ListTile(
+                  onTap: () {
+                    pushTo(context, WelcomeInfoScreen());
+                  },
+                  title: Text("Welcome"),
                 ),
-                ExpansionPanel(
-                  canTapOnHeader: true,
-                  backgroundColor: _cardColor,
-                  isExpanded: expes[1],
-                  headerBuilder: (c, b) => ListTile(
-                    title: Text("Usage limit problem"),
-                    isThreeLine: true,
-                    subtitle: Text(
-                        "If the system is killing your app in the background and the notification service stops, here's something you can do."),
-                  ),
-                  body: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        title: Text("Restart service"),
-                        subtitle: Text(
-                            "If the notification service has stopped, try and restart it here"),
-                        trailing: ElevatedButton(
-                            onPressed: () {}, child: Text("Restart service")),
-                      ),
-                      ListTile(
-                        title: Text("Don't kill my app website"),
-                      ),
-                      ListTile(
-                        onTap: Utils.openAppSettingsScreen,
-                        title: Text("Apps system level settings"),
-                        subtitle: Text(
-                            "Go here and remove restrictions from battery saver"),
-                      ),
-                    ],
-                  ),
+               if(false) ListTile(
+                  onTap: () {
+                    pushTo(context, AlarmsScreen());
+                  },
+                  title: Text("See Alarms"),
                 ),
-              ])
+                if(false)ListTile(
+                  onTap: () async {
+                    await SharedPrefs.clear();
+                    pushTo(context, SplashScreen(), clear: true);
+                  },
+                  title: Text("Clear data and restart"),
+                ),
+                if(false)ListTile(
+                  onTap: () {
+                    pushTo(context, SelectTimeScreen());
+                  },
+                  title: Text("Select time"),
+                ),
+                Divider(),
+                _setting(label:'Troubleshoot',icon: Icons.support,onTap: (){
+                  pushTo(context,TroubleshootScreen());
+                }),
+                Divider(),
+                _setting(label:'Show app usage card',icon: Icons.bar_chart,onTap: (){
+                  pushTo(context,TroubleshootScreen());
+                },trailing: Switch.adaptive(value: true, onChanged: (e){})),
+                Divider(),
+                _setting(label:'Rating dialog',icon: Icons.star_border,onTap: (){
+                  pushTo(context,TroubleshootScreen());
+                },trailing: Switch.adaptive(value: false, onChanged: (e){})),
+
+              ],
+            ),
+          )
         ],
       ),
     );
   }
+  get style => TextStyle(color: Theme.of(context).primaryColorDark,fontSize: 16, fontWeight: FontWeight.bold);
+
+  Widget _setting({IconData icon, String label, VoidCallback onTap,Widget trailing,Widget subtitle}) => ListTile(
+    leading: Icon(icon),
+    subtitle: subtitle,
+    horizontalTitleGap: 0,
+    onTap:onTap,
+    trailing:trailing?? Icon(Icons.navigate_next),
+    title: Text('$label',style: style,),
+  );
+
+  Widget _subtitle(String s) =>Container(
+    color: Colors.white,
+    child: Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(s,style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),),
+        ),
+      ],
+    ),
+  );
+
+  Widget _themeSelector() =>Column(
+    mainAxisSize:MainAxisSize.min,children: [
+    _setting(
+      icon: Icons.image,
+      label: "Select theme",
+    ),
+    SelectThemeWidget(),
+  ],);
 }

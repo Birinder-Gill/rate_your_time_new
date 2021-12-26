@@ -11,7 +11,12 @@ class EmptyWeekView extends StatelessWidget {
     final newUser = Provider.of<AppModel>(context).isEmpty;
 
     if (newUser) {
-      return FirstTimeEmptyView();
+      return FirstTimeEmptyView(
+        title: 'Week View',
+        desc:
+            "This is the week view description for this week. This screen shows the daily averages for this week for you to see the progress you've made this week so far and to compare it with previous weeeks.",
+        assetPath: 'assets/images/week_view.jpg',
+      );
     } else {
       return EmptyView();
     }

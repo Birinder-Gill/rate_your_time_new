@@ -12,28 +12,22 @@ class _SelectThemeWidgetState extends State<SelectThemeWidget> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<ThemeModel>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Select theme"),
-      ),
-      body: Row(
-        children: [
-          Expanded(
-            child: Column(
-              // alignment: WrapAlignment.spaceEvenly,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        for(int i=0;i<model.themes.length;i++)
+          GestureDetector(
+              onTap: (){
+                model.setTheme(i);
+                // Navigator.pop(context);
+              },
+              child: Column(
                 children: [
-                  for(int i=0;i<model.themes.length;i++)
-                    GestureDetector(
-                        onTap: (){
-                          model.setTheme(i);
-                          // Navigator.pop(context);
-                        },
-                        child: ThemeTile(model.themes[i],height: 70,))
+                  ThemeTile(model.themes[i],height: 50,),
+                  Icon(Icons.check_circle,color: i == model.selectedSIndex?null:Colors.grey,)
                 ],
-              ),
-          ),
-        ],
-      ),
+              )),
+      ],
     );
 
   }

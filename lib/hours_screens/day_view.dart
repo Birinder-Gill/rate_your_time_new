@@ -47,6 +47,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
+    return EmptyDayView();
     return Consumer<DayModel>(
       builder: (_, model, __) => !model.loaded
           ? simpleLoader()
@@ -57,12 +58,12 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        // if ((model.hours?.length ?? 0) == 0)
+                        if ((model.hours?.length ?? 0) == 0)
                           EmptyDayView(),
-                        // for (var i in model.hours)
-                        //   HourWidget(i, updateHour: (hour) {
-                        //     model.updateHour(hour);
-                        //   }),
+                        for (var i in model.hours)
+                          HourWidget(i, updateHour: (hour) {
+                            model.updateHour(hour);
+                          }),
                         // GoalWidgetWrapper(),
                       ],
                     ),

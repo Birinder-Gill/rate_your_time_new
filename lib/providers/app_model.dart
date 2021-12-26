@@ -17,6 +17,8 @@ const largeLetterSpacing = 1.0;
 class ThemeModel with ChangeNotifier {
   ThemeData selectedTheme;
 
+  int selectedSIndex = 0;
+
   ThemeModel() {
     selectedTheme = _defaultTheme;
   }
@@ -31,7 +33,6 @@ class ThemeModel with ChangeNotifier {
         textOnLight: Color(0xff14213d),
         textOnDark: Color(0xffffffff),
         isDark: false),
-
     MyTheme(
       scaffoldBackground: Color(0xffd7e4eb),
       cardsOnScaffold: Color(0xffffffff),
@@ -42,7 +43,6 @@ class ThemeModel with ChangeNotifier {
       textOnDark: Color(0xffffffff),
       isDark: false,
     ),
-
     MyTheme(
         scaffoldBackground: Color(0xff1d3557),
         cardsOnScaffold: Color(0xff457b9d),
@@ -57,6 +57,7 @@ class ThemeModel with ChangeNotifier {
   ThemeData get _defaultTheme => _buildFromMyTheme(themes[0]);
 
   setTheme(int index) {
+    this.selectedSIndex = index;
     this.selectedTheme = _buildFromMyTheme(themes[index]);
     SharedPrefs.setInt(SharedPrefs.themeIndex, index);
     nextTick(() {
@@ -77,6 +78,13 @@ class ThemeModel with ChangeNotifier {
       primaryColorDark: theme.backdropColor,
       primaryColorLight: theme.scaffoldBackground,
       buttonColor: theme.backdropColor,
+      switchTheme: SwitchThemeData(
+        thumbColor:
+            MaterialStateProperty.resolveWith((states) => theme.backdropColor),
+        trackColor: MaterialStateProperty.resolveWith(
+            (states) => theme.backdropColor.withOpacity(.4)),
+
+      ),
       unselectedWidgetColor: theme.backdropColor,
       snackBarTheme: SnackBarThemeData(
           backgroundColor: theme.backdropColor,

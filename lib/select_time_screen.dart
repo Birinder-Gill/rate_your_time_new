@@ -74,6 +74,7 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
   }
 
   String _formatIntervalTime(int init, int end) {
+    if(init==null||end==null)return '';
     final hours = end > init ? end - init : 24 - init + end;
     return '${hours}hr${hours > 1 ? 's' : ''}';
   }

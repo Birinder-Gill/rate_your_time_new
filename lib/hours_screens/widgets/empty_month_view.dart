@@ -10,7 +10,8 @@ class EmptyMonthView extends StatelessWidget {
   Widget build(BuildContext context) {
     final newUser = Provider.of<AppModel>(context).isEmpty;
     if (newUser) {
-      return FirstTimeEmptyView();
+      return FirstTimeEmptyView(title: "Month view",desc: "This will show your efficiency this month so far. Your average of every day for this month so far",
+      assetPath: "assets/images/month_view.jpg",);
     } else {
       return EmptyView();
     }
