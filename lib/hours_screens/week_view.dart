@@ -48,8 +48,11 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
     final appModel = Provider.of<AppModel>(context, listen: false);
     final date = appModel.frontLabel(MaterialLocalizations.of(context));
     return Scaffold(
-      body: false?  Center(child: EmptyWeekView()): Consumer<WeekModel>(
+      body: Consumer<WeekModel>(
         builder: (BuildContext context, model, Widget child) {
+          if (model.isEmpty) {
+            return Center(child: EmptyWeekView());
+          }
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
@@ -107,9 +110,7 @@ class _WeekViewStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!model.loaded) return simpleLoader();
-    if (model.isEmpty) {
-      return Center(child: EmptyWeekView());
-    }
+
     final theme = Theme.of(context);
     return Card(
       child: Column(

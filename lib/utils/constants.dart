@@ -148,7 +148,7 @@ void toast(String msg) {
 
 bool _dialogShowing = false;
 
-void showLoader(BuildContext context,{String label = "Loading..."}) {
+void showLoader(BuildContext context, {String label = "Loading..."}) {
   if (_dialogShowing) {
     return;
   }
@@ -161,7 +161,8 @@ void showLoader(BuildContext context,{String label = "Loading..."}) {
         height: 150,
         width: 200,
         child: Center(
-          child: Material(child: Column(
+          child: Material(
+              child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
@@ -361,7 +362,7 @@ class TimeUtils {
   }
 
   static Future<DateTime> getMonthStart(DateTime to) async {
-    //TODO: Maybe we could remove initial dae check and make it synchronous;
+    //FIXME: Maybe we could remove initial dae check and make it synchronous;
     final from = DateTime.utc(to.year, to.month, 1);
     final installDate = await SharedPrefs.checkInstallDate();
     consoleLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
@@ -380,22 +381,51 @@ class TimeUtils {
     return '${l.formatShortDate(from)}  - ${l.formatShortDate(to)}';
   }
 
-  static String getTimeTillNextAlarm() {
+  static Future<String> getTimeTillNextAlarm() async {
+    String label(DateTime now, {int hrs}) {
+      int result = 0;
+      String unit = '';
+      String trail = '';
+      if (now.minute == 59) {
+        result = 60 - now.second;
+        unit = 'second';
+      } else {
+        result = 60 - now.minute;
+        unit = 'minute';
+      }
+      if (result > 1) {
+        trail = 's';
+      }
+      var prefix = '';
+      if (hrs != null && hrs > 0) {
+        prefix = '$hrs hr ';
+      }
+      return '$prefix $result $unit$trail';
+    }
+
+    final list = await Utils.getAllAlarms();
     final now = DateTime.now();
-    int result = 0;
-    String unit = '';
-    String trail = '';
-    if(now.minute == 59){
-      result = 60-now.second;
-      unit='second';
-    }else{
-      result = 60-now.minute;
-      unit='minute';
-    }
-    if(result>1){
-      trail = 's';
-    }
-    return '$result $unit$trail';
+    bool captured = false;
+    int firstHr;
+    int lastHr;
+    list.forEach((element) {
+      final hr = int.parse(element['time'].toString().split(':').first);
+      if (firstHr == null) {
+        firstHr = hr;
+      }
+      if (captured) {
+        return label(now);
+      }
+      lastHr = hr;
+      if (hr == now.hour) {
+        captured = true;
+      }
+    });
+    final tom = now.add(Duration(days: now.hour>lastHr?1:0));
+    final newD = DateTime(tom.year, tom.month, tom.day, firstHr);
+    int hrs = newD.difference(now).inHours;
+
+    return label(now, hrs: hrs);
   }
 }
 
@@ -429,6 +459,11 @@ class Utils {
   static deleteAlarms() {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     return channel.invokeMethod(Constants.deleteAlarms);
+  }
+
+  static Future<List> getAllAlarms() {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    return channel.invokeMethod(Constants.getAlarms);
   }
 
   static AverageDataModel parseAveragesData(Map data) {

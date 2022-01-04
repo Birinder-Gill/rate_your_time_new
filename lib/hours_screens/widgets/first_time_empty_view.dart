@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rate_your_time_new/utils/constants.dart';
 
 class FirstTimeEmptyView extends StatelessWidget {
   final String title;
@@ -40,12 +41,20 @@ class _NotificationInTimer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
-    return Text(
-     "Notification in 00:27".toUpperCase(),
-      style: tt.caption.copyWith(
-          letterSpacing: 2,
-          wordSpacing: 2,
-          fontWeight: FontWeight.bold),
+    return FutureBuilder<String>(
+      future: TimeUtils.getTimeTillNextAlarm(),
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          return Text(
+         "Notification in ${snapshot.data}".toUpperCase(),
+          style: tt.caption.copyWith(
+              letterSpacing: 2,
+              wordSpacing: 2,
+              fontWeight: FontWeight.bold),
+        );
+        }
+        return SizedBox.shrink();
+      }
     );
   }
 }
@@ -75,13 +84,17 @@ class _GradientyImage extends StatelessWidget {
         );
       },
       blendMode: BlendMode.dstIn,
-      child: Container(
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Theme.of(context).primaryColorDark,width: .3),
-            // boxShadow: [BoxShadow(color: Theme.of(context).primaryColorDark,blurRadius: 4)],
-            color: scColor,
-        image: DecorationImage(image: AssetImage(assetPath),fit: BoxFit.contain)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal:24.0),
+        child: Container(
+
+          decoration: BoxDecoration(
+              // shape: BoxShape.circle,
+              border: Border.all(color: Theme.of(context).primaryColorDark,width: .3),
+              // boxShadow: [BoxShadow(color: Theme.of(context).primaryColorDark,blurRadius: 4)],
+              color: scColor,
+          image: DecorationImage(image: AssetImage(assetPath),fit: BoxFit.contain)),
+        ),
       ),
     );
   }

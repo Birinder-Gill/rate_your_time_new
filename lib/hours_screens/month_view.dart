@@ -39,8 +39,11 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: false? EmptyMonthView(): Consumer<MonthModel>(
+      body:  Consumer<MonthModel>(
         builder: (BuildContext context, model, Widget child) {
+          if (model.isEmpty) {
+            return EmptyMonthView();
+          }
           final appModel = Provider.of<AppModel>(context, listen: false);
           final date = appModel.frontLabel(MaterialLocalizations.of(context));
           return ListView(
@@ -97,9 +100,6 @@ class _MonthViewStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!model.loaded) return simpleLoader();
-    if (model.isEmpty) {
-      return EmptyMonthView();
-    }
     final primaryDark = Theme.of(context).primaryColorDark;
     final gridHeight = _gridHeight(model.av.averages.length);
     final theme = Theme.of(context);

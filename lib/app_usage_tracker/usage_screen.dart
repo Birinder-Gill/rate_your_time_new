@@ -127,11 +127,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final theme = themeData.textTheme;
-    _granted = false;
+    // _granted = false;
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text("App usage"),
         actions: [
           if (granted)
             Padding(

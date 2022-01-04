@@ -47,7 +47,7 @@ class _TroubleshootScreenState extends State<TroubleshootScreen> {
                 await Utils.createAlarms();
                 hideLoader(context);
                 toast("Service restarted successfully.");
-                toast("Next notification in ${TimeUtils.getTimeTillNextAlarm()}.");
+                toast("Next notification in ${await TimeUtils.getTimeTillNextAlarm()}.");
               }
 
             ),

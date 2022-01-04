@@ -54,7 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                   title: Text("Welcome"),
                 ),
-               if(false) ListTile(
+                ListTile(
                   onTap: () {
                     pushTo(context, AlarmsScreen());
                   },

@@ -47,19 +47,20 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
-    // return EmptyDayView();
     return Consumer<DayModel>(
-      builder: (_, model, __) => !model.loaded
-          ? simpleLoader()
-          : Column(
+      builder: (_, model, __) {
+        if(!model.loaded)
+          return simpleLoader();
+        if ((model.hours?.length ?? 0) == 0) {
+          return EmptyDayView();
+        }
+        return Column(
               children: [
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        if ((model.hours?.length ?? 0) == 0)
-                          EmptyDayView(),
                         for (var i in model.hours)
                           HourWidget(i, updateHour: (hour) {
                             model.updateHour(hour);
@@ -71,7 +72,8 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                 ),
                 if (model.average > 0) _average(context, model.average)
               ],
-            ),
+            );
+      },
     );
   }
 

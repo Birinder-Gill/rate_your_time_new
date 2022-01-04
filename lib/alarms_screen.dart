@@ -12,8 +12,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   List alarms;
 
   getAllAlarms() {
-    final channel = MethodChannel(Constants.CHANNEL_NAME);
-    channel.invokeMethod(Constants.getAlarms).then((value) {
+    Utils.getAllAlarms().then((value) {
       setState(() {
         this.alarms = value;
       });

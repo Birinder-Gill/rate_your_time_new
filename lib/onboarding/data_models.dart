@@ -1,6 +1,6 @@
 import 'package:rate_your_time_new/utils/constants.dart';
 
-//TODO:UNCOMMENT WHEN AND IF GOALS ADDED
+///UNCOMMENT WHEN AND IF GOALS ADDED
 // const OnBoardingModel(
 //     'Set Plan for Day',
 //     'Use your morning to focus on yourself and set your goal for the day.\n\n'
