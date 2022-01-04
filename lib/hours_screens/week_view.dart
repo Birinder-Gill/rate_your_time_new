@@ -48,7 +48,7 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
     final appModel = Provider.of<AppModel>(context, listen: false);
     final date = appModel.frontLabel(MaterialLocalizations.of(context));
     return Scaffold(
-      body: true?  Center(child: EmptyWeekView()): Consumer<WeekModel>(
+      body: false?  Center(child: EmptyWeekView()): Consumer<WeekModel>(
         builder: (BuildContext context, model, Widget child) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

@@ -32,7 +32,6 @@ class AppUsageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return SizedBox.shrink();
     if (!accessGranted) {
       return _noAccessGranted(context);
     }

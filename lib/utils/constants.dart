@@ -141,8 +141,56 @@ void nextTick(VoidCallback run) {
   Timer.run(run);
 }
 
+void toast(String msg) {
+  final channel = MethodChannel(Constants.CHANNEL_NAME);
+  channel.invokeMethod(Constants.toast);
+}
+
+bool _dialogShowing = false;
+
+void showLoader(BuildContext context,{String label = "Loading..."}) {
+  if (_dialogShowing) {
+    return;
+  }
+  _dialogShowing = true;
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (c) => Center(
+      child: SizedBox(
+        height: 150,
+        width: 200,
+        child: Center(
+          child: Material(child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: simpleLoader(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("$label"),
+              )
+            ],
+          )),
+        ),
+      ),
+    ),
+  ).then((value) {
+    _dialogShowing = false;
+  });
+}
+
+void hideLoader(BuildContext context) {
+  if (_dialogShowing) {
+    Navigator.pop(context);
+    _dialogShowing = false;
+  }
+}
+
 class Constants {
-  static const String appName = "Rate your time.";
+  static const String appName = "Rate your time";
 
   static const String getDayData = "getDayData";
   static const String addAlarms = "addAlarms";
@@ -159,6 +207,9 @@ class Constants {
   static const String openNotificationSettings = 'openNotificationSettings';
   static const String openSettings = 'openSettings';
   static const String openAppSettings = 'openAppSettings';
+  static const String toast = 'toast';
+  static const String isBatterySaverDisabled = 'isBatterySaverDisabled';
+
   static const String clearPrefs = 'clearPrefs';
   static const String loadGoal = 'loadGoal';
   static const String isTableEmpty = 'isTableEmpty';
@@ -328,6 +379,24 @@ class TimeUtils {
     }
     return '${l.formatShortDate(from)}  - ${l.formatShortDate(to)}';
   }
+
+  static String getTimeTillNextAlarm() {
+    final now = DateTime.now();
+    int result = 0;
+    String unit = '';
+    String trail = '';
+    if(now.minute == 59){
+      result = 60-now.second;
+      unit='second';
+    }else{
+      result = 60-now.minute;
+      unit='minute';
+    }
+    if(result>1){
+      trail = 's';
+    }
+    return '$result $unit$trail';
+  }
 }
 
 class Utils {
@@ -350,6 +419,11 @@ class Utils {
       'wHour': await SharedPrefs.getInt(SharedPrefs.wakeUpHour),
       'sHour': await SharedPrefs.getInt(SharedPrefs.sleepHour)
     });
+  }
+
+  static Future<bool> batterySaverDisabled() {
+    final channel = MethodChannel(Constants.CHANNEL_NAME);
+    return channel.invokeMethod<bool>(Constants.isBatterySaverDisabled);
   }
 
   static deleteAlarms() {

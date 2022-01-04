@@ -10,15 +10,15 @@ import 'package:rate_your_time_new/utils/shared_prefs.dart';
 import 'package:rate_your_time_new/widgets/circular_range_picker/double_circular_slider.dart';
 
 class SelectTimeScreen extends StatefulWidget {
+  final bool firstTime;
+
+  const SelectTimeScreen({Key key, this.firstTime = true}) : super(key: key);
+
   @override
   _SelectTimeScreenState createState() => _SelectTimeScreenState();
 }
 
-class _SelectTimeScreenState extends State<SelectTimeScreen>
-    with TickerProviderStateMixin {
-  final _wC = TextEditingController();
-  final _sC = TextEditingController();
-
+class _SelectTimeScreenState extends State<SelectTimeScreen> {
   Color get baseColor => Theme.of(context).primaryColorDark;
 
   int _wakeUpDefault = 7;
@@ -30,19 +30,14 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
   double get _size => 350.0;
   final _formKey = GlobalKey<FormState>();
 
-  AnimationController _wTimeC;
-  AnimationController _sTimeC;
-
   ThemeData theme;
 
-  final _duration = 300;
-
   void _getTime() async {
-    wakeUpTime = await SharedPrefs.getInt(SharedPrefs.wakeUpHour,defaultValue: _wakeUpDefault);
-    sleepTime = await SharedPrefs.getInt(SharedPrefs.sleepHour,defaultValue: _sleepDefault);
-    setState(() {
-
-    });
+    wakeUpTime = await SharedPrefs.getInt(SharedPrefs.wakeUpHour,
+        defaultValue: _wakeUpDefault);
+    sleepTime = await SharedPrefs.getInt(SharedPrefs.sleepHour,
+        defaultValue: _sleepDefault);
+    setState(() {});
   }
 
   void _updateLabels(int init, int end, int laps) {
@@ -74,7 +69,7 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
   }
 
   String _formatIntervalTime(int init, int end) {
-    if(init==null||end==null)return '';
+    if (init == null || end == null) return '';
     final hours = end > init ? end - init : 24 - init + end;
     return '${hours}hr${hours > 1 ? 's' : ''}';
   }
@@ -82,14 +77,6 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
   @override
   void initState() {
     _getTime();
-    _wTimeC = AnimationController(
-        vsync: this, duration: Duration(milliseconds: _duration));
-    _sTimeC = AnimationController(
-        vsync: this, duration: Duration(milliseconds: _duration));
-
-    Timer(Duration(seconds: 1), () {
-      _wTimeC.forward();
-    });
     super.initState();
   }
 
@@ -97,14 +84,10 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
   Widget build(BuildContext context) {
     theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(elevation: 0,backgroundColor: theme.scaffoldBackgroundColor,),
-      floatingActionButton: _sC.text.isNotEmpty
-          ? FloatingActionButton.extended(
-              onPressed: _savePrefs,
-              label: Text('Next'),
-              icon: Icon(Icons.arrow_forward),
-            )
-          : null,
+      appBar: AppBar(
+        elevation: 0,
+        title: Text('Select time'),
+      ),
       body: Form(
         key: _formKey,
         child: SafeArea(
@@ -140,13 +123,9 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text('Hours awake',
-                            style: Theme.of(context)
-                                .textTheme
-                                .caption),
+                            style: Theme.of(context).textTheme.caption),
                         Text('${_formatIntervalTime(wakeUpTime, sleepTime)}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline4),
+                            style: Theme.of(context).textTheme.headline4),
                       ],
                     )),
                   ),
@@ -164,51 +143,6 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
                   onPressed: _savePrefs,
                   label: Icon(Icons.navigate_next),
                 ),
-                // SizedBox(
-                //   height: 52,
-                // ),
-                // _wakeTimeWidget(_wTimeC, onTimeSelect: (time) {
-                //   _wC.text = time.format(context);
-                //   Timer(Duration(seconds: 1), (){_sTimeC.forward();});
-                //   SharedPrefs.setInt(SharedPrefs.wakeUpHour, time.hour);
-                //
-                //
-                // },isWakeUpTime: true),
-                // SizedBox(
-                //   height: 100,
-                // ),
-                // _wakeTimeWidget(_sTimeC, onTimeSelect: (time) async {
-                //   _sC.text = time.format(context);
-                //   if((await SharedPrefs.getInt(SharedPrefs.wakeUpHour))>=time.hour)
-                //     return;
-                //   SharedPrefs.setInt(SharedPrefs.sleepHour, time.hour);
-                //   Timer(Duration(seconds: 1), (){
-                //     setState(() {});
-                //   });
-                // },isWakeUpTime: false),
-                // SizedBox(
-                //   height: 24,
-                // ),
-                // AnimatedOpacity(
-                //     duration: Duration(milliseconds: 200),
-                //     opacity: _sC.text.isNotEmpty ? 1 : 0,
-                //     child: Text("Great! Lets move forward.")),
-                if (false)
-                  ButtonBar(
-                    children: [
-                      OutlinedButton(
-                          onPressed: () {
-                            _wTimeC.forward();
-                          },
-                          child: Text("FORWARD")),
-                      OutlinedButton(
-                          onPressed: () {
-                            _wTimeC.animateTo(0, duration: Duration.zero);
-                            _sTimeC.reverse();
-                          },
-                          child: Text("BACK")),
-                    ],
-                  )
               ],
             ),
           ),
@@ -222,60 +156,36 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
     if (_formKey.currentState.validate()) {
       await Utils.deleteAlarms();
       await Utils.createAlarms();
-      pushTo(context, HomeScreen(), clear: true);
-    }
-  }
 
-  Widget _wakeTimeWidget(AnimationController parent,
-      {void Function(TimeOfDay dateTime) onTimeSelect, bool isWakeUpTime}) {
-    final label = isWakeUpTime
-        ? 'What time do you wake up at:'
-        : 'What time do you go to sleep at:';
-    final hint = isWakeUpTime ? 'Select Wakeup time' : 'Select sleep time';
-    return SlideTransition(
-        position: Tween<Offset>(
-          end: Offset.zero,
-          begin: Offset(0, 0.4),
-        ).animate(_wTimeC),
-        child: FadeTransition(
-            opacity: Tween<double>(begin: 0, end: 1).animate(parent),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "$label",
-                  style: theme.textTheme.headline6,
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                InkWell(
-                    onTap: () async {
-                      final helpText = isWakeUpTime
-                          ? 'Pick an approx time when you wake up'
-                          : 'Pick an approx time when you go to sleep';
-                      final time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(DateTime.now()),
-                          initialEntryMode: TimePickerEntryMode.input,
-                          confirmText: "OK",
-                          helpText: "$helpText");
-                      if (time != null) {
-                        onTimeSelect(time);
-                      }
+      if (widget.firstTime && !(await Utils.batterySaverDisabled())) {
+        dialog(
+            context,
+            AlertDialog(
+              title: Text("Just one more thing"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                      "Please remove battery optimisation restrictions or the android system may sometimes prevent the hourly notification."),
+                  _action(
+                      icon: Icons.battery_charging_full_sharp,
+                      label: "Remove battery saver restrictions",
+                      onTap: Utils.openAppSettingsScreen),
+                ],
+              ),
+              actions: [
+                OutlinedButton.icon(
+                    onPressed: () {
+                      pushTo(context, HomeScreen(), clear: true);
                     },
-                    child: IgnorePointer(
-                        ignoring: true,
-                        child: TextFormField(
-                          validator: (e) => e.isEmpty ? "$hint" : null,
-                          decoration: InputDecoration(
-                              hintText: "Select a time",
-                              prefixIcon: Icon(Icons.access_time)),
-                          controller: isWakeUpTime ? _wC : _sC,
-                        ))),
+                    label: Icon(Icons.navigate_next),
+                    icon: Text("Maybe later")),
               ],
-            )));
+            ));
+      } else {
+        pushTo(context, HomeScreen(), clear: true);
+      }
+    }
   }
 
   Future<void> _setTime(int start, int end) async {
@@ -283,4 +193,26 @@ class _SelectTimeScreenState extends State<SelectTimeScreen>
     await SharedPrefs.setInt(SharedPrefs.wakeUpHour, start);
     await SharedPrefs.setInt(SharedPrefs.sleepHour, end);
   }
+
+  get style => TextStyle(
+        color: Theme.of(context).primaryColorDark,
+        fontSize: 16,
+      );
+
+  Widget _action({IconData icon, VoidCallback onTap, String label}) => ListTile(
+        leading: Icon(
+          icon,
+          color: Theme.of(context).primaryColorDark,
+        ),
+        visualDensity: VisualDensity.compact,
+        horizontalTitleGap: 0,
+        onTap: onTap,
+        trailing: Icon(
+          Icons.navigate_next,
+        ),
+        title: Text(
+          '$label',
+          style: style,
+        ),
+      );
 }

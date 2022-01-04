@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TroubleshootScreen extends StatefulWidget {
   @override
@@ -15,7 +16,9 @@ class _TroubleshootScreenState extends State<TroubleshootScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Troubleshoot'),
+      ),
       body: ListView(
         children: [
           _section('Rating notification',
@@ -37,12 +40,23 @@ class _TroubleshootScreenState extends State<TroubleshootScreen> {
               icon: Icons.refresh,
               label:
                   "If you're not getting a notification, restart the service here",
+              onTap: () async {
+                showLoader(context,label: "Restarting service");
+                await Utils.deleteAlarms();
+                await Future.delayed(Duration(milliseconds: 500));
+                await Utils.createAlarms();
+                hideLoader(context);
+                toast("Service restarted successfully.");
+                toast("Next notification in ${TimeUtils.getTimeTillNextAlarm()}.");
+              }
 
             ),
             Divider(),
             _action(icon: Icons.battery_charging_full_sharp,label: "Remove battery saver restrictions",onTap:  Utils.openAppSettingsScreen),
             Divider(),
-            _action(icon: Icons.stop_circle_outlined,label: "Don't kill my app website",onTap:  Utils.openAppSettingsScreen)
+            _action(icon: Icons.stop_circle_outlined,label: "Don't kill my app website",onTap:  (){
+              launch('https://dontkillmyapp.com/');
+            })
           ]),
         ],
       ),

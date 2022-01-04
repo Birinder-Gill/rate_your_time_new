@@ -28,16 +28,24 @@ class FirstTimeEmptyView extends StatelessWidget {
         ),
         Expanded(
           child: Center(
-            child: Text(
-              caption??"Notification in 00:27".toUpperCase(),
-              style: tt.caption.copyWith(
-                letterSpacing: 2,
-                  wordSpacing: 2,
-                  fontWeight: FontWeight.bold),
-            ),
+            child: _NotificationInTimer(),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _NotificationInTimer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context).textTheme;
+    return Text(
+     "Notification in 00:27".toUpperCase(),
+      style: tt.caption.copyWith(
+          letterSpacing: 2,
+          wordSpacing: 2,
+          fontWeight: FontWeight.bold),
     );
   }
 }

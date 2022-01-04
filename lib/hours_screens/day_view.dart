@@ -47,7 +47,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
-    return EmptyDayView();
+    // return EmptyDayView();
     return Consumer<DayModel>(
       builder: (_, model, __) => !model.loaded
           ? simpleLoader()

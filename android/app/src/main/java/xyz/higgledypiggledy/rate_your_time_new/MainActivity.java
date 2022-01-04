@@ -9,8 +9,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -238,9 +240,28 @@ public class MainActivity extends FlutterActivity {
                     return;
                 }
 
+                case  "isBatterySaverDisabled":{
+                    result.success(isIgnoringBatteryOptimizations());
+                    return;
+                }
+                case "toast":{
+                    Toast.makeText(this, call.argument("msg"), Toast.LENGTH_LONG).show();
+                    result.success(true);
+                    return;
+                }
+
 
             }
         });
+    }
+
+    private boolean isIgnoringBatteryOptimizations() {
+        PowerManager pwrm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        String name = getApplicationContext().getPackageName();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return pwrm.isIgnoringBatteryOptimizations(name);
+        }
+        return true;
     }
 
     private void isTableEmpty(MethodChannel.Result result) {

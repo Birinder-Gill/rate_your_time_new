@@ -20,7 +20,7 @@ class ThemeModel with ChangeNotifier {
   int selectedSIndex = 0;
 
   ThemeModel() {
-    selectedTheme = _defaultTheme;
+    setTheme(0);
   }
 
   List<MyTheme> themes = [
@@ -54,7 +54,6 @@ class ThemeModel with ChangeNotifier {
         isDark: true),
   ];
 
-  ThemeData get _defaultTheme => _buildFromMyTheme(themes[0]);
 
   setTheme(int index) {
     this.selectedSIndex = index;
@@ -95,6 +94,7 @@ class ThemeModel with ChangeNotifier {
           elevation: 0,
           iconTheme: IconThemeData(color: theme.onPrimaryDark),
           backgroundColor: theme.backdropColor,
+          textTheme: _buildTextTheme(base.textTheme, theme,!theme.isDark),
           titleTextStyle: TextStyle(color: theme.cardsOnScaffold),
           brightness: theme.isDark ? Brightness.light : Brightness.dark),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -135,14 +135,14 @@ class ThemeModel with ChangeNotifier {
         contentPadding:
             const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       ),
-      textTheme: _buildTextTheme(base.textTheme, theme),
-      primaryTextTheme: _buildTextTheme(base.primaryTextTheme, theme),
-      accentTextTheme: _buildTextTheme(base.accentTextTheme, theme),
+      textTheme: _buildTextTheme(base.textTheme, theme,theme.isDark),
+      primaryTextTheme: _buildTextTheme(base.primaryTextTheme, theme,theme.isDark),
+      accentTextTheme: _buildTextTheme(base.accentTextTheme, theme,theme.isDark),
       iconTheme: _customIconTheme(base.iconTheme, theme),
     );
   }
 
-  TextTheme _buildTextTheme(TextTheme base, MyTheme theme) {
+  TextTheme _buildTextTheme(TextTheme base, MyTheme theme,bool isDark) {
     return GoogleFonts.kanitTextTheme(base
         .copyWith(
           headline5: base.headline5.copyWith(
@@ -179,8 +179,8 @@ class ThemeModel with ChangeNotifier {
           ),
         )
         .apply(
-          displayColor: theme.isDark ? theme.textOnDark : theme.textOnLight,
-          bodyColor: theme.isDark ? theme.textOnDark : theme.textOnLight,
+          displayColor: isDark ? theme.textOnDark : theme.textOnLight,
+          bodyColor: isDark ? theme.textOnDark : theme.textOnLight,
         ));
   }
 

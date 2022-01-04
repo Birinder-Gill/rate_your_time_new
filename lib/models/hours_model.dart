@@ -103,8 +103,8 @@ class AppModel with ChangeNotifier {
   }
 
   checkIfHoursTableEmpty() async {
-    // isEmpty = await ApiHelper.isTableEmpty();
-    isEmpty = true;
+    isEmpty = await ApiHelper.isTableEmpty();
+    // isEmpty = true;
   }
 
   ///I don't think we need this now

@@ -45,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                _themeSelector(),
                 Divider(),
                 _setting(icon:Icons.access_time_outlined,label:"Select time",onTap: () {
-                  pushTo(context, SelectTimeScreen());
+                  pushTo(context, SelectTimeScreen(firstTime: false,));
                 }),
                 if(false)
                 ListTile(

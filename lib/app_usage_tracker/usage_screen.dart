@@ -127,10 +127,11 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final theme = themeData.textTheme;
-_granted=false;
+    _granted = false;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        title: Text("App usage"),
         actions: [
           if (granted)
             Padding(
@@ -277,8 +278,7 @@ _granted=false;
                                                     title:
                                                         Text("Last timestamp"),
                                                     subtitle: Text(
-                                                     '${loc.formatShortDate(lastDateStamp)} ${loc.formatTimeOfDay(lastTimeStamp)}'
-                                                    ),
+                                                        '${loc.formatShortDate(lastDateStamp)} ${loc.formatTimeOfDay(lastTimeStamp)}'),
                                                   ),
                                                   ListTile(
                                                     title: Text(
@@ -301,8 +301,7 @@ _granted=false;
                                                     title:
                                                         Text("Last time used"),
                                                     subtitle: Text(
-                                                        '${loc.formatShortDate(lastDateUsed)} ${loc.formatTimeOfDay(lastTimeUsed)}'
-                                                    ),
+                                                        '${loc.formatShortDate(lastDateUsed)} ${loc.formatTimeOfDay(lastTimeUsed)}'),
                                                   )
                                                 ],
                                               ));
@@ -513,7 +512,7 @@ class _OpenSettingsView extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                    "In your device's usage access settings, Switch on ${Constants.appName} in order to access this feature.",
+                    "In your device's usage access settings, Turn on \"${Constants.appName}\" to access this feature.",
                     style: tt.textTheme.subtitle1,
                     textAlign: TextAlign.center,
                   ),

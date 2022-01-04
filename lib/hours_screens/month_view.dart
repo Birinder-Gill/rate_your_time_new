@@ -39,7 +39,7 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: true? EmptyMonthView(): Consumer<MonthModel>(
+      body: false? EmptyMonthView(): Consumer<MonthModel>(
         builder: (BuildContext context, model, Widget child) {
           final appModel = Provider.of<AppModel>(context, listen: false);
           final date = appModel.frontLabel(MaterialLocalizations.of(context));
