@@ -11,7 +11,7 @@ import 'package:rate_your_time_new/utils/constants.dart';
 
 /// A colored piece of the [RallyPieChart].
 class RallyPieChartSegment {
-  const RallyPieChartSegment({this.color, this.value});
+  const RallyPieChartSegment({required this.color, this.value = 0.0});
 
   final Color color;
   final double value;
@@ -62,7 +62,7 @@ const pieChartMaxSize = 500.0;
 /// have empty space.
 class RallyPieChart extends StatefulWidget {
   const RallyPieChart(
-      {this.heroLabel, this.heroAmount, this.wholeAmount, this.segments});
+      {required this.heroLabel, required this.heroAmount, required this.wholeAmount, required this.segments});
 
   final String heroLabel;
   final String heroAmount;
@@ -122,12 +122,12 @@ class _RallyPieChartState extends State<RallyPieChart>
 
 class _AnimatedRallyPieChart extends AnimatedWidget {
   const _AnimatedRallyPieChart({
-    Key key,
-    this.animation,
-    this.centerLabel,
-    this.centerAmount,
-    this.total,
-    this.segments,
+    Key? key,
+    required this.animation,
+    required this.centerLabel,
+    required this.centerAmount,
+    required this.total,
+    required this.segments,
   }) : super(key: key, listenable: animation);
 
   final Animation<double> animation;
@@ -139,7 +139,7 @@ class _AnimatedRallyPieChart extends AnimatedWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final labelTextStyle = textTheme.bodyText2.copyWith(
+    final labelTextStyle = textTheme.bodyMedium!.copyWith(
       fontSize: 14,
       letterSpacing: letterSpacingOrNone(0.5),
     );
@@ -147,8 +147,8 @@ class _AnimatedRallyPieChart extends AnimatedWidget {
     return LayoutBuilder(builder: (context, constraints) {
       // When the widget is larger, we increase the font size.
       var headlineStyle = constraints.maxHeight >= pieChartMaxSize
-          ? textTheme.headline5.copyWith(fontSize: 70)
-          : textTheme.headline5;
+          ? textTheme.headlineSmall!.copyWith(fontSize: 70)
+          : textTheme.headlineSmall;
 
       // With a large text scale factor, we set a max font size.
       // if (GalleryOptions.of(context).textScaleFactor(context) > 1.0) {
@@ -190,7 +190,7 @@ class _RallyPieChartOutlineDecoration extends Decoration {
   final backgroundColor;
 
   const _RallyPieChartOutlineDecoration(this.backgroundColor,
-      {this.maxFraction, this.total, this.segments});
+      {required this.maxFraction, required this.total, required this.segments});
 
   final double maxFraction;
   final double total;
@@ -211,7 +211,7 @@ class _RallyPieChartOutlineBoxPainter extends BoxPainter {
   final Color backGroundColor;
 
   _RallyPieChartOutlineBoxPainter(
-      {this.maxFraction, this.wholeAmount, this.segments,this.backGroundColor,});
+      { required this.maxFraction,  required this.wholeAmount,  required this.segments, required this.backGroundColor,});
 
   final double maxFraction;
   final double wholeAmount;
@@ -225,16 +225,16 @@ class _RallyPieChartOutlineBoxPainter extends BoxPainter {
     // inner bg arc.
     const strokeWidth = 4.0;
     final outerRadius = math.min(
-          configuration.size.width,
-          configuration.size.height,
+          configuration.size!.width,
+          configuration.size!.height,
         ) /
         2;
     final outerRect = Rect.fromCircle(
-      center: configuration.size.center(offset),
+      center: configuration.size!.center(offset),
       radius: outerRadius - strokeWidth * 3,
     );
     final innerRect = Rect.fromCircle(
-      center: configuration.size.center(offset),
+      center: configuration.size!.center(offset),
       radius: outerRadius - strokeWidth * 12,
     );
 

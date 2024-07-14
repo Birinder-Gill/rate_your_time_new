@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -31,14 +32,10 @@ const Color shrineBackgroundWhite = Colors.white;
 ThemeData _buildShrineTheme() {
   final base = ThemeData.light();
   return base.copyWith(
-    appBarTheme: const AppBarTheme(brightness: Brightness.light, elevation: 0),
-    colorScheme: _shrineColorScheme,
-    accentColor: shrineBrown900,
+    appBarTheme: const AppBarTheme(elevation: 0, systemOverlayStyle: SystemUiOverlayStyle.dark),
     primaryColor: shrinePink100,
-    buttonColor: shrinePink100,
     scaffoldBackgroundColor: shrineBackgroundWhite,
     cardColor: shrineBackgroundWhite,
-    errorColor: shrineErrorRed,
     buttonTheme: const ButtonThemeData(
       colorScheme: _shrineColorScheme,
       textTheme: ButtonTextTheme.normal,
@@ -55,42 +52,41 @@ ThemeData _buildShrineTheme() {
       selectionColor: shrinePink100,
     ),
     primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
-    accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
-    iconTheme: _customIconTheme(base.iconTheme),
+    iconTheme: _customIconTheme(base.iconTheme), colorScheme: _shrineColorScheme.copyWith(secondary: shrineBrown900).copyWith(error: shrineErrorRed),
   );
 }
 
 TextTheme _buildShrineTextTheme(TextTheme base) {
   return GoogleFonts.kanitTextTheme(base
       .copyWith(
-    headline5: base.headline5.copyWith(
+    headlineSmall: base.headlineSmall?.copyWith(
       fontWeight: FontWeight.w500,
       letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
     ),
-    headline6: base.headline6.copyWith(
+    titleLarge: base.titleLarge?.copyWith(
       fontSize: 18,
       letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
     ),
-    caption: base.caption.copyWith(
+    bodySmall: base.bodySmall?.copyWith(
       fontWeight: FontWeight.w400,
       fontSize: 14,
       letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
     ),
-    bodyText1: base.bodyText1.copyWith(
+    bodyLarge: base.bodyLarge?.copyWith(
       fontWeight: FontWeight.w500,
       fontSize: 16,
       letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
     ),
-    bodyText2: base.bodyText2.copyWith(
+    bodyMedium: base.bodyMedium?.copyWith(
       letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
     ),
-    subtitle1: base.subtitle1.copyWith(
+    titleMedium: base.titleMedium?.copyWith(
       letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
     ),
-    headline4: base.headline4.copyWith(
+    headlineMedium: base.headlineMedium?.copyWith(
       letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
     ),
-    button: base.button.copyWith(
+    labelLarge: base.labelLarge?.copyWith(
       fontWeight: FontWeight.w500,
       fontSize: 14,
       letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
@@ -104,16 +100,12 @@ TextTheme _buildShrineTextTheme(TextTheme base) {
 
 const ColorScheme _shrineColorScheme = ColorScheme(
   primary: shrinePink100,
-  primaryVariant: shrineBrown900,
   secondary: shrinePink50,
-  secondaryVariant: shrineBrown900,
   surface: shrineSurfaceWhite,
-  background: shrineBackgroundWhite,
   error: shrineErrorRed,
   onPrimary: shrineBrown900,
   onSecondary: shrineBrown900,
   onSurface: shrineBrown900,
-  onBackground: shrineBrown900,
   onError: shrineSurfaceWhite,
   brightness: Brightness.light,
 );

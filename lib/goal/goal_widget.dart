@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/goal/goal_provider.dart';
@@ -37,16 +36,6 @@ class _GoalWidgetState extends State<GoalWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if(v.goal==null)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Enter goal for today",
-                        hintText: "Be specific and sh*t."
-                      ),
-                    ),
-                  ),
                   _GoalView(v.goal)
                 ],
               ),
@@ -59,29 +48,30 @@ class _GoalWidgetState extends State<GoalWidget> {
 }
 
 class _GoalView extends StatelessWidget {
-  final Goal goal;
+  final Goal? goal;
   _GoalView(this.goal);
 
   @override
   Widget build(BuildContext context) {
+
     final theme = Theme.of(context).textTheme;
     return Column(
-      children: [
+      children: goal==null?[]:[
         Text(
           "Your goal for today",
-          style: theme.subtitle2,
+          style: theme.titleSmall,
         ),
         Text(
-          "${goal.goal}",
-          style: theme.headline5,
+          "${goal!.goal}",
+          style: theme.headlineSmall,
         ),
         Divider(),
         Text(
           "Rating target for today",
-          style: theme.subtitle1,
+          style: theme.titleMedium,
         ),
         RatingStars(
-          rating: goal.ratingTarget,
+          rating: goal!.ratingTarget,
         ),
         Divider(),
         Padding(
@@ -95,7 +85,7 @@ class _GoalView extends StatelessWidget {
               children: [
                 Text(
                   "Would you consider you accomplished your goal for today",
-                  style: theme.button,
+                  style: theme.labelLarge,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

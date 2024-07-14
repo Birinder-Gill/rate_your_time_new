@@ -1,11 +1,8 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
-import 'package:rate_your_time_new/goal/goal_widget.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_day_view.dart';
-import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/day_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
@@ -51,7 +48,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
       builder: (_, model, __) {
         if(!model.loaded)
           return simpleLoader();
-        if ((model.hours?.length ?? 0) == 0) {
+        if ((model.hours.length ?? 0) == 0) {
           return EmptyDayView();
         }
         return Column(
@@ -92,7 +89,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.bodyText2.color),
+                        color: Theme.of(context).textTheme.bodyMedium!.color),
                   ),
                 ),
               ),
@@ -124,7 +121,7 @@ class _DayViewScreenState extends State<DayViewScreen> with WidgetsBindingObserv
                                 backgroundColor: Colors.white,
                                 value: (average),
                                 valueColor: AlwaysStoppedAnimation(
-                                    Theme.of(context).accentColor)),
+                                    Theme.of(context).colorScheme.secondary)),
                           ],
                         )),
                   ],

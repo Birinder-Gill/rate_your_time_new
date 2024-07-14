@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class FirstTimeEmptyView extends StatelessWidget {
   final String title;
   final String desc;
-  final String caption;
+  final String? caption;
   final String assetPath;
 
-  const FirstTimeEmptyView({Key key, this.title, this.desc, this.caption, this.assetPath}) : super(key: key);
+  const FirstTimeEmptyView({Key? key, required this.title, required this.desc,  this.caption, required this.assetPath}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
@@ -16,7 +15,7 @@ class FirstTimeEmptyView extends StatelessWidget {
       children: [
         Text(
           "$title",
-          style: tt.headline4,
+          style: tt.headlineMedium,
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -24,7 +23,7 @@ class FirstTimeEmptyView extends StatelessWidget {
         ),
         Text(
           "$desc",
-          style: tt.subtitle1,
+          style: tt.titleMedium,
           textAlign: TextAlign.center,
         ),
         Expanded(
@@ -47,7 +46,7 @@ class _NotificationInTimer extends StatelessWidget {
         if(snapshot.hasData) {
           return Text(
          "Notification in ${snapshot.data}".toUpperCase(),
-          style: tt.caption.copyWith(
+          style: tt.bodySmall!.copyWith(
               letterSpacing: 2,
               wordSpacing: 2,
               fontWeight: FontWeight.bold),
@@ -62,7 +61,7 @@ class _NotificationInTimer extends StatelessWidget {
 class _GradientyImage extends StatelessWidget {
   final String assetPath;
 
-  const _GradientyImage({Key key, this.assetPath}) : super(key: key);
+  const _GradientyImage({Key? key, required this.assetPath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

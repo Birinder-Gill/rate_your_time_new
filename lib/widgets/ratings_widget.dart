@@ -7,7 +7,7 @@ class RatingStars extends StatefulWidget {
   final bool readOnly;
 
   const RatingStars(
-      {Key key,
+      {Key? key,
       this.size = 50,
       this.total = 5,
       this.rating = 0,
@@ -39,7 +39,7 @@ class _SingleRatingStar extends StatelessWidget {
   final double rating;
   final bool readOnly;
 
-  const _SingleRatingStar({Key key, this.size, this.rating, this.readOnly})
+  const _SingleRatingStar({Key? key, required this.size, this.rating = 0, this.readOnly = true})
       : super(key: key);
 
   @override
@@ -50,7 +50,7 @@ class _SingleRatingStar extends StatelessWidget {
           : rating < 1
               ? Icons.star_half
               : Icons.star_rate,
-      color: Theme.of(context).accentColor,
+      color: Theme.of(context).colorScheme.secondary,
       size: size,
     );
   }

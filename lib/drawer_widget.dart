@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/about_screen.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/settings_screen.dart';
@@ -26,12 +25,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 showSecondsDigit: true,
                 areaDecoration: BoxDecoration(),
                 areaAligment: AlignmentDirectional.center,
-                hourMinuteDigitDecoration: BoxDecoration(),
+                hourDigitDecoration: BoxDecoration(),
+                minuteDigitDecoration: BoxDecoration(),
                 secondDigitDecoration: BoxDecoration(),
                 digitAnimationStyle: Curves.decelerate,
-                hourMinuteDigitTextStyle: Theme.of(context).textTheme.headline3,
-                secondDigitTextStyle: Theme.of(context).textTheme.caption,
-                amPmDigitTextStyle: Theme.of(context).textTheme.headline6,
+                hourMinuteDigitTextStyle: Theme.of(context).textTheme.displaySmall,
+                secondDigitTextStyle: Theme.of(context).textTheme.bodySmall,
+                amPmDigitTextStyle: Theme.of(context).textTheme.titleLarge,
               )),
             ),
           ),

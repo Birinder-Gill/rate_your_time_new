@@ -3,13 +3,13 @@ import 'package:flutter/rendering.dart';
 
 class FinancialEntityCategoryView extends StatelessWidget {
   const FinancialEntityCategoryView({
-    @required this.indicatorColor,
-    @required this.indicatorFraction,
-    @required this.title,
-    @required this.subtitle,
-    @required this.semanticsLabel,
-    @required this.amount,
-    @required this.suffix,
+    required this.indicatorColor,
+    required this.indicatorFraction,
+    required this.title,
+    required this.subtitle,
+    required this.semanticsLabel,
+    required this.amount,
+    required this.suffix,
   });
 
   final Color indicatorColor;
@@ -33,7 +33,7 @@ class FinancialEntityCategoryView extends StatelessWidget {
 
       child: Container(
           child: TextButton(
-            style: TextButton.styleFrom(primary: Colors.black),
+            style: TextButton.styleFrom(foregroundColor: Colors.black),
             onPressed: (){},
             child: Column(
               children: [
@@ -63,7 +63,7 @@ class FinancialEntityCategoryView extends StatelessWidget {
                               children: [
                                 Text(
                                   title,
-                                  style: textTheme.bodyText2
+                                  style: textTheme.bodyMedium!
                                       .copyWith(fontSize: 16),
                                 ),
                                 // Text(
@@ -75,7 +75,7 @@ class FinancialEntityCategoryView extends StatelessWidget {
                             ),
                             Text(
                               amount,
-                              style: textTheme.bodyText1.copyWith(
+                              style: textTheme.bodyLarge!.copyWith(
                                 fontSize: 20,
                                 color: Colors.grey,
                               ),
@@ -108,7 +108,7 @@ class FinancialEntityCategoryView extends StatelessWidget {
 
 
 class VerticalFractionBar extends StatelessWidget {
-  const VerticalFractionBar({this.color, this.fraction});
+  const VerticalFractionBar({required this.color, required this.fraction});
 
   final Color color;
   final double fraction;

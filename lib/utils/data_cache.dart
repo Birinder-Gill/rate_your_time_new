@@ -46,17 +46,17 @@ class DataCache {
   AverageDataModel getAverageData(DateTime to, DateTime from) {
     final key = _makeKey(to, from);
     if (_cachedAverages.containsKey(key))
-      return _cachedAverages[key];
+      return _cachedAverages[key]!;
     else
-      return null;
+      return AverageDataModel();
   }
 
   AverageAppUsageModel getAppsData(DateTime to, DateTime from) {
     final key = _makeKey(to, from);
     if (_cachedAppData.containsKey(key))
-      return _cachedAppData[key];
+      return _cachedAppData[key]!;
     else
-      return null;
+      return AverageAppUsageModel();
   }
 
   void clear({bool clearAppData = false}) {

@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/usage_interval_info_dialog.dart';
+
+import '../../utils/error_image.dart';
 
 class AppUsageCard extends StatelessWidget {
   final AverageAppUsageModel appUsage;
@@ -18,25 +18,24 @@ class AppUsageCard extends StatelessWidget {
   final String Function() date;
 
   AppUsageCard(this.appUsage, this.accessGranted,
-      {@required this.onRetry, this.openDetails, @required this.date});
+      {required this.onRetry, required this.openDetails, required this.date});
 
   num get sum =>
       appUsage.highApps.fold(
           0,
           (previousValue, element) =>
-              previousValue + element.totalTimeInForeground) +
+              previousValue + (element.totalTimeInForeground??0)) +
       appUsage.otherApps.fold(
           0,
           (previousValue, element) =>
-              previousValue + element.totalTimeInForeground);
+              previousValue + (element.totalTimeInForeground??0));
 
   @override
   Widget build(BuildContext context) {
     if (!accessGranted) {
       return _noAccessGranted(context);
     }
-    if (appUsage == null) return simpleLoader();
-    if (appUsage.highApps?.isEmpty ?? true)
+    if (appUsage.highApps.isEmpty)
       return Center(
           child: Column(
         children: [
@@ -46,7 +45,7 @@ class AppUsageCard extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           OutlinedButton(
-              onPressed: () => openDetails(null),
+              onPressed: () => openDetails([]),
               child: Text("GOTO APP USAGE SCREEN"))
         ],
       ));
@@ -60,7 +59,7 @@ class AppUsageCard extends StatelessWidget {
           ),
           Text('Total time spent using phone.',
               textAlign: TextAlign.center,
-              style: theme.subtitle1.copyWith(
+              style: theme.titleMedium!.copyWith(
                   fontWeight: FontWeight.bold,
                   color: themeData.primaryColorDark)),
           GestureDetector(
@@ -72,7 +71,7 @@ class AppUsageCard extends StatelessWidget {
               children: [
                 Text('(${date()})',
                     textAlign: TextAlign.center,
-                    style: theme.subtitle1.copyWith(
+                    style: theme.titleMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: themeData.primaryColorDark)),
                 SizedBox(
@@ -81,7 +80,7 @@ class AppUsageCard extends StatelessWidget {
                 Icon(
                   Icons.info_outline,
                   size: 16,
-                  color: themeData.colorScheme.secondaryVariant,
+                  color: themeData.colorScheme.secondaryContainer,
                 )
               ],
             ),
@@ -89,24 +88,23 @@ class AppUsageCard extends StatelessWidget {
           Text(
             TimeUtils.convertMillsToTime(sum),
             textAlign: TextAlign.center,
-            style: theme.headline4,
+            style: theme.headlineMedium,
           ),
           Text(
             'Most used apps',
-            style: theme.headline6,
+            style: theme.titleLarge,
           ),
           for (final i in appUsage.highApps)
             ListTile(
               horizontalTitleGap: 0,
               title: Text("${i.appName}"),
               subtitle: Text(
-                  '${TimeUtils.convertMillsToTime(i.totalTimeInForeground)}'),
+                  '${TimeUtils.convertMillsToTime(i.totalTimeInForeground??0)}'),
               leading: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.memory(
-                  i.appLogo,
-                  errorBuilder: (w, o, s) => Image.network(
-                      'https://freepikpsd.com/media/2019/10/android-app-icon-png-Free-PNG-Images-Transparent.png'),
+                  i.appLogo!,
+                  errorBuilder: (w, o, s) => ErrorImage(),
                 ),
               ),
             ),
@@ -143,7 +141,7 @@ class AppUsageCard extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Total screen time',style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),),
+                Text('Total screen time',style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(

@@ -6,7 +6,7 @@ import 'package:rate_your_time_new/models/hours_model.dart';
 
 class ViewToggle extends StatefulWidget {
   const ViewToggle({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -26,8 +26,8 @@ class _ViewToggleState extends State<ViewToggle> {
       // selectedColor: theme.primaryColor,
       // unselectedColor: theme.primaryColorLight ,
       // borderColor: theme.accentColor,
-      onValueChanged: (int i) {
-        if (model.animController.value == 1) model.changeViewToggle(i);
+      onValueChanged: (int? i) {
+        if (model.animController?.value == 1) model.changeViewToggle(i??0);
       },
       children: {
         0: SizedBox(
@@ -38,7 +38,7 @@ class _ViewToggleState extends State<ViewToggle> {
               description:
                   'Day view shows your hourly rating for the selected day',
               featureId: 'calendar_view_day',
-              child: Icon(Icons.calendar_view_day,color: model.toggle==0?theme.accentColor:theme.primaryColorDark,)),
+              child: Icon(Icons.calendar_view_day,color: model.toggle==0?theme.colorScheme.secondary:theme.primaryColorDark,)),
         ),
         // if (now.weekday > 1)
           1: SizedBox(
@@ -49,7 +49,7 @@ class _ViewToggleState extends State<ViewToggle> {
                 description:
                     'Week view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected week.',
                 featureId: 'view_week',
-                child: Icon(Icons.view_week,color: model.toggle==1?theme.accentColor:theme.primaryColorDark,)),
+                child: Icon(Icons.view_week,color: model.toggle==1?theme.colorScheme.secondary:theme.primaryColorDark,)),
           ),
         // if (now.day > 1)
           2: SizedBox(
@@ -60,7 +60,7 @@ class _ViewToggleState extends State<ViewToggle> {
                 description:
                     'Month view shows your daily average ratings, time spent on activities and screen time spent on various apps in the selected month.',
                 featureId: 'date_range',
-                child: Icon(Icons.date_range,color: model.toggle==2?theme.accentColor:theme.primaryColorDark,)),
+                child: Icon(Icons.date_range,color: model.toggle==2?theme.colorScheme.secondary:theme.primaryColorDark,)),
           ),
       },
     );

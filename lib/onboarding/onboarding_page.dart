@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/onboarding/data_models.dart';
 
 class OnBoardingPage extends StatefulWidget {
   final OnBoardingModel model;
 
-  const OnBoardingPage({Key key, this.model}) : super(key: key);
+  const OnBoardingPage({Key? key, required this.model}) : super(key: key);
 
   @override
   _OnBoardingPageState createState() => _OnBoardingPageState();
@@ -18,14 +16,14 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
-      isAlwaysShown: true,
+      thumbVisibility: true,
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               "${widget.model.title}",
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
             SizedBox(
@@ -42,7 +40,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
               height: 24,
             ),
             Text("${widget.model.desc}",
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.start),
           ],
         ),

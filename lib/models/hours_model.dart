@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/utils/api_helper.dart';
@@ -12,11 +11,11 @@ import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AppModel with ChangeNotifier {
-  AnimationController animController;
+  late AnimationController animController;
   var isEmpty = false;
 
   // Animation Controller for expanding/collapsing the cart menu.
-  AnimationController expandingController;
+  late AnimationController expandingController;
 
   bool loaded = false;
 
@@ -31,7 +30,7 @@ class AppModel with ChangeNotifier {
 
   double patePickerHeight = 0.0;
 
-  List<bool> selections;
+  late List<bool> selections;
 
   final DateRangePickerController controller = DateRangePickerController();
 
@@ -58,13 +57,10 @@ class AppModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void refresh([DateTime date]) async {
-    if (date == null) {
-      if (this.date == null) return;
-    } else {
-      this.date = date;
-    }
-    _manageTodayCases();
+  void refresh([DateTime? date]) async {
+    if(date!=null)
+    this.date = date;
+      _manageTodayCases();
     loaded = false;
     dates = await _setDates();
     notifyListeners();
@@ -84,7 +80,7 @@ class AppModel with ChangeNotifier {
   }
 
   String frontLabel(MaterialLocalizations localizations) {
-    if (dates == null || dates.isEmpty) return '-/-';
+    if (dates.isEmpty) return '-/-';
     switch (toggle) {
       case 0:
         return localizations.formatShortDate(dates[0]);
@@ -96,7 +92,7 @@ class AppModel with ChangeNotifier {
   }
 
   void toggleBackdrop() {
-    if (animController.isCompleted)
+    if (animController.isCompleted??false)
       animController.reverse();
     else
       animController.forward();
@@ -124,14 +120,14 @@ class AppModel with ChangeNotifier {
 
 class Hour {
   Hour(
-      {this.date,
-      this.month,
-      this.year,
-      this.id,
-      this.time,
-      this.worth,
-      this.activity,
-      this.note});
+      {required this.date,
+      required this.month,
+      required this.year,
+      required this.id,
+      required this.time,
+      required this.worth,
+      required this.activity,
+      required this.note});
 
   int date;
   int month;
@@ -143,14 +139,14 @@ class Hour {
   String note;
 
   Hour copyWith({
-    int date,
-    int month,
-    int year,
-    int id,
-    int time,
-    int worth,
-    int activity,
-    String note,
+    int? date,
+    int? month,
+    int? year,
+    int? id,
+    int? time,
+    int? worth,
+    int? activity,
+    String? note,
   }) =>
       Hour(
         date: date ?? this.date,
@@ -202,10 +198,10 @@ class Hour {
         "note": note
       };
 
-  void update({int activity, String note, int worth}) {
-    this.activity = activity;
-    this.note = note;
-    this.worth = worth;
+  void update({int? activity, String? note, int? worth}) {
+    this.activity = activity??this.activity;
+    this.note = note??this.note;
+    this.worth = worth??this.worth;
   }
 
   @override

@@ -3,17 +3,14 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:meta/meta.dart';
 import 'package:provider/provider.dart';
-import 'package:rate_your_time_new/alarms_screen.dart';
 import 'package:rate_your_time_new/feature_discovery/delegate.dart';
-import 'package:rate_your_time_new/feature_discovery/feature_discovery.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/toggle.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/drawer_widget.dart';
@@ -27,12 +24,12 @@ const _peakVelocityProgress = 0.379146;
 
 class _FrontLayer extends StatelessWidget {
   const _FrontLayer({
-    Key key,
+    Key? key,
+    required this.child,
     this.onTap,
-    this.child,
   }) : super(key: key);
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Widget child;
 
   DateTime get now => DateTime.now();
@@ -56,7 +53,7 @@ class _FrontLayer extends StatelessWidget {
                   opacity: model.animController.value,
                   child: ViewToggle(),
                 ),
-               ],
+              ],
             );
           }),
         ),
@@ -92,14 +89,12 @@ class _FrontLayer extends StatelessWidget {
 
 class _BackdropTitle extends AnimatedWidget {
   const _BackdropTitle({
-    Key key,
-    Animation<double> listenable,
-    this.onPress,
-    @required this.frontTitle,
-    @required this.backTitle,
-  })  : assert(frontTitle != null),
-        assert(backTitle != null),
-        super(key: key, listenable: listenable);
+    Key? key,
+    required Animation<double> listenable,
+    required this.onPress,
+    required this.frontTitle,
+    required this.backTitle,
+  }) : super(key: key, listenable: listenable);
 
   final void Function() onPress;
   final Widget frontTitle;
@@ -135,11 +130,11 @@ class _BackdropTitle extends AnimatedWidget {
     print(Theme.of(context).colorScheme.brightness);
     final theme = Theme.of(context);
     return DefaultTextStyle(
-      style: theme.primaryTextTheme.headline6.apply(
-            color: theme.colorScheme.brightness == Brightness.dark
-                ? theme.colorScheme.onSecondary
-                : theme.colorScheme.onPrimary,
-          ),
+      style: theme.primaryTextTheme.titleLarge!.apply(
+        color: theme.colorScheme.brightness == Brightness.dark
+            ? theme.colorScheme.onSecondary
+            : theme.colorScheme.onPrimary,
+      ),
       softWrap: false,
       overflow: TextOverflow.ellipsis,
       child: Stack(
@@ -184,16 +179,12 @@ class _BackdropTitle extends AnimatedWidget {
 /// front or back layer is showing.
 class Backdrop extends StatefulWidget {
   const Backdrop({
-    @required this.frontLayer,
-    @required this.backLayer,
-    @required this.frontTitle,
-    @required this.backTitle,
-    @required this.controller,
-  })  : assert(frontLayer != null),
-        assert(backLayer != null),
-        assert(frontTitle != null),
-        assert(backTitle != null),
-        assert(controller != null);
+    required this.frontLayer,
+    required this.backLayer,
+    required this.frontTitle,
+    required this.backTitle,
+    required this.controller,
+  });
 
   final Widget frontLayer;
   final Widget backLayer;
@@ -208,8 +199,8 @@ class Backdrop extends StatefulWidget {
 class _BackdropState extends State<Backdrop>
     with SingleTickerProviderStateMixin {
   final GlobalKey _backdropKey = GlobalKey(debugLabel: 'Backdrop');
-  AnimationController _controller;
-  Animation<RelativeRect> _layerAnimation;
+  late AnimationController _controller;
+  late Animation<RelativeRect> _layerAnimation;
 
   @override
   void initState() {
@@ -319,10 +310,10 @@ class _BackdropState extends State<Backdrop>
             excluding: !_frontLayerVisible,
             child: AnimatedBuilder(
               animation: PageStatus.of(context).cartController,
-              builder: (context, child) => child,
+              builder: (context, child) => child ?? SizedBox.shrink(),
               child: AnimatedBuilder(
                 animation: PageStatus.of(context).menuController,
-                builder: (context, child) => child,
+                builder: (context, child) => child ?? SizedBox.shrink(),
                 child: _FrontLayer(
                   child: widget.frontLayer,
                 ),
@@ -348,7 +339,6 @@ class _BackdropState extends State<Backdrop>
                     onPressed: Scaffold.of(c).openDrawer),
               )),
       automaticallyImplyLeading: true,
-      brightness: Brightness.dark,
       elevation: 0,
       titleSpacing: 0,
       centerTitle: true,
@@ -379,6 +369,7 @@ class _BackdropState extends State<Backdrop>
           ),
         ),
       ],
+      systemOverlayStyle: SystemUiOverlayStyle.light,
     );
     final theme = Theme.of(context);
     return AnimatedBuilder(
@@ -387,13 +378,13 @@ class _BackdropState extends State<Backdrop>
         excluding: cartPageIsVisible(context),
         child: Theme(
           data: theme.copyWith(
-            accentColor: theme.colorScheme.secondary,
-            colorScheme: theme.colorScheme.copyWith(
-              onPrimary: theme.colorScheme.onSecondary,
-
-                brightness: theme.colorScheme.brightness == Brightness.dark
-                    ? Brightness.light
-                    : Brightness.dark),
+            colorScheme: theme.colorScheme
+                .copyWith(
+                    onPrimary: theme.colorScheme.onSecondary,
+                    brightness: theme.colorScheme.brightness == Brightness.dark
+                        ? Brightness.light
+                        : Brightness.dark)
+                .copyWith(secondary: theme.colorScheme.secondary),
           ),
           child: Scaffold(
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -416,7 +407,7 @@ class _BackdropState extends State<Backdrop>
       'date_range',
       'add_event'
     ];
-    if(force) {
+    if (force) {
       FeatureDiscovery.clearPreferences(context, steps);
     }
     FeatureDiscovery.discoverFeatures(context, steps);
@@ -425,8 +416,8 @@ class _BackdropState extends State<Backdrop>
 
 class DesktopBackdrop extends StatelessWidget {
   const DesktopBackdrop({
-    @required this.frontLayer,
-    @required this.backLayer,
+    required this.frontLayer,
+    required this.backLayer,
   });
 
   final Widget frontLayer;
@@ -452,7 +443,7 @@ class DesktopBackdrop extends StatelessWidget {
   }
 
   double desktopCategoryMenuPageWidth({
-    BuildContext context,
+    required BuildContext context,
   }) {
     return 232 * 1.0; //reducedTextScale(context);
   }

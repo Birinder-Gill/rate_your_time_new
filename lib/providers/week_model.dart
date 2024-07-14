@@ -4,7 +4,7 @@ import 'package:rate_your_time_new/providers/average_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class WeekModel extends AverageModel with ChangeNotifier {
-  DateTime date;
+  DateTime? date;
   changeDate(DateTime date) {
     this.date = date;
     _loadData();

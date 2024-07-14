@@ -64,7 +64,7 @@ class _TroubleshootScreenState extends State<TroubleshootScreen> {
   }
 
   Widget _section(String title,
-      {String subtitle, List<Widget> actions = const []}) {
+      {String? subtitle, List<Widget> actions = const []}) {
     final t = Theme.of(context).textTheme;
     return Card(
       margin: EdgeInsets.symmetric(vertical: 4),
@@ -76,9 +76,9 @@ class _TroubleshootScreenState extends State<TroubleshootScreen> {
             ListTile(
               title: Text(
                 title,
-                style: t.headline6.copyWith(
+                style: t.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     wordSpacing: 2,
                     letterSpacing: 1),
               ),
@@ -95,7 +95,7 @@ class _TroubleshootScreenState extends State<TroubleshootScreen> {
     final t = Theme.of(context).textTheme;
     return Text(
       s,
-      style: t.caption,
+      style: t.bodySmall,
     );
   }
 
@@ -104,7 +104,7 @@ class _TroubleshootScreenState extends State<TroubleshootScreen> {
         fontSize: 16,
       );
 
-  Widget _action({IconData icon, VoidCallback onTap, String label}) => ListTile(
+  Widget _action({IconData? icon, VoidCallback? onTap, String? label}) => ListTile(
         leading: Icon(icon,color: Theme.of(context).primaryColorDark,),
         visualDensity: VisualDensity.compact,
         horizontalTitleGap: 0,

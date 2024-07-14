@@ -6,18 +6,18 @@ class FDelegate extends StatelessWidget {
   final String title;
   final String description;
   final String featureId;
-  final void Function() onDismiss;
+  final void Function()? onDismiss;
 
   final ContentLocation location;
 
   final Color color;
 
   FDelegate({
-    Key key,
-    @required this.title,
-    @required this.description,
-    @required this.child,
-    @required this.featureId,
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.child,
+    required this.featureId,
     this.onDismiss,
     this.location = ContentLocation.below, this.color=Colors.white,
   }) : super(key: key);
@@ -32,7 +32,7 @@ class FDelegate extends StatelessWidget {
           await FeatureDiscovery.completeCurrentStep(context);
           return false;
         },
-        backgroundColor: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         overflowMode: OverflowMode.extendBackground,
         contentLocation: location,
         title: Text(

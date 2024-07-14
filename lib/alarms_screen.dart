@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
-import 'package:rate_your_time_new/utils/shared_prefs.dart';
 
 class AlarmsScreen extends StatefulWidget {
   @override
@@ -9,7 +7,7 @@ class AlarmsScreen extends StatefulWidget {
 }
 
 class _AlarmsScreenState extends State<AlarmsScreen> {
-  List alarms;
+  List? alarms;
 
   getAllAlarms() {
     Utils.getAllAlarms().then((value) {

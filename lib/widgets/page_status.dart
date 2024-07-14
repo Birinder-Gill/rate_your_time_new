@@ -7,19 +7,17 @@ import 'package:flutter/material.dart';
 
 class PageStatus extends InheritedWidget {
   const PageStatus({
-    Key key,
-    @required this.cartController,
-    @required this.menuController,
-    @required Widget child,
-  })  : assert(cartController != null),
-        assert(menuController != null),
-        super(key: key, child: child);
+    Key? key,
+    required this.cartController,
+    required this.menuController,
+    required Widget child,
+  })  : super(key: key, child: child);
 
   final AnimationController cartController;
   final AnimationController menuController;
 
   static PageStatus of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<PageStatus>();
+    return context.dependOnInheritedWidgetOfExactType<PageStatus>()!;
   }
 
   @override

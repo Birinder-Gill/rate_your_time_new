@@ -37,9 +37,8 @@ class SharedPrefs {
 
   static Future<void> setInt(String key, int value) async {
     consoleLog("IN Set int $key:$value");
-    bool result = await _channel()
+     await _channel()
         .invokeMethod(Constants.setString, {'key': '$key', 'value': "$value"});
-    return result;
   }
 
   // static Future<bool> isFirstDayAtHome() async {

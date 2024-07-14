@@ -13,7 +13,7 @@ class DatumLegendWithMeasures extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  DatumLegendWithMeasures(this.seriesList, {this.animate});
+  DatumLegendWithMeasures(this.seriesList, {this.animate = false});
 
   factory DatumLegendWithMeasures.withSampleData() {
     return new DatumLegendWithMeasures(
@@ -47,7 +47,7 @@ class DatumLegendWithMeasures extends StatelessWidget {
 
   /// Create series list with one series
   static List<charts.Series<TimeSpent, String>> _createSampleData() {
-    final data = [
+    final data = <TimeSpent>[
     ];
 
     return [
@@ -89,7 +89,7 @@ class DatumLegendWithMeasures extends StatelessWidget {
 /// Sample linear data type.
 class TimeSpent {
   // (4, -1, 0, 5, 7, 1, 2, 3)
-  static const cats = {
+  static const cats = <int,String>{
     1: 'Music',
     0: 'Games',
     3: 'Images',
@@ -116,7 +116,7 @@ class TimeSpent {
   };
   TimeSpent(this.cat, this.hours);
 
-  String get category => TimeSpent.cats[cat];
+  String get category => TimeSpent.cats[cat]!;
 
-  Color get color => colors[cat];
+  Color get color => colors[cat]!;
 }

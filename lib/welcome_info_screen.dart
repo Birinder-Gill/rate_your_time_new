@@ -6,9 +6,9 @@ import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/shared_prefs.dart';
 
 class WelcomeInfoScreen extends StatefulWidget {
-  final VoidCallback onPrev;
+  final VoidCallback? onPrev;
 
-  const WelcomeInfoScreen({Key key, this.onPrev}) : super(key: key);
+  const WelcomeInfoScreen({Key? key, this.onPrev}) : super(key: key);
   @override
   _WelcomeInfoScreenState createState() => _WelcomeInfoScreenState();
 }
@@ -47,9 +47,9 @@ class _WelcomeInfoScreenState extends State<WelcomeInfoScreen> {
                     _pageC.previousPage(
                         duration: Duration(milliseconds: 300),
                         curve: Curves.linear);
-                  })else if(widget.onPrev!=null)IconButton(
-                icon: Icon(Icons.keyboard_arrow_up),
-                onPressed:widget.onPrev),
+                  })else IconButton(
+              icon: Icon(Icons.keyboard_arrow_up),
+              onPressed:widget.onPrev),
             SizedBox(
               width: 100,
               child: (_page == _length)

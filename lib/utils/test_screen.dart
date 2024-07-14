@@ -1,14 +1,11 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/home_screen.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/widgets/circular_range_picker/double_circular_slider.dart';
-import 'package:rate_your_time_new/widgets/date_pickers/month_range_picker.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class TestScreen extends StatefulWidget {
@@ -62,7 +59,7 @@ class _TestScreenState extends State<TestScreen> {
             Text(
               "Welcome! Tell us a little about your time.",
               style:
-                  Theme.of(context).textTheme.headline3.copyWith(height: 1.2),
+                  Theme.of(context).textTheme.displaySmall?.copyWith(height: 1.2),
             ),
             SizedBox(
               height: 52,
@@ -137,8 +134,8 @@ class _TestScreenState extends State<TestScreen> {
 
                                 style: ProgressStyle(
                                   depth: slideVal,
-                                  accent: Theme.of(context).accentColor,
-                                  variant: Theme.of(context).accentColor,
+                                  accent: Theme.of(context).colorScheme.secondary,
+                                  variant: Theme.of(context).colorScheme.secondary,
                                 ),
                               )
                             : LinearProgressIndicator(
@@ -221,8 +218,8 @@ class _SleepPageState extends State<SleepPage> {
   int initTime=7;
   int endTime=22;
 
-  int inBedTime;
-  int outBedTime;
+  late int inBedTime;
+  late int outBedTime;
 
   double get _size => 350.0;
 
@@ -254,7 +251,7 @@ class _SleepPageState extends State<SleepPage> {
       children: [
         Text(
           'Welcome! Tell us a little about your time.',
-          style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
         ),
         DoubleCircularSlider(
           24,
@@ -276,7 +273,7 @@ class _SleepPageState extends State<SleepPage> {
             padding: const EdgeInsets.all(42.0),
             child: Center(
                 child: Text('${_formatIntervalTime(inBedTime, outBedTime)}',
-                    style: Theme.of(context).textTheme.headline4.copyWith(color: Colors.white))),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white))),
           ),
         ),
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -286,10 +283,10 @@ class _SleepPageState extends State<SleepPage> {
         TextButton.icon(
           style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.resolveWith((states) => baseColor),
+                  WidgetStateProperty.resolveWith((states) => baseColor),
               foregroundColor:
-                  MaterialStateProperty.resolveWith((states) => Colors.white),
-              shape: MaterialStateProperty.resolveWith(
+                  WidgetStateProperty.resolveWith((states) => Colors.white),
+              shape: WidgetStateProperty.resolveWith(
                 (states) => RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50.0),
                 ),

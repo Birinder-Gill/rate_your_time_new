@@ -66,7 +66,7 @@ class _AboutScreenState extends State<AboutScreen>
 class _AboutPageContent extends StatelessWidget {
   final VoidCallback onNext;
 
-  _AboutPageContent({Key key, this.onNext}) : super(key: key);
+  _AboutPageContent({Key? key, required this.onNext}) : super(key: key);
 
   final title = 'Intention:';
 
@@ -101,7 +101,7 @@ class _AboutPageContent extends StatelessWidget {
                       Center(
                         child: Text(
                           "Rate your time",
-                          style: theme.textTheme.headline6.copyWith(
+                          style: theme.textTheme.titleLarge!.copyWith(
                               fontWeight: FontWeight.bold, letterSpacing: 1),
                         ),
                       ),
@@ -120,7 +120,7 @@ class _AboutPageContent extends StatelessWidget {
                           child: Text(
                             p,
                             textAlign: TextAlign.center,
-                            style: theme.textTheme.subtitle1,
+                            style: theme.textTheme.titleMedium,
                           ),
                         ),
                       SizedBox(

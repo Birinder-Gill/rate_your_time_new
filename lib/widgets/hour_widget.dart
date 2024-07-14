@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/data/activities.dart';
@@ -28,7 +27,7 @@ class HourWidget extends StatelessWidget {
   // };
 
 
-  HourWidget(this.hour, {this.updateHour});
+  HourWidget(this.hour, {required this.updateHour});
 
   get elevation => 1.0;
 
@@ -51,7 +50,7 @@ class HourWidget extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: theme.textTheme.bodyText2.color
+                      color: theme.textTheme.bodyMedium?.color!
                           .withOpacity(hour.worth > 0 ? .9 : .5)),
                 ),
               ),
@@ -94,11 +93,11 @@ class HourWidget extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              " ${hour.note ?? ''}",
+                              " ${hour.note}",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
-                                  .caption
+                                  .bodySmall!
                                   .copyWith(color: primaryDark, fontSize: 12),
                             ),
                           )
@@ -143,7 +142,7 @@ class HourWidget extends StatelessWidget {
         );
 
   Widget _activityIcon(BuildContext context, Hour hour) => hour.activity != 0
-      ? FaIcon(activities[hour.activity].icon,
+      ? FaIcon(activities[hour.activity]?.icon,
     size: 16,
 
   )

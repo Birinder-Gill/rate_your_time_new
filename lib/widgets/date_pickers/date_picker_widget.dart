@@ -9,7 +9,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 class DatePickerWidget extends StatelessWidget {
   final DateTime firstDate;
 
-  const DatePickerWidget({Key key, this.firstDate}) : super(key: key);
+  const DatePickerWidget({Key? key, required this.firstDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class SingleDatePicker extends StatelessWidget {
   final AppModel model;
   final DateTime firstDate;
 
-  const SingleDatePicker({Key key, this.model, this.firstDate})
+  const SingleDatePicker({Key? key, required this.model,required this.firstDate})
       : super(key: key);
 
   @override

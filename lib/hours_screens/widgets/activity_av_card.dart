@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/models/activity_model.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
@@ -21,12 +19,11 @@ class ActivityAverageCard extends StatefulWidget {
 
 class _ActivityAverageCardState extends State<ActivityAverageCard> {
   bool expanded = false;
-  AppModel hoursModel;
+  late AppModel hoursModel;
 
   @override
   Widget build(BuildContext context) {
-    if (hoursModel == null) hoursModel = Provider.of<AppModel>(context);
-    if (widget.av?.activities?.isEmpty??true) return SizedBox.shrink();
+    if (widget.av.activities.isEmpty) return SizedBox.shrink();
     final theme = Theme.of(context);
     return Card(
       child: Column(
@@ -36,7 +33,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
           ),
           Text(
             "Activities you spent most time spent on",
-            style: theme.textTheme.subtitle1.copyWith(
+            style: theme.textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.bold, color: theme.primaryColorDark),
           ),
           Divider(),
@@ -46,7 +43,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                 ExpansionTile(
                   title: Text(
                     "$a",
-                    style: theme.textTheme.subtitle1,
+                    style: theme.textTheme.titleMedium,
                   ),
                   initiallyExpanded: false,
                   children: [
@@ -56,17 +53,17 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                         List<SingleDayAverage>.generate(
                             7,
                             (index) => SingleDayAverage(
-                                null,
-                                widget.av.weekDayActivities[a.id][index + 1]
+                                date:null,
+                                worth:widget.av.weekDayActivities[a.id]![index + 1]
                                         ?.toDouble() ??
                                     0.0,
-                                label: Utils.shortDays[index + 1])),
+                                label: Utils.shortDays[index + 1]!)),
                       ),
                     ),
                   ],
                   subtitle: Text(
                     '${a.timeSpent}${_hrs(a.timeSpent)}',
-                    style: theme.textTheme.subtitle2,
+                    style: theme.textTheme.titleSmall,
                   ),
                   leading: FaIcon(
                     a.icon,
@@ -81,7 +78,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                   leading: FaIcon(a.icon),
                   onTap: () {
                     showDayActivitiesList(
-                        widget.av.weekDayActivities[a.id].entries, a);
+                        widget.av.weekDayActivities[a.id]!.entries, a);
                   },
                 )
             else
@@ -133,7 +130,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                   child: GroupedBarChart(List<SingleDayAverage>.generate(
                       entries.length,
                       (index) => SingleDayAverage(
-                          null, entries.elementAt(index).value.toDouble(),
+                          worth: entries.elementAt(index).value.toDouble(),
                           label: entries.elementAt(index).key.toString()))),
                 )
         ),

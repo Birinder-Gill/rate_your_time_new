@@ -1,9 +1,7 @@
 import 'dart:ui' as ui;
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'circular_slider_paint.dart' show CircularSliderMode;
 import 'utils.dart';
@@ -26,16 +24,16 @@ class SliderPainter extends CustomPainter {
   double radius;
 
   SliderPainter({
-    @required this.mode,
-    @required this.startAngle,
-    @required this.endAngle,
-    @required this.sweepAngle,
-    @required this.selectionColor,
-    @required this.handlerColor,
-    @required this.handlerOutterRadius,
-    @required this.showRoundedCapInSelection,
-    @required this.showHandlerOutter,
-    @required this.sliderStrokeWidth,
+    required this.mode,
+    required this.startAngle,
+    required this.endAngle,
+    required this.sweepAngle,
+    required this.selectionColor,
+    required this.handlerColor,
+    required this.handlerOutterRadius,
+    required this.showRoundedCapInSelection,
+    required this.showHandlerOutter,
+    required this.sliderStrokeWidth,
   });
 
   @override
@@ -68,7 +66,7 @@ class SliderPainter extends CustomPainter {
   }
 
   Paint _getPaint(
-          {@required Color color,
+          {required Color color,
           List<Color> selectionColors = const [
             Colors.deepOrange,
             Colors.deepOrangeAccent,
@@ -80,8 +78,8 @@ class SliderPainter extends CustomPainter {
             Colors.deepPurple,
             Colors.deepOrange,
           ],
-          double width,
-          PaintingStyle style,
+          double? width,
+          PaintingStyle? style,
           Offset center = Offset.zero}) =>
       Paint()
         // ..color = color
@@ -97,12 +95,12 @@ class SliderPainter extends CustomPainter {
         ..strokeWidth = width ?? sliderStrokeWidth;
 
   Paint _getHandlerPaint(
-          {@required Color color, double width, PaintingStyle style}) =>
+          {required Color color, double? width, PaintingStyle style = PaintingStyle.stroke}) =>
       Paint()
         ..color = color
         ..strokeCap =
             showRoundedCapInSelection ? StrokeCap.round : StrokeCap.butt
-        ..style = style ?? PaintingStyle.stroke
+        ..style = style
         ..strokeWidth = width ?? sliderStrokeWidth;
 
   @override

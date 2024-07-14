@@ -8,7 +8,7 @@ showIntervalInfoDialog(BuildContext context,String label) => showCupertinoModalP
 class _UsageIntervalInfoDialog extends StatefulWidget {
   final String label;
 
-  const _UsageIntervalInfoDialog({Key key, this.label}) : super(key: key);
+  const _UsageIntervalInfoDialog({Key? key, required this.label}) : super(key: key);
   @override
   _UsageIntervalInfoDialogState createState() =>
       _UsageIntervalInfoDialogState();
@@ -72,7 +72,7 @@ class _UsageIntervalDetails extends StatelessWidget {
           SizedBox(height: 8,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal:8.0),
-            child: Text('$title',style: tt.subtitle1.copyWith(fontWeight: FontWeight.bold),),
+            child: Text('$title',style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold),),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal:8.0),
@@ -81,18 +81,18 @@ class _UsageIntervalDetails extends StatelessWidget {
           SizedBox(height: 8,),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(desc,style: tt.subtitle1,),
+            child: Text(desc,style: tt.titleMedium,),
           ),
           SizedBox(height: 8,),
           for (final i in points) ListTile(
               visualDensity: VisualDensity.compact,
               horizontalTitleGap: 0,
               leading: Icon(Icons.circle,size: 12,),
-              title: Text(i,style: tt.subtitle1.copyWith(fontWeight: FontWeight.bold,letterSpacing: 1),)),
+              title: Text(i,style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold,letterSpacing: 1),)),
           SizedBox(height: 8,),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(footer,style:tt.subtitle1),
+            child: Text(footer,style:tt.titleMedium),
           ),
         ],
       ),

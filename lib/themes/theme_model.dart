@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 
 class MyTheme {
   MyTheme({
-    @required this.cardsOnScaffold,
-    @required this.scaffoldBackground,
-    @required this.backdropColor,
-    @required this.onPrimaryDark,
-    @required this.accentColor,
-    @required this.textOnDark,
-    @required this.textOnLight,
-    @required this.isDark,
+    required this.cardsOnScaffold,
+    required this.scaffoldBackground,
+    required this.backdropColor,
+    required this.onPrimaryDark,
+    required this.accentColor,
+    required this.textOnDark,
+    required this.textOnLight,
+    required this.isDark,
   });
 
   Color cardsOnScaffold;
@@ -31,16 +31,12 @@ class MyTheme {
 
   get colorScheme =>  ColorScheme(
     primary: scaffoldBackground,
-    primaryVariant: backdropColor,
     secondary: onPrimaryDark,
-    secondaryVariant: accentColor,
     surface: cardsOnScaffold,
-    background: scaffoldBackground,
     error: Colors.red,
     onPrimary: textOnLight,
     onSecondary: textOnDark,
     onSurface: backdropColor,
-    onBackground: accentColor,
     onError: Colors.white,
     brightness: isDark?Brightness.dark:Brightness.light,
   );
@@ -52,26 +48,26 @@ class MyTheme {
       return Color(int.parse(source.toString().replaceAll("#", '0xff')));
     };
     return MyTheme(
-    cardsOnScaffold: json["primaryColor"] == null ? null : _parseColor(json["primaryColor"]),
-    scaffoldBackground: json["primaryLightColor"] == null ? null : _parseColor(json["primaryLightColor"]),
-    backdropColor: json["primaryDarkColor"] == null ? null : _parseColor(json["primaryDarkColor"]),
-    onPrimaryDark: json["secondaryColor"] == null ? null : _parseColor(json["secondaryColor"]),
-    accentColor: json["secondaryDarkColor"] == null ? null : _parseColor(json["secondaryDarkColor"]),
-    textOnDark: json["secondaryTextColor"] == null ? null : _parseColor(json["secondaryTextColor"]),
-    textOnLight: json["primaryTextColor"] == null ? null : _parseColor(json["primaryTextColor"]),
+    cardsOnScaffold: _parseColor(json["primaryColor"]),
+    scaffoldBackground: _parseColor(json["primaryLightColor"]),
+    backdropColor: _parseColor(json["primaryDarkColor"]),
+    onPrimaryDark: _parseColor(json["secondaryColor"]),
+    accentColor: _parseColor(json["secondaryDarkColor"]),
+    textOnDark: _parseColor(json["secondaryTextColor"]),
+    textOnLight: _parseColor(json["primaryTextColor"]),
     isDark: json["isDark"] == null ? null : json["isDark"],
   );
   }
 
   Map<String, dynamic> toMap() => {
-    "primaryColor": cardsOnScaffold == null ? null : cardsOnScaffold,
-    "primaryLightColor": scaffoldBackground == null ? null : scaffoldBackground,
-    "primaryDarkColor": backdropColor == null ? null : backdropColor,
-    "secondaryColor": onPrimaryDark == null ? null : onPrimaryDark,
-    "secondaryDarkColor": accentColor == null ? null : accentColor,
-    "secondaryTextColor": textOnDark == null ? null : textOnDark,
-    "primaryTextColor": textOnLight == null ? null : textOnLight,
-    "isDark": isDark == null ? null : isDark,
+    "primaryColor": cardsOnScaffold ,
+    "primaryLightColor": scaffoldBackground ,
+    "primaryDarkColor": backdropColor ,
+    "secondaryColor": onPrimaryDark ,
+    "secondaryDarkColor": accentColor ,
+    "secondaryTextColor": textOnDark ,
+    "primaryTextColor": textOnLight ,
+    "isDark": isDark,
   };
 
 

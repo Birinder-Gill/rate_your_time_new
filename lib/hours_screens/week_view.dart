@@ -4,7 +4,6 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/app_usage_tracker/usage_screen.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/app_usage_card.dart';
-import 'package:rate_your_time_new/hours_screens/widgets/empty_view.dart';
 import 'package:rate_your_time_new/hours_screens/widgets/empty_week_view.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/providers/week_model.dart';
@@ -49,7 +48,7 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
     final date = appModel.frontLabel(MaterialLocalizations.of(context));
     return Scaffold(
       body: Consumer<WeekModel>(
-        builder: (BuildContext context, model, Widget child) {
+        builder: (context, model, child) {
           if (model.isEmpty) {
             return Center(child: EmptyWeekView());
           }
@@ -59,33 +58,37 @@ class _WeekViewScreenState extends State<WeekViewScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: _WeekViewStats(model,date: date,),
+                  child: _WeekViewStats(
+                    model,
+                    date: date,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ActivityAverageCard(model.av),
                 ),
-                if(model.loaded && !model.isEmpty) Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppUsageCard(
-                    model.appUsage,
-                    model.accessGranted,
-                    onRetry: () {
-                      model.refresh(hours: false);
-                    },
-                    openDetails: (list) async {
-                      pushTo(
-                          context,
-                          AppsUsageScreen(
-                            from: await TimeUtils.getWeekStart(model.date),
-                            to: await TimeUtils.getWeekEnd(model.date),
-                            distinctApps: list,
-                            dateRangeLabel: model.appUsage.label,
-                          ));
-                    },
-                    date:()=>model.appUsage.label,
+                if (model.loaded && !model.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppUsageCard(
+                      model.appUsage,
+                      model.accessGranted,
+                      onRetry: () {
+                        model.refresh(hours: false);
+                      },
+                      openDetails: (list) async {
+                        pushTo(
+                            context,
+                            AppsUsageScreen(
+                              from: await TimeUtils.getWeekStart(model.date),
+                              to: await TimeUtils.getWeekEnd(model.date),
+                              distinctApps: list,
+                              dateRangeLabel: model.appUsage.label,
+                            ));
+                      },
+                      date: () => model.appUsage.label,
+                    ),
                   ),
-                ),
                 SizedBox(
                   height: 24,
                 )
@@ -105,7 +108,7 @@ class _WeekViewStats extends StatelessWidget {
 
   // final bool firstDay;
 
-  _WeekViewStats(this.model,{this.date});
+  _WeekViewStats(this.model, {required this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -116,11 +119,11 @@ class _WeekViewStats extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-              title:
-                  Text('Averages of hourly ratings for $date.',
-                      textAlign: TextAlign.center,
-                      style:theme.textTheme.subtitle1.copyWith(
-                          fontWeight: FontWeight.bold, color: theme.primaryColorDark))),
+              title: Text('Averages of hourly ratings for $date.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.primaryColorDark))),
           Container(
               height: 300,
               child: GroupedBarChart(model.av.averages, onBarSelected: (i) {
@@ -146,7 +149,9 @@ class _WeekViewStats extends StatelessWidget {
                   label: Text("Self analysis")),
             ],
           ),
-          SizedBox(height: 16,)
+          SizedBox(
+            height: 16,
+          )
         ],
       ),
     );

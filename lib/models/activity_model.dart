@@ -13,16 +13,16 @@ class Activity {
   final int timeSpent;
 
   const Activity(
-      {this.id,
-      this.name,
+      {required this.id,
+      required this.name,
       this.icon = FontAwesomeIcons.goodreads,
       this.timeSpent = 0});
 
   Activity copyWith({
-    int id,
-    String name,
-    Widget icon,
-    int timeSpent,
+    int? id,
+    String? name,
+    IconData? icon,
+    int? timeSpent,
   }) =>
       Activity(
           id: id ?? this.id,
@@ -50,9 +50,9 @@ class Activity {
       );
 
   Map<String, dynamic> toMap() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "icon": icon == null ? null : icon,
-        'timeSpent': timeSpent ?? 0
+        "id": id,
+        "name": name,
+        "icon": icon,
+        'timeSpent': timeSpent
       };
 }

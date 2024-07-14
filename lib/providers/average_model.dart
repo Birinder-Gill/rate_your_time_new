@@ -1,19 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/models/average_app_usage_model.dart';
 import 'package:rate_your_time_new/models/average_data_model.dart';
-import 'package:rate_your_time_new/utils/api_helper.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:rate_your_time_new/utils/data_cache.dart';
 
 class AverageModel {
   bool _loading = false;
-  AverageDataModel av;
-  double rating;
+  AverageDataModel av = AverageDataModel();
+  double rating=0;
 
   bool loaded = false;
   bool isEmpty = false;
-  AverageAppUsageModel appUsage;
+  AverageAppUsageModel appUsage = AverageAppUsageModel();
 
   static DataCache cache = DataCache();
 
@@ -29,13 +27,7 @@ class AverageModel {
       rating=0;
       consoleLog("Get hours called with from = [$from] and to =[$to]");
       this.av = cache.getAverageData(to, from);
-      if (this.av == null) {
-        Map hourData = await ApiHelper.getRangeData(to, from);
-        this.av = await compute<Map, AverageDataModel>(
-            Utils.parseAveragesData, {'data':hourData,'week':week});
-        cache.addAverageCache(to, from, this.av);
-      }
-      isEmpty = av.averages.isEmpty|| (av.averages.fold(0, (previousValue, element) => previousValue+element.worth)==0);
+      isEmpty = av.averages.isEmpty|| (av.averages.fold(0, (previousValue, element) => previousValue+element.worth.toInt())==0);
 
       if(!isEmpty){
         rating=av.averages.fold<double>(0.0, (previousValue, element) => previousValue+element.worth)/5;
@@ -60,14 +52,6 @@ class AverageModel {
       from = to.subtract(Duration(days: 1));
     }
     this.appUsage = (cache.getAppsData(to, from));
-    if(this.appUsage==null) {
-      this.accessGranted = await Utils.isUsageAccessGranted();
-      if(this.accessGranted){
-        this.appUsage = (await ApiHelper.trackUsageData(from, to));
-        if(this.appUsage.highApps.isNotEmpty)
-          cache.addAppDataCache(to, from, this.appUsage);
-      }
-    }
     _appsLoading=false;
   }
 

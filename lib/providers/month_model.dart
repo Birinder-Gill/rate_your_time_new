@@ -4,9 +4,9 @@ import 'package:rate_your_time_new/providers/average_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 
 class MonthModel extends AverageModel with ChangeNotifier {
-  DateTime date;
+  DateTime? date;
 
-  AverageAppUsageModel appUsage;
+  AverageAppUsageModel appUsage = AverageAppUsageModel();
 
   String dateLabel = "";
 
@@ -34,7 +34,10 @@ class MonthModel extends AverageModel with ChangeNotifier {
   }
 
   void _loadHours(DateTime from, DateTime to) {
-    this.dateLabel = "${Constants.months[date.month-1]} ${date.year}";
+    if(this.date == null){
+      this.date = DateTime.now();
+    }
+    this.dateLabel = "${Constants.months[date!.month-1]} ${date!.year}";
     getHours(from, to,week: false).then((value) {
       notifyListeners();
     });

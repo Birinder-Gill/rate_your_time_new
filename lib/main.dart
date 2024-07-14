@@ -1,7 +1,6 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rate_your_time_new/feature_discovery/feature_discovery.dart';
 import 'package:rate_your_time_new/providers/app_model.dart';
 import 'package:rate_your_time_new/providers/month_model.dart';
 import 'package:rate_your_time_new/providers/week_model.dart';
@@ -38,8 +37,8 @@ class MyApp extends StatelessWidget {
             return FeatureDiscovery(
               recordStepsInSharedPreferences: true,
               child: ListTileTheme(
-                textColor: model.selectedTheme.primaryColorDark,
-                iconColor: model.selectedTheme.primaryColorDark,
+                textColor: model.selectedTheme?.primaryColorDark,
+                iconColor: model.selectedTheme?.primaryColorDark,
                 child: MaterialApp(
                   debugShowCheckedModeBanner: false,
                   theme:model.selectedTheme,

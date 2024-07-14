@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/data/activities.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
-import 'package:rate_your_time_new/providers/day_model.dart';
 
 class EditHourWidget extends StatefulWidget {
   final Hour hour;
 
-  EditHourWidget(this.hour, {this.updateHour});
+  EditHourWidget(this.hour, {required this.updateHour});
 
   @override
   _EditHourWidgetState createState() => _EditHourWidgetState();
@@ -21,13 +19,13 @@ class _EditHourWidgetState extends State<EditHourWidget> {
   int activityId = 0;
   final commentC = TextEditingController();
 
-  int rating;
+  late int rating;
 
   @override
   void initState() {
     rating = widget.hour.worth;
     activityId = widget.hour.activity;
-    commentC.text = widget.hour.note??"";
+    commentC.text = widget.hour.note;
     super.initState();
   }
 
@@ -130,11 +128,11 @@ class _EditHourWidgetState extends State<EditHourWidget> {
         },
         child: Text("$i"),
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith((states) =>
+          backgroundColor: WidgetStateProperty.resolveWith((states) =>
               i <= rating
                   ? Theme.of(context).primaryColorDark
                   : Colors.transparent),
-          foregroundColor: MaterialStateProperty.resolveWith((states) =>
+          foregroundColor: WidgetStateProperty.resolveWith((states) =>
               i <= rating
                   ? Theme.of(context).colorScheme.onPrimary
                   : Theme.of(context).colorScheme.onSurface),

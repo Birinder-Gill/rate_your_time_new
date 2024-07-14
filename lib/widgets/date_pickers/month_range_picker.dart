@@ -6,7 +6,7 @@ class MonthRangePicker extends StatefulWidget {
   final AppModel model;
   final DateTime firstDate;
 
-  const MonthRangePicker({Key key, this.model, this.firstDate})
+  const MonthRangePicker({Key? key, required this.model, required this.firstDate})
       : super(key: key);
 
   @override
@@ -16,16 +16,16 @@ class MonthRangePicker extends StatefulWidget {
 
 class _MonthRangePickerState extends State<MonthRangePicker> {
 
-  PageController pageController;
-  DateTime selectedDate;
-  int displayedYear;
+  late PageController pageController;
+  late DateTime selectedDate;
+  late int displayedYear;
 
   final List<int> years = [2021];
 
   Color get accentColor =>
       Theme
           .of(context)
-          .accentColor;
+          .colorScheme.secondary;
 
   get primary => Theme.of(context).primaryColor;
 
@@ -67,7 +67,7 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
               children: <Widget>[
                 Text('$displayedYear', style: theme
                     .textTheme
-                    .headline6.copyWith(color: theme.accentColor),),
+                    .titleLarge?.copyWith(color: theme.colorScheme.secondary),),
                 Row(
                   children: <Widget>[
                     IconButton(
@@ -127,25 +127,25 @@ class _MonthRangePickerState extends State<MonthRangePicker> {
 
 
                           style: ButtonStyle(
-                            elevation: MaterialStateProperty.resolveWith(
+                            elevation: WidgetStateProperty.resolveWith(
                                   (states) =>
                               date.month == selectedDate.month &&
                                   date.year == selectedDate.year
                                   ? 4.0
                                   : 0,
                             ),
-                            backgroundColor: MaterialStateProperty.resolveWith(
+                            backgroundColor: WidgetStateProperty.resolveWith(
                                   (states) =>
                               date.month == selectedDate.month &&
                                   date.year == selectedDate.year
                                   ? accentColor
                                   : null,
                             ),
-                            side: MaterialStateProperty.resolveWith((states) => BorderSide(
+                            side: WidgetStateProperty.resolveWith((states) => BorderSide(
                               color: accentColor,
                               width: .2,
                             )),
-                            textStyle: MaterialStateProperty.resolveWith((
+                            textStyle: WidgetStateProperty.resolveWith((
                                 states) =>
                                 TextStyle(
                                     color: date.month == selectedDate.month &&

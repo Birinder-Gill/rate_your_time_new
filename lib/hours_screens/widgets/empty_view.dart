@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
-import 'package:rate_your_time_new/utils/constants.dart';
 
 class EmptyView extends StatelessWidget {
 
-  const EmptyView({Key key}) : super(key: key);
+  const EmptyView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class EmptyView extends StatelessWidget {
         Text(
           "No data found for\n${model.frontLabel(MaterialLocalizations.of(context))}",
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         // SizedBox(height: 50,),
         // SizedBox(height:MediaQuery.of(context).size.height/12 ,),
@@ -37,7 +36,7 @@ class EmptyView extends StatelessWidget {
             child: Text(
               "Please choose another date.",
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.caption,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
         ),

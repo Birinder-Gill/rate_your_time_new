@@ -38,7 +38,7 @@ class ThemeTile extends StatelessWidget {
 
   final double height;
 
-  const ThemeTile(this.e, {Key key, this.height=50}) : super(key: key);
+  const ThemeTile(this.e, {Key? key, this.height=50}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class ThemeTile extends StatelessWidget {
     );
   }
 
-  _themeView({Color back, Color front}) =>Container(
+  _themeView({required Color back, required Color front}) =>Container(
     width: double.infinity,
     color: back,
     child: Container(

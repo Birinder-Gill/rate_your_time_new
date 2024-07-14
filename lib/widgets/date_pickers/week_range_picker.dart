@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rate_your_time_new/models/hours_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -9,13 +8,13 @@ class WeekRangePicker extends StatelessWidget {
 
   final DateTime firstDate;
 
-  WeekRangePicker({Key key, this.model, this.firstDate}) : super(key: key) {
+  WeekRangePicker({Key? key,required this.model, required this.firstDate}) : super(key: key) {
     setSelection(model.date, refreshModel: false);
   }
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) async {
     PickerDateRange ranges = args.value;
-    DateTime date1 = ranges.startDate;
+    DateTime date1 = ranges.startDate??DateTime.now();
     setSelection(date1);
   }
 

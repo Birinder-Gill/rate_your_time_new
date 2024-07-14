@@ -45,7 +45,7 @@ class GroupedBarChart extends StatelessWidget {
       selectionModels: [
         charts.SelectionModelConfig(
             updatedListener: (charts.SelectionModel model) {
-          if (model.hasDatumSelection && onBarSelected != null) {
+          if (model.hasDatumSelection) {
             if (!tapped[0]) {
               tapped[0] = true;
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -103,7 +103,7 @@ class GroupedBarChart extends StatelessWidget {
         labelAccessorFn: (t, i) => '',
         fillColorFn: (d, i) => charts.ColorUtil.fromDartColor(barColor),
         domainFn: (SingleDayAverage sales, _) =>
-            sales.label ?? Utils.shortDays[sales.date.weekday],
+            sales.label ?? Utils.shortDays[sales.date?.weekday] ?? "",
         measureFn: (SingleDayAverage sales, _) =>
             sales.worth > 0 ? sales.worth : 0,
         data: av,
@@ -114,7 +114,7 @@ class GroupedBarChart extends StatelessWidget {
 
 /// Sample ordinal data type.
 class SingleDayAverage {
-  final DateTime date;
+  final DateTime? date;
   final double worth;
 
   final double pendingSales;
@@ -123,26 +123,32 @@ class SingleDayAverage {
 
   final String label;
 
-  SingleDayAverage(this.date, this.worth,
-      {this.pendingSales = 0.0,
+  SingleDayAverage(
+      {required this.worth,
+      this.pendingSales = 0.0,
+      this.date,
       // this.filledRegion = 0,
       this.label});
 
   double get whiteBlocks => (pendingSales / (worth + pendingSales)) * 5;
 
   SingleDayAverage copyWith(
-          {DateTime date,
-          double worth,
-          double pendingSales,
-          int filledHours,
-          String label}) =>
-      SingleDayAverage(date ?? this.date, worth ?? this.worth,
+          {DateTime? date,
+          double? worth,
+          double? pendingSales,
+          int? filledHours,
+          String? label}) =>
+      SingleDayAverage(
+          date: date ?? this.date,
+          worth: worth ?? this.worth,
           pendingSales: pendingSales ?? this.pendingSales,
           // filledRegion: filledHours ?? this.filledRegion,
           label: label ?? this.label);
 
   @override
   String toString() {
-    return "${DefaultMaterialLocalizations().formatShortDate(date)}\nWorth ---> $worth\nPending sales -> $pendingSales\nLabel $label";
+    return date == null
+        ? ""
+        : "${DefaultMaterialLocalizations().formatShortDate(date)}\nWorth ---> $worth\nPending sales -> $pendingSales\nLabel $label";
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/themes/dark_theme.dart';
 import 'package:rate_your_time_new/themes/shrine_theme.dart';
@@ -15,7 +14,7 @@ const mediumLetterSpacing = 0.04;
 const largeLetterSpacing = 1.0;
 
 class ThemeModel with ChangeNotifier {
-  ThemeData selectedTheme;
+  ThemeData? selectedTheme;
 
   int selectedSIndex = 0;
 
@@ -71,16 +70,13 @@ class ThemeModel with ChangeNotifier {
   ThemeData _buildFromMyTheme(MyTheme theme) {
     final base = theme.isDark ? ThemeData.dark() : ThemeData.light();
     return base.copyWith(
-      colorScheme: theme.colorScheme,
-      accentColor: theme.accentColor,
       primaryColor: theme.cardsOnScaffold,
       primaryColorDark: theme.backdropColor,
       primaryColorLight: theme.scaffoldBackground,
-      buttonColor: theme.backdropColor,
       switchTheme: SwitchThemeData(
         thumbColor:
-            MaterialStateProperty.resolveWith((states) => theme.backdropColor),
-        trackColor: MaterialStateProperty.resolveWith(
+            WidgetStateProperty.resolveWith((states) => theme.backdropColor),
+        trackColor: WidgetStateProperty.resolveWith(
             (states) => theme.backdropColor.withOpacity(.4)),
 
       ),
@@ -94,30 +90,28 @@ class ThemeModel with ChangeNotifier {
           elevation: 0,
           iconTheme: IconThemeData(color: theme.onPrimaryDark),
           backgroundColor: theme.backdropColor,
-          textTheme: _buildTextTheme(base.textTheme, theme,!theme.isDark),
           titleTextStyle: TextStyle(color: theme.cardsOnScaffold),
-          brightness: theme.isDark ? Brightness.light : Brightness.dark),
+          toolbarTextStyle: _buildTextTheme(base.textTheme, theme,!theme.isDark).bodyMedium),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith(
+              backgroundColor: WidgetStateProperty.resolveWith(
                   (states) => theme.cardsOnScaffold),
-              foregroundColor: MaterialStateProperty.resolveWith(
+              foregroundColor: WidgetStateProperty.resolveWith(
                   (states) => theme.accentColor))),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.resolveWith(
+              foregroundColor: WidgetStateProperty.resolveWith(
                   (states) => theme.backdropColor))),
       outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
-              shape: MaterialStateProperty.resolveWith((states) =>
+              shape: WidgetStateProperty.resolveWith((states) =>
                   RoundedRectangleBorder(
                       side: BorderSide(color: theme.backdropColor))),
-              foregroundColor: MaterialStateProperty.resolveWith(
+              foregroundColor: WidgetStateProperty.resolveWith(
                   (states) => theme.backdropColor))),
       scaffoldBackgroundColor: theme.scaffoldBackground,
       cardColor: theme.cardsOnScaffold,
       dialogBackgroundColor: theme.cardsOnScaffold,
-      errorColor: theme.accentColor,
       buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.normal,
       ),
@@ -137,42 +131,41 @@ class ThemeModel with ChangeNotifier {
       ),
       textTheme: _buildTextTheme(base.textTheme, theme,theme.isDark),
       primaryTextTheme: _buildTextTheme(base.primaryTextTheme, theme,theme.isDark),
-      accentTextTheme: _buildTextTheme(base.accentTextTheme, theme,theme.isDark),
-      iconTheme: _customIconTheme(base.iconTheme, theme),
+      iconTheme: _customIconTheme(base.iconTheme, theme), colorScheme: theme.colorScheme.copyWith(secondary: theme.accentColor).copyWith(error: theme.accentColor),
     );
   }
 
   TextTheme _buildTextTheme(TextTheme base, MyTheme theme,bool isDark) {
     return GoogleFonts.kanitTextTheme(base
         .copyWith(
-          headline5: base.headline5.copyWith(
+          headlineSmall: base.headlineSmall?.copyWith(
             fontWeight: FontWeight.w500,
             letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
           ),
-          headline6: base.headline6.copyWith(
+          titleLarge: base.titleLarge?.copyWith(
             fontSize: 18,
             letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
           ),
-          caption: base.caption.copyWith(
+          bodySmall: base.bodySmall?.copyWith(
             fontWeight: FontWeight.w400,
             fontSize: 14,
             letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
           ),
-          bodyText1: base.bodyText1.copyWith(
+          bodyLarge: base.bodyLarge?.copyWith(
             fontWeight: FontWeight.w500,
             fontSize: 16,
             letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
           ),
-          bodyText2: base.bodyText2.copyWith(
+          bodyMedium: base.bodyMedium?.copyWith(
             letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
           ),
-          subtitle1: base.subtitle1.copyWith(
+          titleMedium: base.titleMedium?.copyWith(
             letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
           ),
-          headline4: base.headline4.copyWith(
+          headlineMedium: base.headlineMedium?.copyWith(
             letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
           ),
-          button: base.button.copyWith(
+          labelLarge: base.labelLarge?.copyWith(
             fontWeight: FontWeight.w500,
             fontSize: 14,
             letterSpacing: letterSpacingOrNone(defaultLetterSpacing),
@@ -184,7 +177,7 @@ class ThemeModel with ChangeNotifier {
         ));
   }
 
-  _cutCornerBorder(MyTheme theme, {Color color, double width}) =>
+  _cutCornerBorder(MyTheme theme, {Color? color, double? width}) =>
       CutCornersBorder(
         borderSide: BorderSide(
             color: color ?? theme.backdropColor, width: width ?? 0.5),

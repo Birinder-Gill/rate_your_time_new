@@ -31,10 +31,10 @@ class CutCornersBorder extends OutlineInputBorder {
 
   @override
   CutCornersBorder copyWith({
-    BorderSide borderSide,
-    BorderRadius borderRadius,
-    double gapPadding,
-    double cut,
+    BorderSide? borderSide,
+    BorderRadius? borderRadius,
+    double? gapPadding,
+    double? cut,
   }) {
     return CutCornersBorder(
       borderSide: borderSide ?? this.borderSide,
@@ -47,7 +47,7 @@ class CutCornersBorder extends OutlineInputBorder {
   final double cut;
 
   @override
-  ShapeBorder lerpFrom(ShapeBorder a, double t) {
+  ShapeBorder lerpFrom(ShapeBorder? a, double? t) {
     if (a is CutCornersBorder) {
       final outline = a;
       return CutCornersBorder(
@@ -108,12 +108,11 @@ class CutCornersBorder extends OutlineInputBorder {
     double gapPercentage = 0,
     TextDirection textDirection,
   }) {
-    assert(gapExtent != null);
     assert(gapPercentage >= 0 && gapPercentage <= 1);
 
     final paint = borderSide.toPaint();
     final outer = borderRadius.toRRect(rect);
-    if (gapStart == null || gapExtent <= 0 || gapPercentage == 0) {
+    if (gapExtent <= 0 || gapPercentage == 0) {
       canvas.drawPath(_notchedCornerPath(outer.middleRect), paint);
     } else {
       final extent = lerpDouble(0.0, gapExtent + gapPadding * 2, gapPercentage);
@@ -334,7 +333,8 @@ class TimeUtils {
     return "$bef - $time${minutes > 0 ? ":$minutes" : ''} am";
   }
 
-  static Future<DateTime> getWeekStart(DateTime to) async {
+  static Future<DateTime> getWeekStart(DateTime? date) async {
+    final to = date??DateTime.now();
     final from = to.subtract(Duration(days: to.weekday - 1));
     final installDate = await SharedPrefs.checkInstallDate();
     consoleLog('----------------------------');
@@ -343,7 +343,8 @@ class TimeUtils {
     return from.isBefore(installDate) ? installDate : from;
   }
 
-  static Future<DateTime> getWeekEnd(DateTime from) async {
+  static Future<DateTime> getWeekEnd(DateTime? date) async {
+    final from = date??DateTime.now();
     final to = from.add(Duration(days: 7 - from.weekday));
     final now = DateTime.now();
     return to;
@@ -352,7 +353,8 @@ class TimeUtils {
     return to.isBefore(now) ? to : now;
   }
 
-  static Future<DateTime> getMonthEnd(DateTime from) async {
+  static Future<DateTime> getMonthEnd(DateTime? date) async {
+    final from = date??DateTime.now();
     final to = DateTime(
         from.year, from.month, DateUtils.getDaysInMonth(from.year, from.month));
     final now = DateTime.now();
@@ -361,7 +363,8 @@ class TimeUtils {
     return to.isBefore(now) ? to : now;
   }
 
-  static Future<DateTime> getMonthStart(DateTime to) async {
+  static Future<DateTime> getMonthStart(DateTime? date) async {
+    final to = date??DateTime.now();
     //FIXME: Maybe we could remove initial dae check and make it synchronous;
     final from = DateTime.utc(to.year, to.month, 1);
     final installDate = await SharedPrefs.checkInstallDate();
@@ -397,7 +400,7 @@ class TimeUtils {
         trail = 's';
       }
       var prefix = '';
-      if (hrs != null && hrs > 0) {
+      if (hrs > 0) {
         prefix = '$hrs hr ';
       }
       return '$prefix $result $unit$trail';
@@ -410,9 +413,6 @@ class TimeUtils {
     int lastHr;
     list.forEach((element) {
       final hr = int.parse(element['time'].toString().split(':').first);
-      if (firstHr == null) {
-        firstHr = hr;
-      }
       if (captured) {
         return label(now);
       }
@@ -477,7 +477,6 @@ class Utils {
                         e.map((k, v) => MapEntry("$k", v))))))));
     consoleLog(hours, log: true);
     AverageDataModel av = AverageDataModel();
-    if (av.averages == null) av.averages = [];
     final tempActivityMap = {};
     final weekDayActivityMap = <int, Map<int, int>>{};
 
@@ -532,7 +531,7 @@ class Utils {
         (b, a) => tempActivityMap[a].compareTo(tempActivityMap[b]));
     sorted.forEach((key, value) {
       Activity act = activities[key]?.copyWith(timeSpent: value);
-      if (act != null) av.activities.add(act);
+      av.activities.add(act);
     });
     if (av.activities.length > ACTIVITIES_TO_SHOW) {
       final temp = List<Activity>.from(av.activities);
@@ -558,19 +557,13 @@ class Utils {
 
   static AverageAppUsageModel parseStatsData(List list) {
     ///Get actual time range interval
-    int min, max;
+    int min=0, max=0;
     list.forEach((element) {
       final from = element['firstTimeStamp'];
-      if (min == null) {
-        min = from;
-      }
       if (min > from) {
         min = from;
       }
       final to = element['LastTimeStamp'];
-      if (max == null) {
-        max = to;
-      }
       if (max < to) {
         max = to;
       }
@@ -585,7 +578,7 @@ class Utils {
         (e) => UsageStat.fromJson(jsonEncode(e)),
       ),
     );
-    apps.sort((b, a) => a.totalTimeInForeground - b.totalTimeInForeground);
+    apps.sort((b, a) => (a.totalTimeInForeground??0) - (b.totalTimeInForeground??0));
 
     if (apps.length > APPS_TO_SHOW) {
       final temp = List<UsageStat>.from(apps);

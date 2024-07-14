@@ -39,8 +39,8 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  Consumer<MonthModel>(
-        builder: (BuildContext context, model, Widget child) {
+      body: Consumer<MonthModel>(
+        builder: (BuildContext context, model, child) {
           if (model.isEmpty) {
             return EmptyMonthView();
           }
@@ -56,32 +56,33 @@ class _MonthViewScreenState extends State<MonthViewScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ActivityAverageCard(
-                  model.av,
+                  model.av!,
                   isWeek: false,
                 ),
               ),
-              if(model.loaded && !model.isEmpty)Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AppUsageCard(
-                  model.appUsage,
-                  model.accessGranted,
-                  onRetry: () {
-                    model.refresh(hours: false);
-                  },
-                  openDetails: (list) async {
-                    pushTo(
-                      context,
-                      AppsUsageScreen(
-                        from: await TimeUtils.getMonthStart(model.date),
-                        to: await TimeUtils.getMonthEnd(model.date),
-                        distinctApps: list,
-                        dateRangeLabel: model.appUsage.label,
-                      ),
-                    );
-                  },
-                  date:()=> model.appUsage.label,
+              if (model.loaded && !model.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppUsageCard(
+                    model.appUsage,
+                    model.accessGranted,
+                    onRetry: () {
+                      model.refresh(hours: false);
+                    },
+                    openDetails: (list) async {
+                      pushTo(
+                        context,
+                        AppsUsageScreen(
+                          from: await TimeUtils.getMonthStart(model.date),
+                          to: await TimeUtils.getMonthEnd(model.date),
+                          distinctApps: list,
+                          dateRangeLabel: model.appUsage.label,
+                        ),
+                      );
+                    },
+                    date: () => model.appUsage.label,
+                  ),
                 ),
-              ),
             ],
           );
         },
@@ -95,7 +96,7 @@ class _MonthViewStats extends StatelessWidget {
 
   final String date;
 
-  _MonthViewStats(this.model, {this.date});
+  _MonthViewStats(this.model, {required this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +111,7 @@ class _MonthViewStats extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text('Time efficiency for $date.',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.subtitle1.copyWith(
+                  style: theme.textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.primaryColorDark))),
           Padding(
@@ -155,7 +156,7 @@ class _MonthViewStats extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(2.0),
                                 child: Text(
-                                  "${i.date.day}",
+                                  "${i.date?.day}",
                                   textAlign: TextAlign.center,
                                 ),
                               ),

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SelfAnalysisView extends StatefulWidget {
@@ -31,13 +30,13 @@ class _SelfAnalysisViewState extends State<SelfAnalysisView> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               heading,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
           ),
           Text(
             subHeading,
-            style: Theme.of(context).textTheme.subtitle2,
+            style: Theme.of(context).textTheme.titleSmall,
             textAlign: TextAlign.center,
           ),
           Divider(),

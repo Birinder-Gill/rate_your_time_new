@@ -123,19 +123,15 @@ class _DoubleCircularSliderState extends State<DoubleCircularSlider> {
           secondarySectors: widget.secondarySectors ?? 0,
           child: widget.child,
           onSelectionChange: (newInit, newEnd, laps) {
-            if (widget.onSelectionChange != null) {
-              widget.onSelectionChange(newInit, newEnd, laps);
-            }
-            setState(() {
+            widget.onSelectionChange(newInit, newEnd, laps);
+                      setState(() {
               _init = newInit;
               _end = newEnd;
             });
           },
           onSelectionEnd: (newInit, newEnd, laps) {
-            if (widget.onSelectionEnd != null) {
-              widget.onSelectionEnd(newInit, newEnd, laps);
-            }
-          },
+            widget.onSelectionEnd(newInit, newEnd, laps);
+                    },
           sliderStrokeWidth: widget.sliderStrokeWidth ?? 12.0,
           baseColor: widget.baseColor ?? Color.fromRGBO(255, 255, 255, 0.1),
           selectionColor:

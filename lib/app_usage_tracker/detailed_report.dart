@@ -39,10 +39,12 @@ class _DetailedReportState extends State<DetailedReport> {
         horizontalTitleGap: 0,
         title: Text("${i.appName}"),
         subtitle:
-            Text('${TimeUtils.convertMillsToTime(i.totalTimeInForeground)}'),
+            Text('${TimeUtils.convertMillsToTime(i.totalTimeInForeground??0)}'),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.memory(i.appLogo),
+          child: i.appLogo == null?Center(
+            child: ErrorWidget(Exception("App logo is null"))
+          ):Image.memory(i.appLogo!),
         ),
       ):SizedBox.shrink();
 }

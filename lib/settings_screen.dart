@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_your_time_new/select_time_screen.dart';
 import 'package:rate_your_time_new/splash_screen.dart';
@@ -95,7 +94,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
   get style => TextStyle(color: Theme.of(context).primaryColorDark,fontSize: 16, fontWeight: FontWeight.bold);
 
-  Widget _setting({IconData icon, String label, VoidCallback onTap,Widget trailing,Widget subtitle}) => ListTile(
+  Widget _setting({required IconData icon,required  String label, VoidCallback? onTap, Widget? trailing, Widget? subtitle}) => ListTile(
     leading: Icon(icon),
     subtitle: subtitle,
     horizontalTitleGap: 0,
@@ -110,7 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(s,style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),),
+          child: Text(s,style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),),
         ),
       ],
     ),

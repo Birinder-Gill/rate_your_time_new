@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rate_your_time_new/utils/api_helper.dart';
 
 class GoalProvider with ChangeNotifier {
-  Goal goal;
+  Goal? goal;
 
   bool loaded=false;
 
@@ -17,13 +17,13 @@ class GoalProvider with ChangeNotifier {
 
 class Goal {
   Goal({
-    this.id,
-    this.ratingTarget,
-    this.date,
-    this.month,
-    this.year,
-    this.isAccomplished,
-    this.goal,
+    required this.id,
+    required this.ratingTarget,
+    required this.date,
+    required this.month,
+    required this.year,
+    required this.isAccomplished,
+    required this.goal,
   });
 
   int id;
@@ -35,13 +35,13 @@ class Goal {
   String goal;
 
   Goal copyWith({
-    int id,
-    int ratingTarget,
-    int date,
-    int month,
-    int year,
-    int isAccomplished,
-    String goal,
+    int? id,
+    double? ratingTarget,
+    int? date,
+    int? month,
+    int? year,
+    int? isAccomplished,
+    String? goal,
   }) =>
       Goal(
         id: id ?? this.id,
@@ -70,12 +70,12 @@ class Goal {
       );
 
   Map<String, dynamic> toMap() => {
-        "id": id == null ? null : id,
-        "ratingTarget": ratingTarget == null ? null : ratingTarget,
-        "date": date == null ? null : date,
-        "month": month == null ? null : month,
-        "year": year == null ? null : year,
-        "isAccomplished": isAccomplished == null ? null : isAccomplished,
-        "goal": goal == null ? null : goal,
+        "id": id ,
+        "ratingTarget": ratingTarget ,
+        "date": date ,
+        "month": month ,
+        "year": year ,
+        "isAccomplished": isAccomplished ,
+        "goal": goal ,
       };
 }

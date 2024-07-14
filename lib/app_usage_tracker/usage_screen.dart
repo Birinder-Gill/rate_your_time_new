@@ -1,32 +1,24 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math' as math;
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rate_your_time_new/app_usage_tracker/stat_model.dart';
 import 'package:rate_your_time_new/providers/app_usage_model.dart';
 import 'package:rate_your_time_new/utils/constants.dart';
-import 'package:rate_your_time_new/utils/test_screen.dart';
 import 'package:rate_your_time_new/utils/usage_interval_info_dialog.dart';
-import 'package:rate_your_time_new/widgets/finance_entity.dart';
 import 'package:rate_your_time_new/widgets/graphs/pie%20chart.dart';
-import 'package:rate_your_time_new/widgets/pie_chart.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AppsUsageScreen extends StatefulWidget {
-  final DateTime from;
-  final DateTime to;
-  final List<UsageStat> distinctApps;
+  final DateTime? from;
+  final DateTime? to;
+  final List<UsageStat>? distinctApps;
 
-  final String dateRangeLabel;
+  final String? dateRangeLabel;
 
   const AppsUsageScreen(
-      {Key key, this.from, this.to, this.distinctApps, this.dateRangeLabel})
+      {Key? key, this.from, this.to, this.distinctApps, this.dateRangeLabel})
       : super(key: key);
 
   @override
@@ -35,9 +27,9 @@ class AppsUsageScreen extends StatefulWidget {
 
 class _AppsUsageScreenState extends State<AppsUsageScreen>
     with WidgetsBindingObserver {
-  List<UsageStat> apps;
+  List<UsageStat> apps = [];
 
-  bool _granted;
+  bool _granted = false;
 
   var search = '';
 
@@ -47,16 +39,16 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
 
   var error = false;
 
-  DateTime to, from;
+ late DateTime to, from;
 
-  Map<int, int> catMap;
+  Map<int, int> catMap = {};
 
   String label = '';
 
   double get sum =>
-      sumOf<UsageStat>(distinctApps, (e) => e.totalTimeInForeground);
+      sumOf<UsageStat>(distinctApps, (e) => e.totalTimeInForeground??0);
 
-  get granted => (_granted != null && (_granted));
+  get granted => ((_granted));
 
   Color get primaryDark => Theme.of(context).primaryColorDark;
 
@@ -71,7 +63,9 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
+      default:
         break;
+
     }
   }
 
@@ -80,16 +74,16 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
       loading = true;
     });
     try {
-      if (widget.distinctApps == null || forceReload) {
+      if (forceReload) {
         final model = AppUsageModel();
         await model.getApps(begin: from, end: to);
         distinctApps = model.distinctApps;
         catMap = model.catMap;
         label = model.label;
       } else {
-        distinctApps = widget.distinctApps;
+        distinctApps = widget.distinctApps??[];
         catMap = AppUsageModel.makeCatMap(distinctApps);
-        label = widget.dateRangeLabel;
+        label = widget.dateRangeLabel ?? '';
       }
     } catch (e) {
       error = true;
@@ -140,10 +134,10 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                   "${_label(from)} - ${_label(to)}",
                   style: Theme.of(context)
                       .textTheme
-                      .caption
-                      .copyWith(color: themeData.accentColor),
+                      .bodySmall!
+                      .copyWith(color: themeData.colorScheme.secondary),
                 ),
-                icon: Icon(Icons.edit, size: 16, color: themeData.accentColor),
+                icon: Icon(Icons.edit, size: 16, color: themeData.colorScheme.secondary),
               ),
             ),
         ],
@@ -177,7 +171,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                         Text(
                                           "Total screen time ($label)",
                                           textAlign: TextAlign.center,
-                                          style: theme.subtitle1.copyWith(
+                                          style: theme.titleMedium!.copyWith(
                                               color: themeData
                                                   .colorScheme.onSecondary),
                                         ),
@@ -202,7 +196,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                       Text(
                                         TimeUtils.convertMillsToTime(sum),
                                         textAlign: TextAlign.center,
-                                        style: theme.headline3.copyWith(
+                                        style: theme.displaySmall?.copyWith(
                                             color: themeData
                                                 .colorScheme.onSecondary),
                                       ),
@@ -210,7 +204,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                         iconSize: 36,
                                         icon: Icon(
                                           Icons.refresh,
-                                          color: Theme.of(context).accentColor,
+                                          color: Theme.of(context).colorScheme.secondary,
                                         ),
                                         onPressed: getApps,
                                         // mini: true,
@@ -229,8 +223,8 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                           _mostUsedApps(themeData),
                           _categoryGraph(themeData),
                           Center(child: _subTitle('All apps', themeData)),
-                          for (UsageStat i in distinctApps ?? [])
-                            if (i.package.contains(search) ||
+                          for (UsageStat i in distinctApps)
+                            if ((i.package?.contains(search)??false) ||
                                 i.appName.contains(search))
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -241,12 +235,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                     onTap: () {
                                       final lastDateUsed =
                                           DateTime.fromMillisecondsSinceEpoch(
-                                              i.lastTimeUsed);
+                                              i.lastTimeUsed??0);
                                       final lastTimeUsed =
                                           TimeOfDay.fromDateTime(lastDateUsed);
                                       final lastDateStamp =
                                           DateTime.fromMillisecondsSinceEpoch(
-                                              i.lastTimeStamp);
+                                              i.lastTimeStamp??0);
                                       final lastTimeStamp =
                                           TimeOfDay.fromDateTime(lastDateStamp);
                                       final loc =
@@ -257,13 +251,13 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                                 titlePadding: EdgeInsets.zero,
                                                 title: ListTile(
                                                   title: Text('${i.appName}'),
-                                                  subtitle: Text(i.package),
+                                                  subtitle: Text(i.package??"-/-"),
                                                   leading: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
                                                             8.0),
-                                                    child:
-                                                        Image.memory(i.appLogo),
+                                                    child:i.appLogo==null?
+                                                        Image.memory(i.appLogo!):ErrorWidget(Exception("Image logo not found")),
                                                   ),
                                                 ),
                                                 children: [
@@ -284,7 +278,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                                     subtitle: Text(
                                                       TimeUtils
                                                           .convertMillsToTime(i
-                                                              .totalTimeVisible),
+                                                              .totalTimeVisible??0),
                                                     ),
                                                   ),
                                                   ListTile(
@@ -292,7 +286,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                                         "Total time in foreground"),
                                                     subtitle: Text(
                                                       TimeUtils.convertMillsToTime(
-                                                          i.totalTimeInForeground),
+                                                          i.totalTimeInForeground??0),
                                                     ),
                                                   ),
                                                   ListTile(
@@ -306,22 +300,22 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                     },
                                     trailing: Text(
                                       TimeUtils.convertMillsToTime(
-                                        i.totalTimeInForeground,
+                                        i.totalTimeInForeground??0,
                                       ),
-                                      style: theme.bodyText1.copyWith(
-                                          color: themeData.accentColor),
+                                      style: theme.bodyLarge?.copyWith(
+                                          color: themeData.colorScheme.secondary),
                                     ),
                                     title: Text(
                                       "${i.appName}",
-                                      style: theme.headline6,
+                                      style: theme.titleLarge,
                                     ),
                                     subtitle: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: LinearProgressIndicator(
-                                        value: i.totalTimeInForeground /
-                                            distinctApps[0]
-                                                .totalTimeInForeground,
+                                        value: (i.totalTimeInForeground??0) /
+                                            (distinctApps[0]
+                                                .totalTimeInForeground??0),
                                         minHeight: 8,
                                         valueColor:
                                             AlwaysStoppedAnimation(primaryDark),
@@ -331,13 +325,13 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                                     ),
                                     leading: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Image.memory(i.appLogo),
+                                      child: Image.memory(i.appLogo!,errorBuilder: (c,o,e)=>SizedBox.shrink(),
                                     ),
                                     // horizontalTitleGap: 0,
                                   ),
                                 ),
                               ),
-                        ],
+                              )],
                       ),
                     ),
     );
@@ -351,9 +345,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
 
   _errorView() => Center(child: Text("An error occurred"));
 
-  String _label(DateTime date) => date == null
-      ? "-/-"
-      : MaterialLocalizations.of(context).formatShortMonthDay(date);
+  String _label(DateTime date) => MaterialLocalizations.of(context).formatShortMonthDay(date);
 
   void pickFromDate() {
     final theme = Theme.of(context);
@@ -366,12 +358,12 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
             builder: (context, child) => Theme(
                 data: theme.copyWith(
                     colorScheme: c.copyWith(
-                        onSurface: c.secondaryVariant,
-                        primary: c.primaryVariant,
+                        onSurface: c.secondaryContainer,
+                        primary: c.primaryContainer,
                         brightness: Brightness.light,
                         onPrimary: c.onSecondary,
                         onSecondary: c.onPrimary)),
-                child: child),
+                child: child??SizedBox.shrink()),
             context: context,
             initialDateRange: DateTimeRange(start: from, end: to),
             firstDate: DateTime(2018),
@@ -388,7 +380,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
   }
 
   Widget _mostUsedApps(ThemeData themeData) {
-    if ((distinctApps?.length ?? 0) < 4) {
+    if ((distinctApps.length) < 4) {
       return SizedBox.shrink();
     }
     return Padding(
@@ -408,15 +400,14 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
                             padding: const EdgeInsets.all(8.0),
                             child: Image.memory(
                                 distinctApps[int.parse('$e$i', radix: 2)]
-                                    .appLogo),
+                                    .appLogo!,errorBuilder: (c,o,e)=>SizedBox.shrink(),),
                           ),
                           title: Text(
                             TimeUtils.convertMillsToTime(
                               distinctApps[int.parse('$e$i', radix: 2)]
-                                  .totalTimeInForeground,
+                                  .totalTimeInForeground??0,
                             ),
-                            style: themeData.textTheme.bodyText1
-                                .copyWith(color: themeData.accentColor),
+                            style: themeData.textTheme.bodyLarge!.copyWith(color: themeData.colorScheme.secondary),
                           )),
                     ),
                   )
@@ -446,7 +437,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
           if (showDivider) const Divider(),
           Text(
             s,
-            style: theme.textTheme.subtitle1.copyWith(
+            style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold, color: theme.primaryColorDark),
           ),
           const SizedBox(
@@ -459,7 +450,7 @@ class _AppsUsageScreenState extends State<AppsUsageScreen>
 class _OpenSettingsView extends StatelessWidget {
   final VoidCallback openSettings;
 
-  const _OpenSettingsView({Key key, this.openSettings}) : super(key: key);
+  const _OpenSettingsView({Key? key, required this.openSettings}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -475,7 +466,7 @@ class _OpenSettingsView extends StatelessWidget {
               child: Center(
                 child: Text(
                   "This app needs Android's usage access permission to get your app usage stats.",
-                  style: tt.textTheme.headline5,
+                  style: tt.textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -511,7 +502,7 @@ class _OpenSettingsView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     "In your device's usage access settings, Turn on \"${Constants.appName}\" to access this feature.",
-                    style: tt.textTheme.subtitle1,
+                    style: tt.textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
                 ),
