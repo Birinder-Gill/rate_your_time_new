@@ -112,6 +112,7 @@ class _SelectTimeScreenState extends State<SelectTimeScreen> {
                   handlerOutterRadius: 12.0,
                   onSelectionChange: _updateLabels,
                   sliderStrokeWidth: 10.0,
+                  onSelectionEnd: (int a, int b, int c) {  },
                   child: Padding(
                     padding: const EdgeInsets.all(42.0),
                     child: Center(

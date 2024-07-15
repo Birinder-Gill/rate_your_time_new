@@ -75,8 +75,8 @@ class RallyPieChart extends StatefulWidget {
 
 class _RallyPieChartState extends State<RallyPieChart>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  Animation<double> animation;
+  late AnimationController controller;
+  late Animation<double> animation;
 
   @override
   void initState() {

@@ -73,20 +73,21 @@ class DoubleCircularSlider extends StatefulWidget {
     this.divisions,
     this.init,
     this.end, {
-    this.height,
-    this.width,
-    this.child,
-    this.primarySectors,
-    this.secondarySectors,
-    this.baseColor,
-    this.selectionColor,
-    this.handlerColor,
-    this.onSelectionChange,
-    this.onSelectionEnd,
-    this.handlerOutterRadius,
-    this.showHandlerOutter,
-    this.sliderStrokeWidth,
-    this.shouldCountLaps, this.textColor,
+    this.height = 220,
+    this.width = 220,
+    required this.child,
+    this.primarySectors = 0,
+    this.secondarySectors = 0,
+    this.baseColor = const Color.fromRGBO(255, 255, 255, 0.1),
+    this.selectionColor = const Color.fromRGBO(255, 255, 255, 0.3),
+    this.handlerColor = Colors.white,
+    required this.onSelectionChange,
+    required this.onSelectionEnd,
+    this.handlerOutterRadius = 12.0,
+    this.showHandlerOutter = true,
+    this.sliderStrokeWidth = 12.0,
+    this.shouldCountLaps = false,
+    required this.textColor,
   })  : assert(init >= 0 && init <= divisions,
             'init has to be > 0 and < divisions value'),
         assert(end >= 0 && end <= divisions,
@@ -99,8 +100,8 @@ class DoubleCircularSlider extends StatefulWidget {
 }
 
 class _DoubleCircularSliderState extends State<DoubleCircularSlider> {
-  int _init;
-  int _end;
+  late int _init;
+  late int _end;
 
   @override
   void initState() {
@@ -112,35 +113,34 @@ class _DoubleCircularSliderState extends State<DoubleCircularSlider> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: widget.height ?? 220,
-        width: widget.width ?? 220,
+        height: widget.height,
+        width: widget.width,
         child: CircularSliderPaint(
           mode: CircularSliderMode.doubleHandler,
           init: _init,
           end: _end,
           divisions: widget.divisions,
-          primarySectors: widget.primarySectors ?? 0,
-          secondarySectors: widget.secondarySectors ?? 0,
+          primarySectors: widget.primarySectors,
+          secondarySectors: widget.secondarySectors,
           child: widget.child,
           onSelectionChange: (newInit, newEnd, laps) {
             widget.onSelectionChange(newInit, newEnd, laps);
-                      setState(() {
+            setState(() {
               _init = newInit;
               _end = newEnd;
             });
           },
           onSelectionEnd: (newInit, newEnd, laps) {
             widget.onSelectionEnd(newInit, newEnd, laps);
-                    },
-          sliderStrokeWidth: widget.sliderStrokeWidth ?? 12.0,
-          baseColor: widget.baseColor ?? Color.fromRGBO(255, 255, 255, 0.1),
-          selectionColor:
-              widget.selectionColor ?? Color.fromRGBO(255, 255, 255, 0.3),
-          handlerColor: widget.handlerColor ?? Colors.white,
-          handlerOutterRadius: widget.handlerOutterRadius ?? 12.0,
+          },
+          sliderStrokeWidth: widget.sliderStrokeWidth,
+          baseColor: widget.baseColor,
+          selectionColor: widget.selectionColor,
+          handlerColor: widget.handlerColor,
+          handlerOutterRadius: widget.handlerOutterRadius,
           showRoundedCapInSelection: true,
-          showHandlerOutter: widget.showHandlerOutter ?? true,
-          shouldCountLaps: widget.shouldCountLaps ?? false,
+          showHandlerOutter: widget.showHandlerOutter,
+          shouldCountLaps: widget.shouldCountLaps,
           textColor: widget.textColor,
         ));
   }

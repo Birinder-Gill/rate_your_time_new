@@ -18,10 +18,10 @@ class SliderPainter extends CustomPainter {
   bool showHandlerOutter;
   double sliderStrokeWidth;
 
-  Offset initHandler;
-  Offset endHandler;
-  Offset center;
-  double radius;
+  Offset? initHandler;
+  late Offset endHandler;
+  late Offset center;
+  late double radius;
 
   SliderPainter({
     required this.mode,
@@ -52,8 +52,8 @@ class SliderPainter extends CustomPainter {
     // draw handlers
     if (mode == CircularSliderMode.doubleHandler) {
       initHandler = radiansToCoordinates(center, -pi / 2 + startAngle, radius);
-      canvas.drawCircle(initHandler, handlerOutterRadius, handler..color = Colors.deepOrange.shade800);
-        _drawSunny(canvas,initHandler,Icons.wb_sunny_sharp,Colors.amber);
+      canvas.drawCircle(initHandler!, handlerOutterRadius, handler..color = Colors.deepOrange.shade800);
+        _drawSunny(canvas,initHandler!,Icons.wb_sunny_sharp,Colors.amber);
     }
 
     endHandler = radiansToCoordinates(center, -pi / 2 + endAngle, radius);

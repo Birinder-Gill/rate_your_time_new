@@ -58,8 +58,10 @@ class _TestScreenState extends State<TestScreen> {
           children: [
             Text(
               "Welcome! Tell us a little about your time.",
-              style:
-                  Theme.of(context).textTheme.displaySmall?.copyWith(height: 1.2),
+              style: Theme.of(context)
+                  .textTheme
+                  .displaySmall
+                  ?.copyWith(height: 1.2),
             ),
             SizedBox(
               height: 52,
@@ -104,7 +106,7 @@ class _TestScreenState extends State<TestScreen> {
               },
             ),
             Transform.rotate(
-              angle: pi + pi/2,
+              angle: pi + pi / 2,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Neumorphic(
@@ -131,11 +133,12 @@ class _TestScreenState extends State<TestScreen> {
                             ? NeumorphicProgress(
                                 percent: .7,
                                 height: 16,
-
                                 style: ProgressStyle(
                                   depth: slideVal,
-                                  accent: Theme.of(context).colorScheme.secondary,
-                                  variant: Theme.of(context).colorScheme.secondary,
+                                  accent:
+                                      Theme.of(context).colorScheme.secondary,
+                                  variant:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                               )
                             : LinearProgressIndicator(
@@ -215,8 +218,8 @@ class SleepPage extends StatefulWidget {
 class _SleepPageState extends State<SleepPage> {
   final baseColor = Color.fromRGBO(255, 255, 255, 0.3);
 
-  int initTime=7;
-  int endTime=22;
+  int initTime = 7;
+  int endTime = 22;
 
   late int inBedTime;
   late int outBedTime;
@@ -251,7 +254,10 @@ class _SleepPageState extends State<SleepPage> {
       children: [
         Text(
           'Welcome! Tell us a little about your time.',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Colors.white),
         ),
         DoubleCircularSlider(
           24,
@@ -261,24 +267,27 @@ class _SleepPageState extends State<SleepPage> {
           width: _size,
           primarySectors: 4,
           secondarySectors: 60,
+          textColor: Theme.of(context).colorScheme.secondary,
           baseColor: Color.fromRGBO(255, 255, 255, 0.1),
           selectionColor: baseColor,
-
           handlerColor: Colors.white,
-
           handlerOutterRadius: 12.0,
           onSelectionChange: _updateLabels,
           sliderStrokeWidth: 12.0,
+          onSelectionEnd: (int a, int b, int c) {},
           child: Padding(
             padding: const EdgeInsets.all(42.0),
             child: Center(
                 child: Text('${_formatIntervalTime(inBedTime, outBedTime)}',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white))),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(color: Colors.white))),
           ),
         ),
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          _formatBedTime('WAKE UP AT', inBedTime,FontAwesomeIcons.solidSun),
-          _formatBedTime('SLEEP AT', outBedTime,FontAwesomeIcons.cloudMoon),
+          _formatBedTime('WAKE UP AT', inBedTime, FontAwesomeIcons.solidSun),
+          _formatBedTime('SLEEP AT', outBedTime, FontAwesomeIcons.cloudMoon),
         ]),
         TextButton.icon(
           style: ButtonStyle(
@@ -302,11 +311,14 @@ class _SleepPageState extends State<SleepPage> {
   Widget _formatBedTime(String pre, int time, IconData ic) {
     return Column(
       children: [
-        FaIcon(ic,color: Colors.white,),
+        FaIcon(
+          ic,
+          color: Colors.white,
+        ),
         Text(pre, style: TextStyle(color: baseColor)),
         Text(
           '${_formatTime(time)}',
-          style: TextStyle(color: Colors.white,fontSize: 24),
+          style: TextStyle(color: Colors.white, fontSize: 24),
         )
       ],
     );
@@ -318,6 +330,6 @@ class _SleepPageState extends State<SleepPage> {
 
   String _formatIntervalTime(int init, int end) {
     final hours = end > init ? end - init : 24 - init + end;
-    return '${hours}hr${hours>1?'s':''}';
+    return '${hours}hr${hours > 1 ? 's' : ''}';
   }
 }

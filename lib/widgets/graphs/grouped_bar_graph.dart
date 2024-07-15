@@ -16,7 +16,7 @@ class GroupedBarChart extends StatelessWidget {
   final bool showLabel;
 
   GroupedBarChart(this.av,
-      {this.animate, this.onBarSelected, this.showLabel = true});
+      {this.animate = true,required this.onBarSelected, this.showLabel = true});
 
   // factory GroupedBarChart.withHoursData(
   //     List<SingleDayAverage> av, void Function(int index) onBarSelected) {
@@ -66,7 +66,7 @@ class GroupedBarChart extends StatelessWidget {
               });
             } else {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              onBarSelected(model.selectedDatum[0].index);
+              onBarSelected(model.selectedDatum[0].index??0);
             }
           }
         })
@@ -87,9 +87,9 @@ class GroupedBarChart extends StatelessWidget {
       new charts.Series<SingleDayAverage, String>(
           id: 'tv',
           domainFn: (SingleDayAverage sales, _) =>
-              sales.label ?? Utils.shortDays[sales.date.weekday],
+              sales.label ?? Utils.shortDays[sales.date?.weekday]??'',
           labelAccessorFn: (t, i) =>
-              (showLabel && av[i].worth > 0) ? "${av[i].worth.toInt()}h" : '',
+              (showLabel && av[i??0].worth > 0) ? "${av[i??0].worth.toInt()}h" : '',
           measureFn: (SingleDayAverage sales, _) =>
               sales.worth > 0 ? sales.worth : 0,
           data: charter,
@@ -121,7 +121,7 @@ class SingleDayAverage {
 
   // final int filledRegion;
 
-  final String label;
+  final String? label;
 
   SingleDayAverage(
       {required this.worth,
@@ -149,6 +149,6 @@ class SingleDayAverage {
   String toString() {
     return date == null
         ? ""
-        : "${DefaultMaterialLocalizations().formatShortDate(date)}\nWorth ---> $worth\nPending sales -> $pendingSales\nLabel $label";
+        : "${DefaultMaterialLocalizations().formatShortDate(date!)}\nWorth ---> $worth\nPending sales -> $pendingSales\nLabel $label";
   }
 }

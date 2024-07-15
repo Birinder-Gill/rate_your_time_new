@@ -57,7 +57,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                                 worth:widget.av.weekDayActivities[a.id]![index + 1]
                                         ?.toDouble() ??
                                     0.0,
-                                label: Utils.shortDays[index + 1]!)),
+                                label: Utils.shortDays[index + 1]!)), onBarSelected: (int index) {  },
                       ),
                     ),
                   ],
@@ -131,7 +131,7 @@ class _ActivityAverageCardState extends State<ActivityAverageCard> {
                       entries.length,
                       (index) => SingleDayAverage(
                           worth: entries.elementAt(index).value.toDouble(),
-                          label: entries.elementAt(index).key.toString()))),
+                          label: entries.elementAt(index).key.toString())), onBarSelected: (int index) {  },),
                 )
         ),
         dialog: true);

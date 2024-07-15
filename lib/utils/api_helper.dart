@@ -51,8 +51,8 @@ class ApiHelper {
     };
     consoleLog("Body = $body");
     final List? list = await _invokeMethod<List>('getApps', body);
-    return await compute<List?, AverageAppUsageModel?>(
-        Utils.parseStatsData, list);
+    return await compute<List, AverageAppUsageModel?>(
+        Utils.parseStatsData, list??[]);
   }
 
   static Future loadGoal(DateTime date) async {
