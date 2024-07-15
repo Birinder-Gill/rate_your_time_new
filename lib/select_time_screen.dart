@@ -154,7 +154,7 @@ class _SelectTimeScreenState extends State<SelectTimeScreen> {
       await Utils.deleteAlarms();
       await Utils.createAlarms();
 
-      if (widget.firstTime && !(await Utils.batterySaverDisabled())) {
+      if (widget.firstTime && !(await Utils.batterySaverDisabled()??false)) {
         dialog(
             context,
             AlertDialog(

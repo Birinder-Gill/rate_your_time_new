@@ -47,25 +47,26 @@ class CutCornersBorder extends OutlineInputBorder {
   final double cut;
 
   @override
-  ShapeBorder lerpFrom(ShapeBorder? a, double? t) {
+  ShapeBorder? lerpFrom(ShapeBorder? a, double? t) {
     if (a is CutCornersBorder) {
       final outline = a;
       return CutCornersBorder(
-        borderRadius: BorderRadius.lerp(outline.borderRadius, borderRadius, t),
-        borderSide: BorderSide.lerp(outline.borderSide, borderSide, t),
+        borderRadius:
+            BorderRadius.lerp(outline.borderRadius, borderRadius, t ?? 0)!,
+        borderSide: BorderSide.lerp(outline.borderSide, borderSide, t ?? 0),
         cut: cut,
         gapPadding: outline.gapPadding,
       );
     }
-    return super.lerpFrom(a, t);
+    return super.lerpFrom(a, t ?? 0);
   }
 
   @override
-  ShapeBorder lerpTo(ShapeBorder b, double t) {
+  ShapeBorder? lerpTo(ShapeBorder? b, double t) {
     if (b is CutCornersBorder) {
       final outline = b;
       return CutCornersBorder(
-        borderRadius: BorderRadius.lerp(borderRadius, outline.borderRadius, t),
+        borderRadius: BorderRadius.lerp(borderRadius, outline.borderRadius, t)!,
         borderSide: BorderSide.lerp(borderSide, outline.borderSide, t),
         cut: cut,
         gapPadding: outline.gapPadding,
@@ -79,7 +80,9 @@ class CutCornersBorder extends OutlineInputBorder {
     if (start > 0 || extent > 0) {
       path.relativeMoveTo(extent + start, center.top);
       _notchedSidesAndBottom(center, path);
-      path..lineTo(center.left + cut, center.top)..lineTo(start, center.top);
+      path
+        ..lineTo(center.left + cut, center.top)
+        ..lineTo(start, center.top);
     } else {
       path.moveTo(center.left + cut, center.top);
       _notchedSidesAndBottom(center, path);
@@ -103,10 +106,10 @@ class CutCornersBorder extends OutlineInputBorder {
   void paint(
     Canvas canvas,
     Rect rect, {
-    double gapStart,
+    double? gapStart,
     double gapExtent = 0,
     double gapPercentage = 0,
-    TextDirection textDirection,
+    TextDirection? textDirection,
   }) {
     assert(gapPercentage >= 0 && gapPercentage <= 1);
 
@@ -116,18 +119,18 @@ class CutCornersBorder extends OutlineInputBorder {
       canvas.drawPath(_notchedCornerPath(outer.middleRect), paint);
     } else {
       final extent = lerpDouble(0.0, gapExtent + gapPadding * 2, gapPercentage);
-      switch (textDirection) {
+      switch ((textDirection ?? TextDirection.ltr)) {
         case TextDirection.rtl:
           {
-            final path = _notchedCornerPath(
-                outer.middleRect, gapStart + gapPadding - extent, extent);
+            final path = _notchedCornerPath(outer.middleRect,
+                (gapStart ?? 0) + gapPadding - (extent ?? 0), (extent ?? 0));
             canvas.drawPath(path, paint);
             break;
           }
         case TextDirection.ltr:
           {
             final path = _notchedCornerPath(
-                outer.middleRect, gapStart - gapPadding, extent);
+                outer.middleRect, (gapStart ?? 0) - gapPadding, (extent ?? 0));
             canvas.drawPath(path, paint);
             break;
           }
@@ -245,7 +248,7 @@ Widget adButton() => OutlinedButton.icon(
     icon: Icon(Icons.font_download),
     label: Text("Watch an Ad"));
 
-Future<T> pushTo<T>(BuildContext context, Widget screen,
+Future<T?> pushTo<T>(BuildContext context, Widget screen,
     {bool replace = false, bool clear = false, bool dialog = false}) {
   if (clear) {
     return Navigator.pushAndRemoveUntil<T>(
@@ -291,7 +294,7 @@ class TimeUtils {
     final sec = 1000;
     final min = sec * 60;
     final hour = min * 60;
-    final day = hour * 24;
+    // final day = hour * 24;
     var mins = 0.0;
     var label = '';
     // if (i >= day) {
@@ -334,7 +337,7 @@ class TimeUtils {
   }
 
   static Future<DateTime> getWeekStart(DateTime? date) async {
-    final to = date??DateTime.now();
+    final to = date ?? DateTime.now();
     final from = to.subtract(Duration(days: to.weekday - 1));
     final installDate = await SharedPrefs.checkInstallDate();
     consoleLog('----------------------------');
@@ -344,7 +347,7 @@ class TimeUtils {
   }
 
   static Future<DateTime> getWeekEnd(DateTime? date) async {
-    final from = date??DateTime.now();
+    final from = date ?? DateTime.now();
     final to = from.add(Duration(days: 7 - from.weekday));
     final now = DateTime.now();
     return to;
@@ -354,7 +357,7 @@ class TimeUtils {
   }
 
   static Future<DateTime> getMonthEnd(DateTime? date) async {
-    final from = date??DateTime.now();
+    final from = date ?? DateTime.now();
     final to = DateTime(
         from.year, from.month, DateUtils.getDaysInMonth(from.year, from.month));
     final now = DateTime.now();
@@ -364,7 +367,7 @@ class TimeUtils {
   }
 
   static Future<DateTime> getMonthStart(DateTime? date) async {
-    final to = date??DateTime.now();
+    final to = date ?? DateTime.now();
     //FIXME: Maybe we could remove initial dae check and make it synchronous;
     final from = DateTime.utc(to.year, to.month, 1);
     final installDate = await SharedPrefs.checkInstallDate();
@@ -385,7 +388,7 @@ class TimeUtils {
   }
 
   static Future<String> getTimeTillNextAlarm() async {
-    String label(DateTime now, {int hrs}) {
+    String label(DateTime now, {int hrs = 0}) {
       int result = 0;
       String unit = '';
       String trail = '';
@@ -409,9 +412,10 @@ class TimeUtils {
     final list = await Utils.getAllAlarms();
     final now = DateTime.now();
     bool captured = false;
-    int firstHr;
-    int lastHr;
-    list.forEach((element) {
+    int firstHr = 0;
+    int lastHr = 0;
+
+    for (var element in (list ?? [])) {
       final hr = int.parse(element['time'].toString().split(':').first);
       if (captured) {
         return label(now);
@@ -420,8 +424,8 @@ class TimeUtils {
       if (hr == now.hour) {
         captured = true;
       }
-    });
-    final tom = now.add(Duration(days: now.hour>lastHr?1:0));
+    }
+    final tom = now.add(Duration(days: now.hour > lastHr ? 1 : 0));
     final newD = DateTime(tom.year, tom.month, tom.day, firstHr);
     int hrs = newD.difference(now).inHours;
 
@@ -451,7 +455,7 @@ class Utils {
     });
   }
 
-  static Future<bool> batterySaverDisabled() {
+  static Future<bool?> batterySaverDisabled() {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     return channel.invokeMethod<bool>(Constants.isBatterySaverDisabled);
   }
@@ -461,7 +465,7 @@ class Utils {
     return channel.invokeMethod(Constants.deleteAlarms);
   }
 
-  static Future<List> getAllAlarms() {
+  static Future<List?> getAllAlarms() {
     final channel = MethodChannel(Constants.CHANNEL_NAME);
     return channel.invokeMethod(Constants.getAlarms);
   }
@@ -498,8 +502,8 @@ class Utils {
             int.parse(ymd[0]), int.parse(ymd[1]) + 1, int.parse(ymd[2]));
         print("DATETIME DT =========>  $dt");
         var key = data['week'] == true ? dt.weekday : dt.day;
-        weekDayActivityMap[e['activity']][key] =
-            (1 + (weekDayActivityMap[e['activity']][key] ?? 0));
+        weekDayActivityMap[e['activity']]?[key] =
+            (1 + (weekDayActivityMap[e['activity']]?[key] ?? 0));
       });
       double filledSales = total / Utils.wokeHours();
 
@@ -516,7 +520,9 @@ class Utils {
       consoleLog(dt);
       if (!filledSales.isNaN) {
         double pendingSales = ((total / element.value.length) - filledSales);
-        av.averages.add(SingleDayAverage(dt, filledSales,
+        av.averages.add(SingleDayAverage(
+            date: dt,
+            worth: filledSales,
             pendingSales: pendingSales.isNaN ? 0 : pendingSales));
         // filledRegion:((element.value.length/Utils.wokeHours())*5).toInt()
       }
@@ -525,13 +531,16 @@ class Utils {
     consoleLog(
         "${tempActivityMap.map((key, value) => MapEntry("${activities[key]}", value))}");
     consoleLog("Day activity map = $weekDayActivityMap");
-    av.averages.sort((a, b) =>
-        a.date.millisecondsSinceEpoch - b.date.millisecondsSinceEpoch);
+    av.averages.sort((a, b) => (a.date != null && b.date != null)
+        ? a.date!.millisecondsSinceEpoch - b.date!.millisecondsSinceEpoch
+        : 0);
     final sorted = SplayTreeMap<int, int>.from(tempActivityMap,
         (b, a) => tempActivityMap[a].compareTo(tempActivityMap[b]));
     sorted.forEach((key, value) {
-      Activity act = activities[key]?.copyWith(timeSpent: value);
-      av.activities.add(act);
+      final act = activities[key]?.copyWith(timeSpent: value);
+      if (act != null) {
+        av.activities.add(act);
+      }
     });
     if (av.activities.length > ACTIVITIES_TO_SHOW) {
       final temp = List<Activity>.from(av.activities);
@@ -557,7 +566,7 @@ class Utils {
 
   static AverageAppUsageModel parseStatsData(List list) {
     ///Get actual time range interval
-    int min=0, max=0;
+    int min = 0, max = 0;
     list.forEach((element) {
       final from = element['firstTimeStamp'];
       if (min > from) {
@@ -578,7 +587,8 @@ class Utils {
         (e) => UsageStat.fromJson(jsonEncode(e)),
       ),
     );
-    apps.sort((b, a) => (a.totalTimeInForeground??0) - (b.totalTimeInForeground??0));
+    apps.sort((b, a) =>
+        (a.totalTimeInForeground ?? 0) - (b.totalTimeInForeground ?? 0));
 
     if (apps.length > APPS_TO_SHOW) {
       final temp = List<UsageStat>.from(apps);
