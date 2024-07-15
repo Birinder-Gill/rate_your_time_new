@@ -197,7 +197,7 @@ class _RallyPieChartOutlineDecoration extends Decoration {
   final List<RallyPieChartSegment> segments;
 
   @override
-  BoxPainter createBoxPainter([VoidCallback onChanged]) {
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
     return _RallyPieChartOutlineBoxPainter(
       maxFraction: maxFraction,
       wholeAmount: total,
